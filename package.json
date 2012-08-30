@@ -1,0 +1,14 @@
+{
+	"name": "SemTag",
+	"description": "-",
+	"author": "@EivindEE", 
+	"node":"0.6.12",
+	"version": "0.0.1",
+	"dependencies": {
+		"jasmine-dom" : "git://github.com/edpaget/node-jasmine-dom.git"
+	},
+	"scripts": {
+		"test": "jasmine-dom --runner path/to/SpecRunner.html"
+	},
+	"engine": "node 0.6.12"
+}
