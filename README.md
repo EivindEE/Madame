@@ -1,3 +1,5 @@
+SemTag [![Build Status](https://secure.travis-ci.org/EivindEE/semtag.png)](http://travis-ci.org/EivindEE/semtag)
+=============================
 # Purpose of SemTagExtractor
 
 SemTagExtractor should take a pice of text, let the user mark the parts that have an important semantic meaning,
