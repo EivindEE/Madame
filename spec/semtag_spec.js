@@ -5,9 +5,6 @@ describe("SemTag", function() {
 	beforeEach(function() {
 		semTag = semtag("content", "tag");
 	});	
-	it("should fail", function () {
-		expect(true).toBe(false);
-	});
 	
 	it("should construct with no less than two arguments", function() {
 		expect(function () {semtag()}).toThrow({name : "MissingArgumentsException", message : "Function requires both a valid text and trigger argument"});
