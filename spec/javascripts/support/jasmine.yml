@@ -10,8 +10,7 @@
 #   - lib/source2.js
 #   - dist/**/*.js
 #
-src_files:
-
+src_files: *.js
 # ADD OTHER FILES HERE!
 
 
