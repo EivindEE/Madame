@@ -8,7 +8,7 @@
 		"jasmine-dom" : "git://github.com/edpaget/node-jasmine-dom.git"
 	},
 	"scripts": {
-		"test": "jasmine-dom --runner path/to/SpecRunner.html"
+		"test": "jasmine-dom --runner SpecRunner.html"
 	},
 	"engine": "node 0.6.12"
 }
