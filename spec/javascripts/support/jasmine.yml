@@ -10,7 +10,7 @@
 #   - lib/source2.js
 #   - dist/**/*.js
 #
-src_files: *.js
+src_files: semtag.js
 # ADD OTHER FILES HERE!
 
 
