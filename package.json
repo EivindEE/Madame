@@ -5,7 +5,7 @@
 	"node":"0.6.12",
 	"version": "0.0.1",
 	"dependencies": {
-		"jasmine-dom" : "git://github.com/edpaget/node-jasmine-dom.git"
+		"jasmine-dom" : "git://github.com/edpaget/node-jasmine-dom/"
 	},
 	"scripts": {
 		"test": "jasmine-dom --runner SpecRunner.html"
