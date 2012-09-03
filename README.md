@@ -1,4 +1,4 @@
-SemTag [![Build Status](https://secure.travis-ci.org/EivindEE/SemTag.png)](http://travis-ci.org/EivindEE/SemTag)
+SemTag
 =============================
 # Purpose of SemTagExtractor
 
