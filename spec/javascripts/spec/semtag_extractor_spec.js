@@ -88,7 +88,7 @@ describe("SemTag", function () {
 		it("should return an Element with the same text content", function () {
 			expect(semTag.surround(df).textContent).toBe(content.textContent);
 		});
-		it("Element returned should is an an ancestor of the content of the input", function () {
+		it("Element returned should be an ancestor of the content of the input", function () {
 			expect(semTag.surround(df)).hasDescendant(content);
 		});
 		it("Should allow the user to select the surrounding tag type", function () {

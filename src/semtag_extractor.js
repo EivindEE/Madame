@@ -25,9 +25,8 @@ var semtag = function (text, trigger) {
 			throw {name: "MissingArgumentsException", message: "Function requires a range object to surround with tags"};
 		}
 		var tag = document.createElement(type);
-		tag.appendChild(fragment);
 		tag.className =  cName || "";
-		
+		tag.appendChild(fragment);
 		return tag;
 	};
 	return self;
