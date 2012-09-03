@@ -1,9 +1,9 @@
 /*global describe: false, expect: false, it: false, semtag: false, beforeEach: false, afterEach: false*/
 describe("SemTag", function () {
 	"use strict";
-	var semTag;
+	var extractor;
 	beforeEach(function () {
-		semTag = semtag("content", "tag");
+		extractor = semtag("content", "tag").extractor;
 	});
 	it("should construct with no less than two arguments", function () {
 		expect(function () {semtag(); }).toThrow({name : "MissingArgumentsException", message : "Function requires both a valid text and trigger argument"});
@@ -35,19 +35,19 @@ describe("SemTag", function () {
 			body.removeChild(notDescendant);
 		});
 		it("should return true if the nodes are the same", function () {
-			expect(semTag.ancestorOrSelf(ancestor, ancestor)).toBe(true);
+			expect(extractor.ancestorOrSelf(ancestor, ancestor)).toBe(true);
 		});
 		it("should return false if the node is not a descendant", function () {
-			expect(semTag.ancestorOrSelf(ancestor, notDescendant)).toBe(false);
+			expect(extractor.ancestorOrSelf(ancestor, notDescendant)).toBe(false);
 		});
 		it("should return true if the node is a child", function () {
-			expect(semTag.ancestorOrSelf(ancestor, child)).toBe(true);
+			expect(extractor.ancestorOrSelf(ancestor, child)).toBe(true);
 		});
 		it("should return true if the node is a descendant", function () {
-			expect(semTag.ancestorOrSelf(ancestor, descendant)).toBe(true);
+			expect(extractor.ancestorOrSelf(ancestor, descendant)).toBe(true);
 		});
 		it("should return true if a text node is a descendant", function () {
-			expect(semTag.ancestorOrSelf(ancestor, textDescendant)).toBe(true);
+			expect(extractor.ancestorOrSelf(ancestor, textDescendant)).toBe(true);
 		});
 	});
 	describe("it should surround a given range with the tag and class specified", function () {
@@ -80,22 +80,22 @@ describe("SemTag", function () {
 			});
 		});
 		it("should accept a range parameter as it's first parameter", function () {
-			expect(semTag.surround(df)).toBeTruthy();
+			expect(extractor.surround(df)).toBeTruthy();
 		});
 		it("should otherwise throw an exception", function () {
-			expect(function () {semTag.surround(notDf); }).toThrow({name: "MissingArgumentsException", message: "Function requires a range object to surround with tags"});
+			expect(function () {extractor.surround(notDf); }).toThrow({name: "MissingArgumentsException", message: "Function requires a range object to surround with tags"});
 		});
 		it("should return an Element with the same text content", function () {
-			expect(semTag.surround(df).textContent).toBe(content.textContent);
+			expect(extractor.surround(df).textContent).toBe(content.textContent);
 		});
 		it("Element returned should be an ancestor of the content of the input", function () {
-			expect(semTag.surround(df)).hasDescendant(content);
+			expect(extractor.surround(df)).hasDescendant(content);
 		});
 		it("Should allow the user to select the surrounding tag type", function () {
-			expect(semTag.surround(df, "span").nodeName).toContain("SPAN");
+			expect(extractor.surround(df, "span").nodeName).toContain("SPAN");
 		});
 		it("Should allow the user to select the surrounding tag class", function () {
-			expect(semTag.surround(df, "span", "semtag").className).toContain("semtag");
+			expect(extractor.surround(df, "span", "semtag").className).toContain("semtag");
 		});
 	});
 });

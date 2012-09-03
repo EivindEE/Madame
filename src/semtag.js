@@ -4,8 +4,9 @@ var semtag = function (text, trigger) {
 	if (!(text && trigger)) {
 		throw {name : "MissingArgumentsException", message : "Function requires both a valid text and trigger argument"};
 	}
+	var that = { extractor: {}};
 
-	self.ancestorOrSelf = function (ancestor, descendant) {
+	that.extractor.ancestorOrSelf = function (ancestor, descendant) {
 		if (ancestor === descendant) {
 			return true;
 		}
@@ -14,7 +15,7 @@ var semtag = function (text, trigger) {
 		}
 		return false;
 	};
-	self.surround = function (fragment, type, cName) {
+	that.extractor.surround = function (fragment, type, cName) {
 		if (!fragment) {
 			throw {name: "MissingArgumentsException", message: "Function requires a range object to surround with tags"};
 		}
@@ -23,5 +24,5 @@ var semtag = function (text, trigger) {
 		tag.appendChild(fragment);
 		return tag;
 	};
-	return self;
+	return that;
 };
