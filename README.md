@@ -30,13 +30,13 @@ All functions are assumed to be run in the browser, with access to the global do
 	@return Range, a range object containing the range which should be tagged
 	```
 
-* Surround range with tags
+* Surround DocumentFragment with tags
 
 	```
 	@param range: Range, the range to be surrounded with tags
 	@param string: tag, the name of the tag to be created(default: span) 
-	@param string: className, the name of the class the tag should be given
-	@return a map containing a DocumentFragment object containing the tagged text
+	@param string: className, the name of the class the tag should be given(default: none)
+	@return a Element object containing the tagged text
 	```
 
 * Ancestor or self (to make sure we only tag the content) 
