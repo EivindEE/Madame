@@ -98,4 +98,41 @@ describe("SemTag", function () {
 			expect(extractor.surround(df, "span", "semtag").className).toContain("semtag");
 		});
 	});
+	describe("it should provide a minimal legal range",function () {
+		var CA ,
+			CAContent,
+			SP,
+			SPContent,
+			EP,
+			EPContent,
+			S,
+			E,
+			range;
+			
+
+			beforeEach(function () {
+				CA = document.createElement("div");
+				CAContent = document.createTextNode("Common node text");
+				SP = document.createElement("span");
+				SPContent = document.createTextNode("Start node text");
+				EP = document.createElement("span");
+				EPContent = document.createTextNode("Start other node text");
+				
+				CA.appendChild(CAContent);
+				SP.appendChild(SPContent);
+				EP.appendChild(EPContent);
+				
+				range = document.createRange();
+			});
+			
+			it("should return the same range iff both start and end have the same parent", function (){
+				range.setEnd(CAContent, 5);
+				range.setStart(CAContent, 0);
+				expect(extractor.legalRange(range)).toBe(range);
+				
+				CA.appendChild(EP);
+				range.setEnd(EPContent, 5);
+				expect(extractor.legalRange(range)).not.toBe(range);
+			});
+	});
 });

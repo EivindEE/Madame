@@ -24,5 +24,13 @@ var semtag = function (text, trigger) {
 		tag.appendChild(fragment);
 		return tag;
 	};
+	
+	that.extractor.legalRange = function (range) {
+		if (range.startContainer === range.endContainer) {
+			return range;
+		} else { 
+			return null; 
+		}
+	};
 	return that;
 };
