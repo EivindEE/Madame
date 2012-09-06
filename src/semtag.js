@@ -4,20 +4,18 @@ var semtag = function (text, trigger) {
 	if (!(text && trigger)) {
 		throw {name : "MissingArgumentsException", message : "Function requires both a valid text and trigger argument"};
 	}
-	var that = { extractor: {}};
-
-	var closestChild = function (node, descendant) {
-		var parent;
-		if (descendant.parentElement) {
-			parent = descendant.parentElement;
-			if ( node === parent ) {
-				return descendant;
+	var that = { extractor: {}},
+		closestChild = function (node, descendant) {
+			var parent;
+			if (descendant.parentElement) {
+				parent = descendant.parentElement;
+				if (node === parent) {
+					return descendant;
+				}
+				return closestChild(node, parent);
 			}
-			return closestChild(node, parent);
-		}
-		return false;
-	}
-
+			return false;
+		};
 	that.extractor.ancestorOrSelf = function (ancestor, descendant) {
 		if (ancestor === descendant) {
 			return true;
@@ -27,16 +25,6 @@ var semtag = function (text, trigger) {
 		}
 		return false;
 	};
-	that.extractor.surround = function (fragment, type, cName) {
-		if (!fragment) {
-			throw {name: "MissingArgumentsException", message: "Function requires a range object to surround with tags"};
-		}
-		var tag = document.createElement(type);
-		tag.className =  cName || "";
-		tag.appendChild(fragment);
-		return tag;
-	};
-	
 	that.extractor.legalRange = function (range) {
 		var newRange = range.cloneRange(),
 			child;
@@ -56,6 +44,15 @@ var semtag = function (text, trigger) {
 		newRange.setStartBefore(range.startContainer.parentElement);
 		newRange.setEndAfter(range.endContainer.parentElement);
 		return newRange;
+	};
+	that.extractor.surround = function (fragment, type, cName) {
+		if (!fragment) {
+			throw {name: "MissingArgumentsException", message: "Function requires a range object to surround with tags"};
+		}
+		var tag = document.createElement(type);
+		tag.className =  cName || "";
+		tag.appendChild(fragment);
+		return tag;
 	};
 	return that;
 };

@@ -1,4 +1,4 @@
-/*global describe: false, expect: false, it: false, semtag: false, beforeEach: false, afterEach: false*/
+/*global describe: false, expect: false, it: false, semtag: false, beforeEach: false, afterEach: false, document: false, body: false*/
 describe("SemTag", function () {
 	"use strict";
 	var extractor;
@@ -50,6 +50,70 @@ describe("SemTag", function () {
 			expect(extractor.ancestorOrSelf(ancestor, textDescendant)).toBe(true);
 		});
 	});
+	describe("it should provide a minimal legal range", function () {
+		var CA,
+			CAContent,
+			SP,
+			SPContent,
+			EP,
+			EPContent,
+			S,
+			E,
+			range;
+		beforeEach(function () {
+			CA = document.createElement("div");
+			CAContent = document.createTextNode("Common node text");
+			SP = document.createElement("span");
+			SPContent = document.createTextNode("Start node text");
+			EP = document.createElement("p");
+			EPContent = document.createTextNode("Start other node text");
+			document.body.appendChild(CA);
+			range = document.createRange();
+		});
+		afterEach(function () {
+			document.body.removeChild(CA);
+		});
+		it("should return the same range iff both start and end have the same parent", function () {
+			CA.appendChild(CAContent);
+			range.setStart(CAContent, 0);
+			range.setEnd(CAContent, 5);
+			expect(extractor.legalRange(range)).toEqual(range);
+			EP.appendChild(EPContent);
+			CA.appendChild(EP);
+			range.setStart(CAContent, 0);
+			range.setEnd(EPContent, 5);
+			expect(extractor.legalRange(range)).not.toBe(range);
+		});
+		it("should extend range to cover the ancestor which is a direct child of the starts container, iff the end is a descendant of the starts container", function () {
+			SP.appendChild(SPContent);
+			EP.appendChild(EPContent);
+			CA.appendChild(SP);
+			SP.appendChild(EP);
+			range.setStart(SPContent, 3);
+			range.setEnd(EPContent, 5);
+			expect(extractor.legalRange(range).endContainer).toEqual(SP);
+		});
+		it("should extend range to cover the ancestor which is a direct child of the end container, iff the start is a descendant of the ends container", function () {
+			SP.appendChild(SPContent);
+			CA.appendChild(EP);
+			EP.appendChild(SP);
+			EP.appendChild(EPContent);
+			range.setStart(SPContent, 3);
+			range.setEnd(EPContent, 5);
+			expect(range.startContainer).not.toEqual(EP);
+			expect(extractor.legalRange(range).startContainer).toEqual(EP);
+		});
+		it("should return a range surrounding the ancestor elements, iff they are different children of the common ancestor", function () {
+			CA.appendChild(SP);
+			CA.appendChild(EP);
+			SP.appendChild(SPContent);
+			EP.appendChild(EPContent);
+			range.setStart(SPContent, 3);
+			range.setEnd(EPContent, 5);
+			expect(extractor.legalRange(range).startContainer).toBe(CA);
+			expect(extractor.legalRange(range).endContainer).toBe(CA);
+		});
+	});
 	describe("it should surround a given range with the tag and class specified", function () {
 		var df,
 			content,
@@ -57,14 +121,14 @@ describe("SemTag", function () {
 			tagType = "span",
 			className = "tag",
 			hasDescendant = function (ancestor, descendant) {
-						if (ancestor === descendant) {
-							return true;
-						}
-						if (descendant.parentNode) {
-							return hasDescendant(ancestor, descendant.parentNode);
-						}
-						return false;
-					};
+				if (ancestor === descendant) {
+					return true;
+				}
+				if (descendant.parentNode) {
+					return hasDescendant(ancestor, descendant.parentNode);
+				}
+				return false;
+			};
 		beforeEach(function () {
 			df = document.createDocumentFragment();
 			content = document.createElement("div");
@@ -97,90 +161,5 @@ describe("SemTag", function () {
 		it("Should allow the user to select the surrounding tag class", function () {
 			expect(extractor.surround(df, "span", "semtag").className).toContain("semtag");
 		});
-	});
-	describe("it should provide a minimal legal range",function () {
-		var CA ,
-			CAContent,
-			SP,
-			SPContent,
-			EP,
-			EPContent,
-			S,
-			E,
-			range;
-			
-
-			beforeEach(function () {
-				CA = document.createElement("div");
-				CAContent = document.createTextNode("Common node text");
-				SP = document.createElement("span");
-				SPContent = document.createTextNode("Start node text");
-				EP = document.createElement("p");
-				EPContent = document.createTextNode("Start other node text");
-				
-				document.body.appendChild(CA);
-//				CA.appendChild(CAContent);
-//				SP.appendChild(SPContent);
-//				EP.appendChild(EPContent);
-				
-				range = document.createRange();
-			});
-			
-			afterEach(function () {				
-				document.body.removeChild(CA);
-			});
-			
-			it("should return the same range iff both start and end have the same parent", function () {
-				CA.appendChild(CAContent);
-				range.setStart(CAContent, 0);
-				range.setEnd(CAContent, 5);
-				expect(extractor.legalRange(range)).toEqual(range);
-				
-				EP.appendChild(EPContent);
-				CA.appendChild(EP);
-				range.setStart(CAContent, 0);
-				range.setEnd(EPContent, 5);
-				expect(extractor.legalRange(range)).not.toBe(range);
-			});
-			
-			it("should extend range to cover the ancestor which is a direct child of the starts container, iff the end is a descendant of the starts container", function () {
-				SP.appendChild(SPContent);
-				EP.appendChild(EPContent);
-				
-				CA.appendChild(SP);
-				SP.appendChild(EP);
-				
-				range.setStart(SPContent, 3);
-				range.setEnd(EPContent, 5);
-				
-				expect(extractor.legalRange(range).endContainer).toEqual(SP);
-			});
-			
-			it("should extend range to cover the ancestor which is a direct child of the end container, iff the start is a descendant of the ends container", function () {
-				SP.appendChild(SPContent);
-				
-				CA.appendChild(EP);
-				EP.appendChild(SP);
-				EP.appendChild(EPContent);
-				
-				range.setStart(SPContent, 3);
-				range.setEnd(EPContent, 5);
-				
-				expect(range.startContainer).not.toEqual(EP);
-				expect(extractor.legalRange(range).startContainer).toEqual(EP);
-			});
-			
-		it("should return a range surrounding the ancestor elements, iff they are different children of the common ancestor", function () {
-				CA.appendChild(SP);
-				CA.appendChild(EP);
-				SP.appendChild(SPContent);
-				EP.appendChild(EPContent);
-				range.setStart(SPContent, 3);
-				range.setEnd(EPContent, 5);
-				
-				expect(extractor.legalRange(range).startContainer).toBe(CA);
-				expect(extractor.legalRange(range).endContainer).toBe(CA);
-			}); 
-			
 	});
 });
