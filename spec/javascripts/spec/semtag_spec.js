@@ -1,14 +1,28 @@
 /*global describe: false, expect: false, it: false, semtag: false, beforeEach: false, afterEach: false, document: false, body: false*/
-describe("SemTag", function () {
+describe("SemTag - Extractor", function () {
 	"use strict";
-	var extractor;
+	var extractor,
+		container;
+
 	beforeEach(function () {
-		extractor = semtag("content", "tag").extractor;
+		container = document.body;
+		extractor = semtag(container, "trigger").extractor;
 	});
-	it("should construct with no less than two arguments", function () {
-		expect(function () {semtag(); }).toThrow({name : "MissingArgumentsException", message : "Function requires both a valid text and trigger argument"});
-		expect(function () {semtag("content"); }).toThrow({name : "MissingArgumentsException", message : "Function requires both a valid text and trigger argument"});
-		expect(function () {semtag("content", "tag"); }).not.toThrow({name : "MissingArgumentsException", message : "Function requires both a valid text and trigger argument"});
+	it("should only construct with two or three arguments", function () {
+		expect(function () {semtag(); }).toThrow({name : "MissingArgumentsException", message : "Function requires both a valid container and trigger argument"});
+		expect(function () {semtag(container); }).toThrow({name : "MissingArgumentsException", message : "Function requires both a valid container and trigger argument"});
+		expect(function () {semtag(container, "trigger"); }).not.toThrow({name : "MissingArgumentsException", message : "Function requires both a valid container and trigger argument"});
+		expect(function () {semtag(container, "trigger", {}); }).not.toThrow({name : "MissingArgumentsException", message : "Function requires both a valid container and trigger argument"});
+		expect(function () {semtag(container, "trigger", {}, "other"); }).toThrow({name : "MissingArgumentsException", message : "Function requires both a valid container and trigger argument"});
+	});
+	it("Should require a HTMLElement as  its first argument", function () {
+		var id = document.createElement("span");
+		id.setAttribute("id", "idObject");
+		document.body.appendChild(id);
+		expect(function () {semtag("Not a HTMLNode", "trigger"); }).toThrow({name : "InvalidTypeException", message : "Container must be a HTMLElement"});
+		expect(function () {semtag(document.body, "trigger"); }).not.toThrow({name : "InvalidTypeException", message : "Container must be a HTMLElement"});
+		expect(function () {semtag(id, "trigger"); }).not.toThrow({name : "InvalidTypeException", message : "Container must be a HTMLElement"});
+		document.body.removeChild(id);
 	});
 	describe("it should check if a node is the descendant of another node or if the nodes are equal", function () {
 		var body,
@@ -155,11 +169,55 @@ describe("SemTag", function () {
 		it("Element returned should be an ancestor of the content of the input", function () {
 			expect(extractor.surround(df)).hasDescendant(content);
 		});
-		it("Should allow the user to select the surrounding tag type", function () {
-			expect(extractor.surround(df, "span").nodeName).toContain("SPAN");
+		it("should allow the user to select the surrounding tag type (via constructor)", function () {
+			var options = {tagName : "SPAN"}
+			extractor = semtag(container, "trigger", options).extractor;
+			expect(extractor.surround(df).tagName).toContain(options.tagName);
+			
+			options = {tagName : "DIV"}
+			extractor = semtag(container, "trigger", options).extractor;
+			expect(extractor.surround(df).tagName).toContain(options.tagName);
 		});
-		it("Should allow the user to select the surrounding tag class", function () {
-			expect(extractor.surround(df, "span", "semtag").className).toContain("semtag");
+		it("should allow the user to select the surrounding tag class (via constructor)", function () {
+			var options = {className : "semtag"}
+			extractor = semtag(container, "trigger", options).extractor;
+			expect(extractor.surround(df).className).toContain(options.className);
+		});
+	});
+	describe("it should extract the selected ranges", function () {
+		var tags = [],
+			notTags = [],
+			numberOfTags = 4,
+			numberNotTags = 4,
+			element,
+			i,
+			totalElements = numberOfTags + numberNotTags;
+		beforeEach(function () {
+			for (i = 0; i < numberOfTags; i += 1) {
+				element = document.createElement("span");
+				element.setAttribute("class", "semtag");
+				document.body.appendChild(element);
+				tags.push(element);
+			}
+			for (i = 0; i < numberOfTags; i += 1) {
+				element = document.createElement("span");
+				element.setAttribute("class", "not-semtag");
+				document.body.appendChild(element);
+				notTags.push(element);
+			}
+		});
+		afterEach(function () {
+			for (i = 0; i < tags.length; i += 1) {
+				document.body.removeChild(tags[i]);
+			}
+			tags = [];
+			for (i = 0; i < notTags.length; i += 1) {
+				document.body.removeChild(notTags[i]);
+			}
+			notTags = [];
+		});
+		it("should return an array with the elements", function () {
+			expect(extractor.extract().length).toBe(numberOfTags);
 		});
 	});
 });
