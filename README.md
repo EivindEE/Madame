@@ -1,5 +1,8 @@
 SemTag
 =============================
+
+# Homepage
+You can view this projects homepage on [eelseth.github.com/SemTag](eelseth.github.com/SemTag)
 # Tests
 To run the tests for this project, open `/spec/SpecRunner.html`.
 The tests will then be run in your browser. 
