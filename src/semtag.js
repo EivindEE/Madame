@@ -1,0 +1,68 @@
+/*jslint browser: true */
+var semtag = function (container, trigger, options) {
+	"use strict";
+	if (arguments.length !== 2 && arguments.length !== 3 ) {
+		throw {name : "MissingArgumentsException", message : "Function requires both a valid container and trigger argument"};
+	}
+	if (!(container instanceof HTMLElement)) {
+		throw {name : "InvalidTypeException", message : "Container must be a HTMLElement"};
+	}
+	var that = { extractor: {}},
+		closestChild = function (node, descendant) {
+			var parent;
+			if (descendant.parentElement) {
+				parent = descendant.parentElement;
+				if (node === parent) {
+					return descendant;
+				}
+				return closestChild(node, parent);
+			}
+			return false;
+		},
+		options = options || {},
+		elementType = options.tagName || "span",
+		className = options.className || "semtag";
+	that.extractor.ancestorOrSelf = function (ancestor, descendant) {
+		if (ancestor === descendant) {
+			return true;
+		}
+		if (descendant.parentNode) {
+			return this.ancestorOrSelf(ancestor, descendant.parentNode);
+		}
+		return false;
+	};
+	that.extractor.legalRange = function (range) {
+		var newRange = range.cloneRange(),
+			child;
+		if (range.startContainer === range.endContainer) {
+			return newRange;
+		}
+		child = closestChild(range.startContainer.parentElement, range.endContainer.parentElement);
+		if (child) {
+			newRange.setEndAfter(child);
+			return newRange;
+		}
+		child = closestChild(range.endContainer.parentElement, range.startContainer.parentElement);
+		if (child) {
+			newRange.setStartBefore(child);
+			return newRange;
+		}
+		newRange.setStartBefore(range.startContainer.parentElement);
+		newRange.setEndAfter(range.endContainer.parentElement);
+		return newRange;
+	};
+	that.extractor.surround = function (fragment) {
+		if (!fragment) {
+			throw {name: "MissingArgumentsException", message: "Function requires a range object to surround with tags"};
+		}
+		var tag = document.createElement(elementType);
+		tag.className = className;
+		tag.appendChild(fragment);
+		return tag;
+	};
+	
+	that.extractor.extract = function () {		
+		return container.getElementsByClassName(className);
+	};
+	return that;
+};
