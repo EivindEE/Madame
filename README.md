@@ -1,5 +1,11 @@
 SemTag
 =============================
+# Tests
+To run the tests for this project, open /spec/SpecRunner.html.
+The tests will then be run in your browser. 
+This package will be tested on Safari, Chrome and FireFox as these are the ones I have access to.
+Support for IE might be added at a later time.
+
 # Purpose of SemTagExtractor
 
 SemTagExtractor should take a pice of text, let the user mark the parts that have an important semantic meaning,
