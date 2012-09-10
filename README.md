@@ -5,7 +5,29 @@ SemTag
 SemTagExtractor should take a pice of text, let the user mark the parts that have an important semantic meaning,
 and extract these parts for further processing.
 
+Special care needs to be taken with the ranges of the selection. 
+Since we need to insert the meta data into tags we can't just use the user range without some checks.
+Consider the case:
+
+`<p>`some text <span style="background: lightblue;"> in a p`</p> <p>` pluss some </span>  other text `</p>`
+
+If we simply inserted a tag we would get invalid HTML:
+
+`<p>`some text `<tag>` in a p`</p> <p>` pluss some `</tag>`  other text `</p>`
+
+To get a well formed HTML document we need to either close and open the HTML tags
+
+`<p>`some text `</p><tag><p>` in a p`</p> <p>` pluss some ``</p></tag><p>`  other text `</p>`
+
+which would change the meaning and probably the layout of the document or we could expand the range of the selection:
+
+`<tag><p>`some text in a p`</p>` `<p>` pluss some   other text `</p></tag>`
+
+extending the range in this way should conserve the meaning of the original markup and still have the selected text in scope.
+
+
 ## Initial specifications for semtag.js:
+
 * semtag should be constructed by giving the id of the element containing the text, and the id of the trigger.
 * When the trigger is pressed the selected text should tagged for extraction
 
@@ -46,6 +68,10 @@ All functions are assumed to be run in the browser, with access to the global do
 	@param ancestor: HTMLElement, the element to check if is ancestor
 	@return true iff descendant is a descendant of ancestor
 	```
-
+	
+* Extract tags
+	```
+	@return a list containing the selected ranges in the container
+	```
 	
 	
