@@ -14,7 +14,7 @@ describe("SemTag - Extractor", function () {
 		expect(function () {semtag(container, "trigger", {}); }).not.toThrow({name : "MissingArgumentsException", message : "Function requires both a valid container and trigger argument"});
 		expect(function () {semtag(container, "trigger", {}, "other"); }).not.toThrow({name : "MissingArgumentsException", message : "Function requires both a valid container and trigger argument"});
 	});
-	it("Should require a HTMLElement as  its first argument", function () {
+	it("should require a HTMLElement as  its first argument", function () {
 		var id = document.createElement("span");
 		id.setAttribute("id", "idObject");
 		document.body.appendChild(id);
