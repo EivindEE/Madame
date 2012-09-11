@@ -1,7 +1,8 @@
 /*jslint browser: true */
+/*global HTMLElement: true*/
 var semtag = function (container, trigger, options) {
 	"use strict";
-	if (arguments.length !== 2 && arguments.length !== 3 ) {
+	if (!(container && trigger)) {
 		throw {name : "MissingArgumentsException", message : "Function requires both a valid container and trigger argument"};
 	}
 	if (!(container instanceof HTMLElement)) {
@@ -19,9 +20,13 @@ var semtag = function (container, trigger, options) {
 			}
 			return false;
 		},
-		options = options || {},
-		elementType = options.tagName || "span",
-		className = options.className || "semtag";
+		elementType,
+		className;
+
+	options = options || {};
+	elementType  = options.tagName || "span";
+	className = options.className || "semtag";
+
 	that.extractor.ancestorOrSelf = function (ancestor, descendant) {
 		if (ancestor === descendant) {
 			return true;
@@ -60,9 +65,16 @@ var semtag = function (container, trigger, options) {
 		tag.appendChild(fragment);
 		return tag;
 	};
-	
-	that.extractor.extract = function () {		
-		return container.getElementsByClassName(className);
+
+	that.extractor.extract = function () {
+		var i,
+			elements = [],
+			nodes =  container.getElementsByClassName(className),
+			nodenum = nodes.length;
+		for (i = 0; i < nodenum; i += 1) {
+			elements[i] = nodes[i];
+		}
+		return elements;
 	};
 	return that;
 };

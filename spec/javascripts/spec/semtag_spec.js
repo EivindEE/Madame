@@ -3,17 +3,16 @@ describe("SemTag - Extractor", function () {
 	"use strict";
 	var extractor,
 		container;
-
 	beforeEach(function () {
 		container = document.body;
 		extractor = semtag(container, "trigger").extractor;
 	});
-	it("should only construct with two or three arguments", function () {
+	it("should construct with two or three arguments, and ignore further arguments", function () {
 		expect(function () {semtag(); }).toThrow({name : "MissingArgumentsException", message : "Function requires both a valid container and trigger argument"});
 		expect(function () {semtag(container); }).toThrow({name : "MissingArgumentsException", message : "Function requires both a valid container and trigger argument"});
 		expect(function () {semtag(container, "trigger"); }).not.toThrow({name : "MissingArgumentsException", message : "Function requires both a valid container and trigger argument"});
 		expect(function () {semtag(container, "trigger", {}); }).not.toThrow({name : "MissingArgumentsException", message : "Function requires both a valid container and trigger argument"});
-		expect(function () {semtag(container, "trigger", {}, "other"); }).toThrow({name : "MissingArgumentsException", message : "Function requires both a valid container and trigger argument"});
+		expect(function () {semtag(container, "trigger", {}, "other"); }).not.toThrow({name : "MissingArgumentsException", message : "Function requires both a valid container and trigger argument"});
 	});
 	it("Should require a HTMLElement as  its first argument", function () {
 		var id = document.createElement("span");
@@ -170,16 +169,15 @@ describe("SemTag - Extractor", function () {
 			expect(extractor.surround(df)).hasDescendant(content);
 		});
 		it("should allow the user to select the surrounding tag type (via constructor)", function () {
-			var options = {tagName : "SPAN"}
+			var options = {tagName : "SPAN"};
 			extractor = semtag(container, "trigger", options).extractor;
 			expect(extractor.surround(df).tagName).toContain(options.tagName);
-			
-			options = {tagName : "DIV"}
+			options = {tagName : "DIV"};
 			extractor = semtag(container, "trigger", options).extractor;
 			expect(extractor.surround(df).tagName).toContain(options.tagName);
 		});
 		it("should allow the user to select the surrounding tag class (via constructor)", function () {
-			var options = {className : "semtag"}
+			var options = {className : "semtag"};
 			extractor = semtag(container, "trigger", options).extractor;
 			expect(extractor.surround(df).className).toContain(options.className);
 		});
@@ -191,7 +189,16 @@ describe("SemTag - Extractor", function () {
 			numberNotTags = 4,
 			element,
 			i,
-			totalElements = numberOfTags + numberNotTags;
+			totalElements = numberOfTags + numberNotTags,
+			contains = function (item, list) {
+				var i;
+				for (i = 0; i < list.length; i += 1) {
+					if (item === list[i]) {
+						return true;
+					}
+				}
+				return false;
+			};
 		beforeEach(function () {
 			for (i = 0; i < numberOfTags; i += 1) {
 				element = document.createElement("span");
@@ -205,6 +212,26 @@ describe("SemTag - Extractor", function () {
 				document.body.appendChild(element);
 				notTags.push(element);
 			}
+			this.addMatchers({
+				toContainAll : function (expected) {
+					var i;
+					for (i = 0; i < expected.length; i += 1) {
+						if (!contains(expected[i], this.actual)) {
+							return false;
+						}
+					}
+					return true;
+				},
+				toContainNone : function (expected) {
+					var i;
+					for (i = 0; i < expected.length; i += 1) {
+						if (contains(expected[i], this.actual)) {
+							return false;
+						}
+					}
+					return true;
+				}
+			});
 		});
 		afterEach(function () {
 			for (i = 0; i < tags.length; i += 1) {
@@ -216,8 +243,14 @@ describe("SemTag - Extractor", function () {
 			}
 			notTags = [];
 		});
-		it("should return an array with the elements", function () {
+		it("should return an array with the correct number of elements elements", function () {
 			expect(extractor.extract().length).toBe(numberOfTags);
+		});
+		it("should include all the tagged elements", function () {
+			expect(extractor.extract()).toContainAll(tags);
+		});
+		it("should include none of the untagged elements", function () {
+			expect(extractor.extract()).toContainNone(notTags);
 		});
 	});
 });
