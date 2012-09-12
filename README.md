@@ -1,5 +1,5 @@
 SemTag
-=============================
+============================
 
 # Homepage
 You can view this projects homepage on [eelseth.github.com/SemTag](http://eivindee.github.com/SemTag)
