@@ -20,11 +20,11 @@ var semtag = function (container, trigger, options) {
 			}
 			return false;
 		},
-		elementType,
+		nodeName,
 		className;
 
 	options = options || {};
-	elementType  = options.tagName || "span";
+	nodeName  = options.nodeName || "span";
 	className = options.className || "semtag";
 
 	that.extractor.ancestorOrSelf = function (ancestor, descendant) {
@@ -60,7 +60,7 @@ var semtag = function (container, trigger, options) {
 		if (!fragment) {
 			throw {name: "MissingArgumentsException", message: "Function requires a range object to surround with tags"};
 		}
-		var tag = document.createElement(elementType);
+		var tag = document.createElement(nodeName);
 		tag.className = className;
 		tag.appendChild(fragment);
 		return tag;
@@ -76,5 +76,22 @@ var semtag = function (container, trigger, options) {
 		}
 		return elements;
 	};
+	
+	that.extractor.tagSelection = function () {
+		var sel = window.getSelection(),
+			range,
+			content,
+			el;
+		if (sel.rangeCount > 0) {
+			range = sel.getRangeAt(0);
+			content = range.extractContents();
+			el = that.extractor.surround(content);
+			return el;
+		}
+		el = document.createElement(nodeName);
+		el.className = className;
+		return el;
+	};
+	
 	return that;
 };
