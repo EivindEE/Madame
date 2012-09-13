@@ -56,19 +56,19 @@ and extract these parts for further processing.</p>
 Since we need to insert the meta data into tags we can't just use the user range without some checks.
 Consider the case:</p>
 
-<p><pre><code>&lt;p&gt;</code></pre>some text <span style="background-color:rgba(100,150,155,0.5);"> in a p<pre><code>&lt;/p&gt; &lt;p&gt;</code></pre> pluss some </span>  other text <pre><code>&lt;/p&gt;</code></pre></p>
+<p><code>&lt;p&gt;</code>some text <span style="background-color:rgba(100,150,155,0.5);"> in a p<code>&lt;/p&gt; &lt;p&gt;</code> pluss some </span>  other text <code>&lt;/p&gt;</code></p>
 
 <p>If we simply inserted a tag we would get invalid HTML:</p>
 
-<p><pre><code>&lt;p&gt;</code></pre>some text <pre><code>&lt;tag&gt;</code></pre> in a p<pre><code>&lt;/p&gt; &lt;p&gt;</code></pre> pluss some <pre><code>&lt;/tag&gt;</code></pre>  other text <pre><code>&lt;/p&gt;</code></pre></p>
+<p><code>&lt;p&gt;</code>some text <code>&lt;tag&gt;</code> in a p<code>&lt;/p&gt; &lt;p&gt;</code> pluss some <code>&lt;/tag&gt;</code>  other text <code>&lt;/p&gt;</code></p>
 
 <p>To get a well formed HTML document we need to either close and open the HTML tags</p>
 
-<p><pre><code>&lt;p&gt;</code></pre>some text <pre><code>&lt;/p&gt;&lt;tag&gt;&lt;p&gt;</code></pre> in a p<pre><code>&lt;/p&gt; &lt;p&gt;</code></pre> pluss some <pre><code>`&lt;/p&gt;&lt;/tag&gt;&lt;p&gt;</code></pre>  other text <pre><code>&lt;/p&gt;</code></pre></p>
+<p><code>&lt;p&gt;</code>some text <code>&lt;/p&gt;&lt;tag&gt;&lt;p&gt;</code> in a p<code>&lt;/p&gt; &lt;p&gt;</code> pluss some <code>`&lt;/p&gt;&lt;/tag&gt;&lt;p&gt;</code>  other text <code>&lt;/p&gt;</code></p>
 
 <p>which would change the meaning and probably the layout of the document or we could expand the range of the selection:</p>
 
-<p><pre><code>&lt;tag&gt;&lt;p&gt;</code></pre>some text in a p<pre><code>&lt;/p&gt;</code></pre> <pre><code>&lt;p&gt;</code></pre> pluss some   other text <pre><code>&lt;/p&gt;&lt;/tag&gt;</code></pre></p>
+<p><code>&lt;tag&gt;&lt;p&gt;</code>some text in a p<code>&lt;/p&gt;</code> <code>&lt;p&gt;</code> pluss some   other text <code>&lt;/p&gt;&lt;/tag&gt;</code></p>
 
 <p>extending the range in this way should conserve the meaning of the original markup and still have the selected text in scope.</p>
 
