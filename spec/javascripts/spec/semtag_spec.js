@@ -257,18 +257,35 @@ describe("SemTag - Extractor", function () {
 			expect(extractor.extract()).toContainNone(notTags);
 		});
 	});
-	describe(" should tag a selection of HTML", function () {
+	describe(" should tag a selection of document", function () {
 		var pNode,
+			firstTextNode,
 			textNode,
+			lastTextNode,
 			selection,
-			range;
+			range,
+			parent, 
+			outsideText;
 		beforeEach(function () {
 			selection = window.getSelection();
 			range = document.createRange();
+			parent = document.createElement("div");
+			parent.setAttribute("id", "container");
 			pNode = document.createElement("p");
-			textNode = document.createTextNode("01234567890123456789");
+			pNode.setAttribute("id", "paragraph");
+			firstTextNode = document.createTextNode("first text node");
+			textNode = document.createTextNode("middle text node");
+			lastTextNode = document.createTextNode("last text node");
+			outsideText = document.createTextNode("outside text node");
+
 			pNode.appendChild(textNode);
-			document.body.appendChild(pNode);
+			parent.appendChild(firstTextNode);
+			parent.appendChild(pNode);
+			parent.appendChild(lastTextNode);
+
+			document.body.appendChild(parent);
+			document.body.appendChild(outsideText);
+			
 			this.addMatchers({
 				toBeInstanceOf: function (type) {
 					return this.actual instanceof type;
@@ -276,13 +293,13 @@ describe("SemTag - Extractor", function () {
 			});
 		});
 		afterEach(function () {
-			document.body.removeChild(pNode);
-		});
-		it(" should be defined", function () {
-			expect(extractor.tagSelection).toBeDefined();
+			document.body.removeChild(parent);
+			document.body.removeChild(outsideText);
+			selection.removeAllRanges();
 		});
 		
 		it(" should return the new semtag Element", function () {
+			selection.addRange(range);
 			expect(extractor.tagSelection()).toBeInstanceOf(HTMLElement);
 			expect(extractor.tagSelection().className).toBe(options.className);
 			expect(extractor.tagSelection().nodeName).toBe(options.nodeName);
@@ -295,6 +312,38 @@ describe("SemTag - Extractor", function () {
 			contents = range.cloneContents();
 			selection.addRange(range);
 			expect(extractor.tagSelection().childNodes[0].textContent).toEqual(contents.childNodes[0].textContent);
+		});
+		
+		it(" should be a direct parent if selection is a single node", function () {
+			var contents;
+			range.setStartBefore(pNode);
+			range.setEndAfter(pNode);
+			contents = range.cloneContents();
+
+			selection.addRange(range);
+			expect(extractor.tagSelection().childNodes[1].getAttribute("id")).toEqual(contents.childNodes[0].getAttribute("id"));
+		});
+		
+		it(" should throw an exception if selection is outside of container", function () {
+			container = document.getElementById(parent.getAttribute("id"));
+			extractor = semtag(container, "trigger").extractor;
+
+			range.setStart(outsideText, 1);
+			range.setEnd(outsideText, 5);
+			selection.addRange(range);
+			expect(function () {extractor.tagSelection();}).toThrow({name: "InvalidSelectionException", message: "Selection is outside of the scope of the semtag container"});
+			
+			selection.removeAllRanges();
+			
+			range.setStart(outsideText, 1);
+			range.setEndAfter(parent);
+			selection.addRange(range);
+			expect(function () {extractor.tagSelection();}).toThrow({name: "InvalidSelectionException", message: "Selection is outside of the scope of the semtag container"});
+			
+		});
+		
+		it(" should tag the selected section of the document", function () {
+			expect(container.getElementsByClassName("semtag").length).toBe(0);
 		});
 	});
 });
