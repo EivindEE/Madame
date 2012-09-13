@@ -42,7 +42,7 @@
 
 <h1>Tests</h1>
 
-<p>To run the tests for this project, open <code>/spec/SpecRunner.html</code> or click <a href="http://eivindee.github.com/SemTag/spec/SpecRunner.html">here</a>.
+<p>To run the tests for this project, open <pre><code>/spec/SpecRunner.html</code></pre> or click <a href="http://eivindee.github.com/SemTag/spec/SpecRunner.html">here</a>.
 The tests will then be run in your browser. 
 This package will be tested on Safari, Chrome and FireFox as these are the ones I have access to.
 Support for IE might be added at a later time.</p>
@@ -56,19 +56,19 @@ and extract these parts for further processing.</p>
 Since we need to insert the meta data into tags we can't just use the user range without some checks.
 Consider the case:</p>
 
-<p><code>&lt;p&gt;</code>some text <span style="background-color:rgba(100,150,155,0.5);"> in a p<code>&lt;/p&gt; &lt;p&gt;</code> pluss some </span>  other text <code>&lt;/p&gt;</code></p>
+<p><pre><code>&lt;p&gt;</code></pre>some text <span style="background-color:rgba(100,150,155,0.5);"> in a p<pre><code>&lt;/p&gt; &lt;p&gt;</code></pre> pluss some </span>  other text <pre><code>&lt;/p&gt;</code></pre></p>
 
 <p>If we simply inserted a tag we would get invalid HTML:</p>
 
-<p><code>&lt;p&gt;</code>some text <code>&lt;tag&gt;</code> in a p<code>&lt;/p&gt; &lt;p&gt;</code> pluss some <code>&lt;/tag&gt;</code>  other text <code>&lt;/p&gt;</code></p>
+<p><pre><code>&lt;p&gt;</code></pre>some text <pre><code>&lt;tag&gt;</code></pre> in a p<pre><code>&lt;/p&gt; &lt;p&gt;</code></pre> pluss some <pre><code>&lt;/tag&gt;</code></pre>  other text <pre><code>&lt;/p&gt;</code></pre></p>
 
 <p>To get a well formed HTML document we need to either close and open the HTML tags</p>
 
-<p><code>&lt;p&gt;</code>some text <code>&lt;/p&gt;&lt;tag&gt;&lt;p&gt;</code> in a p<code>&lt;/p&gt; &lt;p&gt;</code> pluss some <code>`&lt;/p&gt;&lt;/tag&gt;&lt;p&gt;</code>  other text <code>&lt;/p&gt;</code></p>
+<p><pre><code>&lt;p&gt;</code></pre>some text <pre><code>&lt;/p&gt;&lt;tag&gt;&lt;p&gt;</code></pre> in a p<pre><code>&lt;/p&gt; &lt;p&gt;</code></pre> pluss some <pre><code>`&lt;/p&gt;&lt;/tag&gt;&lt;p&gt;</code></pre>  other text <pre><code>&lt;/p&gt;</code></pre></p>
 
 <p>which would change the meaning and probably the layout of the document or we could expand the range of the selection:</p>
 
-<p><code>&lt;tag&gt;&lt;p&gt;</code>some text in a p<code>&lt;/p&gt;</code> <code>&lt;p&gt;</code> pluss some   other text <code>&lt;/p&gt;&lt;/tag&gt;</code></p>
+<p><pre><code>&lt;tag&gt;&lt;p&gt;</code></pre>some text in a p<pre><code>&lt;/p&gt;</code></pre> <pre><code>&lt;p&gt;</code></pre> pluss some   other text <pre><code>&lt;/p&gt;&lt;/tag&gt;</code></pre></p>
 
 <p>extending the range in this way should conserve the meaning of the original markup and still have the selected text in scope.</p>
 
@@ -95,29 +95,29 @@ if they are the same node. If they are not, then surround the nodes with a tag.<
 
 <ul>
 <li><p>Find correct scope
-<code>
+<pre><code>
 @param range: Range, the Range object containing the selected text
 @return Range, a range object containing the range which should be tagged
-</code></p></li>
+</code></pre></p></li>
 <li><p>Surround DocumentFragment with tags</p>
 
-<p><code>
+<p><pre><code>
 @param range: Range, the range to be surrounded with tags
 @param string: tag, the name of the tag to be created(default: span) 
 @param string: className, the name of the class the tag should be given(default: none)
 @return a Element object containing the tagged text
-</code></p></li>
+</code></pre></p></li>
 <li><p>Ancestor or self (to make sure we only tag the content) </p>
 
-<p><code>
+<p><pre><code>
 @param descendant: Object with ancestor, the object to check if has ancestor (must have a parentNode attribute!)
 @param ancestor: HTMLElement, the element to check if is ancestor
 @return true iff descendant is a descendant of ancestor
-</code></p></li>
+</code></pre></p></li>
 <li><p>Extract tags
-<code>
+<pre><code>
 @return a list containing the selected ranges in the container
-</code></p></li>
+</code></pre></p></li>
 </ul>
     <!--[if !IE]><script>fixScale(document);</script><![endif]-->
     
