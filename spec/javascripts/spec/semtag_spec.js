@@ -299,6 +299,8 @@ describe("SemTag - Extractor", function () {
 		});
 		
 		it(" should return the new semtag Element", function () {
+			range.setStart(firstTextNode,0);
+			range.setEnd(firstTextNode,1);
 			selection.addRange(range);
 			expect(extractor.tagSelection()).toBeInstanceOf(HTMLElement);
 			expect(extractor.tagSelection().className).toBe(options.className);
@@ -344,6 +346,13 @@ describe("SemTag - Extractor", function () {
 		
 		it(" should tag the selected section of the document", function () {
 			expect(container.getElementsByClassName("semtag").length).toBe(0);
+			
+			range.setStartBefore(pNode);
+			range.setEndAfter(pNode);
+			selection.addRange(range);
+			extractor.tagSelection();
+			expect(container.getElementsByClassName("semtag").length).toBe(1);
+			
 		});
 	});
 });
