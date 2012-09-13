@@ -55,7 +55,7 @@ if they are the same node. If they are not, then surround the nodes with a tag.
 ## Proposed functions
 All functions are assumed to be run in the browser, with access to the global document and window objects.
 
-* Find correct scope
+* Find a legal range
 	```
 	@param range: Range, the Range object containing the selected text
 	@return Range, a range object containing the range which should be tagged
@@ -66,7 +66,7 @@ All functions are assumed to be run in the browser, with access to the global do
 	```
 	@param range: Range, the range to be surrounded with tags
 	@param string: tag, the name of the tag to be created(default: span) 
-	@param string: className, the name of the class the tag should be given(default: none)
+	@param string: className, the name of the class the tag should be given(default: semtag)
 	@return a Element object containing the tagged text
 	```
 
@@ -82,5 +82,14 @@ All functions are assumed to be run in the browser, with access to the global do
 	```
 	@return a list containing the selected ranges in the container
 	```
-	
-	
+
+* Surround the current selection with tags
+	```
+	@sideEffect selection surrounded with element
+	@return the newly created Element
+	```
+
+* Correct selected range if not a legal range
+	```
+	@sideEffect current selection changed to legal selection
+	```
