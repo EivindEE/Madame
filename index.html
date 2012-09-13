@@ -95,28 +95,24 @@ if they are the same node. If they are not, then surround the nodes with a tag.<
 
 <ul>
 <li><p>Find correct scope
-<pre><code>
-@param range: Range, the Range object containing the selected text
+<pre><code>@param range: Range, the Range object containing the selected text
 @return Range, a range object containing the range which should be tagged
 </code></pre></p></li>
 <li><p>Surround DocumentFragment with tags</p>
 
-<p><pre><code>
-@param range: Range, the range to be surrounded with tags
+<p><pre><code>@param range: Range, the range to be surrounded with tags
 @param string: tag, the name of the tag to be created(default: span) 
 @param string: className, the name of the class the tag should be given(default: none)
 @return a Element object containing the tagged text
 </code></pre></p></li>
 <li><p>Ancestor or self (to make sure we only tag the content) </p>
 
-<p><pre><code>
-@param descendant: Object with ancestor, the object to check if has ancestor (must have a parentNode attribute!)
+<p><pre><code>@param descendant: Object with ancestor, the object to check if has ancestor (must have a parentNode attribute!)
 @param ancestor: HTMLElement, the element to check if is ancestor
 @return true iff descendant is a descendant of ancestor
 </code></pre></p></li>
 <li><p>Extract tags
-<pre><code>
-@return a list containing the selected ranges in the container
+<pre><code>@return a list containing the selected ranges in the container
 </code></pre></p></li>
 </ul>
     <!--[if !IE]><script>fixScale(document);</script><![endif]-->
