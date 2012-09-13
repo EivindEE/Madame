@@ -84,13 +84,14 @@ var semtag = function (container, trigger, options) {
 			el;
 		if (sel.rangeCount > 0) {
 			range = sel.getRangeAt(0);
+			if (!(that.extractor.ancestorOrSelf(container, range.commonAncestorContainer))) {
+				throw {name: "InvalidSelectionException", message: "Selection is outside of the scope of the semtag container"};
+			}
 			content = range.extractContents();
 			el = that.extractor.surround(content);
 			return el;
-		}
-		el = document.createElement(nodeName);
-		el.className = className;
-		return el;
+		}	
+		throw {name: "InvalidSelectionException", message: "Function should not be called when nothing is selected"};
 	};
 	
 	return that;
