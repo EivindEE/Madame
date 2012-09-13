@@ -89,6 +89,7 @@ var semtag = function (container, trigger, options) {
 			}
 			content = range.extractContents();
 			el = that.extractor.surround(content);
+			range.insertNode(el);
 			return el;
 		}	
 		throw {name: "InvalidSelectionException", message: "Function should not be called when nothing is selected"};
