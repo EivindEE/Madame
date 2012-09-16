@@ -76,7 +76,7 @@ var semtag = function (container, trigger, options) {
 		}
 		return elements;
 	};
-	
+
 	that.extractor.tagSelection = function () {
 		var sel = window.getSelection(),
 			range,
@@ -91,9 +91,23 @@ var semtag = function (container, trigger, options) {
 			el = that.extractor.surround(content);
 			range.insertNode(el);
 			return el;
-		}	
+		}
 		throw {name: "InvalidSelectionException", message: "Function should not be called when nothing is selected"};
 	};
-	
+
+	that.extractor.correctSelection = function () {
+		var selection = window.getSelection(),
+			range;
+
+		if (selection.rangeCount > 0) {
+			range = selection.getRangeAt(0);
+			if (that.extractor.ancestorOrSelf(container, range.startContainer) && that.extractor.ancestorOrSelf(container, range.endContainer)) {
+				return "stuff";
+			}
+			throw {name: "InvalidSelectionException", message: "Selection must be fully within the container"};
+		}
+
+	};
+
 	return that;
 };

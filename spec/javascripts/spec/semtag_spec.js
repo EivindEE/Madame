@@ -1,4 +1,4 @@
-/*global describe: false, expect: false, it: false, semtag: false, beforeEach: false, afterEach: false, document: false, body: false*/
+/*global describe: false, expect: false, it: false, semtag: false, beforeEach: false, afterEach: false, document: false, body: false, window: false, HTMLElement: false*/
 describe("SemTag - Extractor", function () {
 	"use strict";
 	var extractor,
@@ -264,7 +264,7 @@ describe("SemTag - Extractor", function () {
 			lastTextNode,
 			selection,
 			range,
-			parent, 
+			parent,
 			outsideText;
 		beforeEach(function () {
 			selection = window.getSelection();
@@ -277,15 +277,12 @@ describe("SemTag - Extractor", function () {
 			textNode = document.createTextNode("middle text node");
 			lastTextNode = document.createTextNode("last text node");
 			outsideText = document.createTextNode("outside text node");
-
 			pNode.appendChild(textNode);
 			parent.appendChild(firstTextNode);
 			parent.appendChild(pNode);
 			parent.appendChild(lastTextNode);
-
 			document.body.appendChild(parent);
 			document.body.appendChild(outsideText);
-			
 			this.addMatchers({
 				toBeInstanceOf: function (type) {
 					return this.actual instanceof type;
@@ -297,16 +294,14 @@ describe("SemTag - Extractor", function () {
 			document.body.removeChild(outsideText);
 			selection.removeAllRanges();
 		});
-		
 		it(" should return the new semtag Element", function () {
-			range.setStart(firstTextNode,0);
-			range.setEnd(firstTextNode,1);
+			range.setStart(firstTextNode, 0);
+			range.setEnd(firstTextNode, 1);
 			selection.addRange(range);
 			expect(extractor.tagSelection()).toBeInstanceOf(HTMLElement);
 			expect(extractor.tagSelection().className).toBe(options.className);
 			expect(extractor.tagSelection().nodeName).toBe(options.nodeName);
 		});
-		
 		it(" should be a direct parent if selection is within a single text node", function () {
 			var contents;
 			range.setStart(textNode, 0);
@@ -315,44 +310,98 @@ describe("SemTag - Extractor", function () {
 			selection.addRange(range);
 			expect(extractor.tagSelection().childNodes[0].textContent).toEqual(contents.childNodes[0].textContent);
 		});
-		
 		it(" should be a direct parent if selection is a single node", function () {
 			var contents;
 			range.setStartBefore(pNode);
 			range.setEndAfter(pNode);
 			contents = range.cloneContents();
-
 			selection.addRange(range);
 			expect(extractor.tagSelection().childNodes[1].getAttribute("id")).toEqual(contents.childNodes[0].getAttribute("id"));
 		});
-		
 		it(" should throw an exception if selection is outside of container", function () {
 			container = document.getElementById(parent.getAttribute("id"));
 			extractor = semtag(container, "trigger").extractor;
-
 			range.setStart(outsideText, 1);
 			range.setEnd(outsideText, 5);
 			selection.addRange(range);
-			expect(function () {extractor.tagSelection();}).toThrow({name: "InvalidSelectionException", message: "Selection is outside of the scope of the semtag container"});
-			
+			expect(function () {extractor.tagSelection(); }).toThrow({name: "InvalidSelectionException", message: "Selection is outside of the scope of the semtag container"});
 			selection.removeAllRanges();
-			
 			range.setStart(outsideText, 1);
 			range.setEndAfter(parent);
 			selection.addRange(range);
-			expect(function () {extractor.tagSelection();}).toThrow({name: "InvalidSelectionException", message: "Selection is outside of the scope of the semtag container"});
-			
+			expect(function () {extractor.tagSelection(); }).toThrow({name: "InvalidSelectionException", message: "Selection is outside of the scope of the semtag container"});
 		});
-		
 		it(" should tag the selected section of the document", function () {
 			expect(container.getElementsByClassName("semtag").length).toBe(0);
-			
 			range.setStartBefore(pNode);
 			range.setEndAfter(pNode);
 			selection.addRange(range);
 			extractor.tagSelection();
 			expect(container.getElementsByClassName("semtag").length).toBe(1);
-			
+		});
+	});
+	describe(" should correct the selected range iff it's not a legal range and iff the selection is within the container", function () {
+		var beforeContainer,
+			beforeContainerText,
+			container,
+			beforePNodeText,
+			pNode,
+			pNodeText,
+			afterPNodeText,
+			afterContainer,
+			afterContainerText,
+			partialyContained,
+			fullyContained,
+			selection,
+			range;
+		beforeEach(function () {
+			beforeContainer = document.createElement("DIV");
+			beforeContainerText = document.createTextNode("before container text");
+			container = document.createElement("DIV");
+			beforePNodeText = document.createTextNode("before pNode text");
+			pNode = document.createElement("P");
+			pNodeText = document.createTextNode("paragraph text node");
+			afterPNodeText = document.createTextNode("after paragraph text node");
+			afterContainer = document.createElement("DIV");
+			afterContainerText = document.createTextNode("before container text");
+			partialyContained = true;
+			fullyContained = false;
+			beforeContainer.appendChild(beforeContainerText);
+			container.appendChild(beforePNodeText);
+			pNode.appendChild(pNodeText);
+			container.appendChild(pNode);
+			container.appendChild(afterPNodeText);
+			afterContainer.appendChild(afterContainerText);
+			document.body.appendChild(beforeContainer);
+			document.body.appendChild(container);
+			document.body.appendChild(afterContainer);
+			extractor = semtag(container, "trigger").extractor;
+			selection = window.getSelection();
+			range = document.createRange();
+		});
+		afterEach(function () {
+			document.body.removeChild(beforeContainer);
+			document.body.removeChild(container);
+			document.body.removeChild(afterContainer);
+			selection.removeAllRanges();
+		});
+		it(" should throw an exception if the start ( anchor) of the selection is outside of the container", function () {
+			range.setStart(beforeContainerText, 0);
+			range.setEnd(beforePNodeText, 3);
+			selection.addRange(range);
+			expect(function () {extractor.correctSelection(); }).toThrow({name: "InvalidSelectionException", message: "Selection must be fully within the container"});
+		});
+		it(" should not throw an exception if both the start and end ( anchor and focus) of the selection are within the container", function () {
+			range.setStart(beforePNodeText, 0);
+			range.setEnd(afterPNodeText, 5);
+			selection.addRange(range);
+			expect(function () {extractor.correctSelection(); }).not.toThrow({name: "InvalidSelectionException", message: "Selection must be fully within the container"});
+		});
+		it(" should throw an exception if the end ( focus) of the selection is outside of the container", function () {
+			range.setStart(beforePNodeText, 3);
+			range.setEnd(afterContainerText, 2);
+			selection.addRange(range);
+			expect(function () {extractor.correctSelection(); }).toThrow({name: "InvalidSelectionException", message: "Selection must be fully within the container"});
 		});
 	});
 });
