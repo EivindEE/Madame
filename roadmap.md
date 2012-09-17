@@ -9,6 +9,7 @@ Roadmap
 * Write function which will allow user to add natural language tags to these sections
 
 # Second sprint
+
 * Add mapping to wordnet for disambiguation
 * Add synsets to selection
 * Create a HTML document with the new meta information
