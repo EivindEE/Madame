@@ -42,14 +42,14 @@ var semtag = function (container, trigger, options) {
 		if (range.startContainer === range.endContainer) {
 			return newRange;
 		}
-		child = closestChild(range.startContainer.parentElement, range.endContainer.parentElement);
-		if (child) {
-			newRange.setEndAfter(child);
-			return newRange;
-		}
 		child = closestChild(range.endContainer.parentElement, range.startContainer.parentElement);
 		if (child) {
 			newRange.setStartBefore(child);
+			return newRange;
+		}
+		child = closestChild(range.startContainer.parentElement, range.endContainer.parentElement);
+		if (child) {
+			newRange.setEndAfter(child);
 			return newRange;
 		}
 		newRange.setStartBefore(range.startContainer.parentElement);
@@ -97,12 +97,20 @@ var semtag = function (container, trigger, options) {
 
 	that.extractor.correctSelection = function () {
 		var selection = window.getSelection(),
-			range;
+			range,
+			rangeStart,
+			rangeEnd;
 
 		if (selection.rangeCount > 0) {
 			range = selection.getRangeAt(0);
-			if (that.extractor.ancestorOrSelf(container, range.startContainer) && that.extractor.ancestorOrSelf(container, range.endContainer)) {
-				return "stuff";
+			rangeStart = range.startContainer;
+			rangeEnd = range.endContainer;
+			if (that.extractor.ancestorOrSelf(container, rangeStart) && that.extractor.ancestorOrSelf(container, rangeEnd)) {
+				if ( rangeStart.parentElement !== rangeEnd.parentElement) {
+					range = that.extractor.legalRange(range);
+					return range;
+				}
+				return range;
 			}
 			throw {name: "InvalidSelectionException", message: "Selection must be fully within the container"};
 		}

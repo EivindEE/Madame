@@ -347,6 +347,9 @@ describe("SemTag - Extractor", function () {
 			beforePNodeText,
 			pNode,
 			pNodeText,
+			innerPNode,
+			innerPNodeText,
+			pNodeTextLast,
 			afterPNodeText,
 			afterContainer,
 			afterContainerText,
@@ -361,6 +364,9 @@ describe("SemTag - Extractor", function () {
 			beforePNodeText = document.createTextNode("before pNode text");
 			pNode = document.createElement("P");
 			pNodeText = document.createTextNode("paragraph text node");
+			innerPNode = document.createElement("P");
+			innerPNodeText = document.createTextNode("inner paragraph text node");
+			pNodeTextLast = document.createTextNode("last paragraph text node");
 			afterPNodeText = document.createTextNode("after paragraph text node");
 			afterContainer = document.createElement("DIV");
 			afterContainerText = document.createTextNode("before container text");
@@ -369,6 +375,9 @@ describe("SemTag - Extractor", function () {
 			beforeContainer.appendChild(beforeContainerText);
 			container.appendChild(beforePNodeText);
 			pNode.appendChild(pNodeText);
+			innerPNode.appendChild(innerPNodeText);
+			pNode.appendChild(innerPNode);
+			pNode.appendChild(pNodeTextLast);
 			container.appendChild(pNode);
 			container.appendChild(afterPNodeText);
 			afterContainer.appendChild(afterContainerText);
@@ -378,6 +387,27 @@ describe("SemTag - Extractor", function () {
 			extractor = semtag(container, "trigger").extractor;
 			selection = window.getSelection();
 			range = document.createRange();
+			
+			this.addMatchers({
+				commonParentAncestor: function (expected) {
+					var start = this.actual.startContainer.nodeName !== "#text" ? 
+								this.actual.startContainer : this.actual.startContainer.parentNode ,
+						end = this.actual.endContainer.nodeName !== "#text" ? 
+								 this.actual.endContainer : this.actual.endContainer.parentNode;
+					this.message = function () {
+						var message = "";
+						if (start !== expected) {
+							message = "Start was in:" + start;
+						}
+						if (end !== expected) {
+							message += " End was in:" + end;
+						}
+						return message + ", should be :" + expected;
+					};
+					
+					return start === expected && end === expected;
+				}
+			});
 		});
 		afterEach(function () {
 			document.body.removeChild(beforeContainer);
@@ -402,6 +432,45 @@ describe("SemTag - Extractor", function () {
 			range.setEnd(afterContainerText, 2);
 			selection.addRange(range);
 			expect(function () {extractor.correctSelection(); }).toThrow({name: "InvalidSelectionException", message: "Selection must be fully within the container"});
+		});
+		
+		it(" should not modify and return the range if the start and end of the selection is in the same node", function () {
+			range.setStart(beforePNodeText, 0);
+			range.setEnd(beforePNodeText, 2);
+			selection.addRange(range);
+			expect(extractor.correctSelection()).toEqual(range);
+			expect(selection.getRangeAt(0)).toEqual(range);
+		});
+		
+		it(" should leave range the same and return if the start and end are children of the same node", function () {
+			range.setStart(beforePNodeText, 0);
+			range.setEnd(afterPNodeText, 0);
+			selection.addRange(range);
+			expect(extractor.correctSelection()).toEqual(range);
+			expect(selection.getRangeAt(0)).toEqual(range);
+		});
+		
+		it(" should change the range, if the start and end are not children of the same node", function () {
+			range.setStart(beforePNodeText, 0);
+			range.setEnd(pNodeText, 2);
+			selection.addRange(range);
+			expect(selection.containsNode(pNode, partialyContained)).toBeTruthy();
+			expect(selection.containsNode(pNode, fullyContained)).toBeFalsy();
+			expect(extractor.correctSelection()).commonParentAncestor(container);
+		});
+		
+		it(" should change the range, if the start is in a child of ends parent", function () {
+			range.setStart(innerPNodeText, 0);
+			range.setEnd(pNodeTextLast, 2);
+			selection.addRange(range);
+			expect(extractor.correctSelection()).commonParentAncestor(pNode);
+		});
+		
+		it(" should change the range, if the end is in a child of starts parent", function () {
+			range.setStart(pNodeText, 0);
+			range.setEnd(innerPNodeText, 2);
+			selection.addRange(range);
+			expect(extractor.correctSelection()).commonParentAncestor(pNode);
 		});
 	});
 });
