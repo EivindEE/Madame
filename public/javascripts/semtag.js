@@ -2,7 +2,8 @@
 /*global HTMLElement: true*/
 var semtag = function (container, trigger, options) {
 	"use strict";
-	if (!(container && trigger)) {
+	console.dir(container);
+	if (!container) {
 		throw {name : "MissingArgumentsException", message : "Function requires both a valid container and trigger argument"};
 	}
 	if (!(container instanceof HTMLElement)) {
@@ -106,7 +107,7 @@ var semtag = function (container, trigger, options) {
 			rangeStart = range.startContainer;
 			rangeEnd = range.endContainer;
 			if (that.extractor.ancestorOrSelf(container, rangeStart) && that.extractor.ancestorOrSelf(container, rangeEnd)) {
-				if ( rangeStart.parentElement !== rangeEnd.parentElement) {
+				if (rangeStart.parentElement !== rangeEnd.parentElement) {
 					range = that.extractor.legalRange(range);
 					return range;
 				}

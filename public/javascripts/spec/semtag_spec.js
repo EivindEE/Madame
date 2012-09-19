@@ -11,9 +11,9 @@ describe("SemTag - Extractor", function () {
 		container = document.body;
 		extractor = semtag(container, "trigger", options).extractor;
 	});
-	it(" should construct with two or three arguments, and ignore further arguments", function () {
+	it(" should construct with provided container, should accept trigger and options", function () {
 		expect(function () {semtag(); }).toThrow({name : "MissingArgumentsException", message : "Function requires both a valid container and trigger argument"});
-		expect(function () {semtag(container); }).toThrow({name : "MissingArgumentsException", message : "Function requires both a valid container and trigger argument"});
+		expect(function () {semtag(container); }).not.toThrow({name : "MissingArgumentsException", message : "Function requires both a valid container and trigger argument"});
 		expect(function () {semtag(container, "trigger"); }).not.toThrow({name : "MissingArgumentsException", message : "Function requires both a valid container and trigger argument"});
 		expect(function () {semtag(container, "trigger", {}); }).not.toThrow({name : "MissingArgumentsException", message : "Function requires both a valid container and trigger argument"});
 		expect(function () {semtag(container, "trigger", {}, "other"); }).not.toThrow({name : "MissingArgumentsException", message : "Function requires both a valid container and trigger argument"});

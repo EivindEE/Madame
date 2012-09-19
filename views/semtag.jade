@@ -1,8 +1,23 @@
-html
-  include includes/head
-  script(src="javascripts/semtag.js")
-  body
-    h1 #{title}
-    p Where you can tag you content with words
-    iframe(src="http://ap.no")
-    include includes/foot
+html(lang="en")
+	head
+		include includes/head
+	body
+		header.jumbotron
+			div.container
+				h1 #{title}
+
+		div.container
+			div.row
+				p.span12 Where you can tag you content with words
+			div.row
+				p.span4 Write the url of the page you want to tag:
+				div.input-append
+					input(type="text", placeholder="URL...", size="20")
+					button.add-on.btn Open Page
+			div.row
+				p.span4
+			div.row
+				iframe(src="http://localhost:3000/test")#container.span12
+			include includes/foot
+			script(src="javascripts/semtag.js")
+			script(src="javascripts/semtag-setup.js")
