@@ -109,6 +109,8 @@ var semtag = function (container, trigger, options) {
 			if (that.extractor.ancestorOrSelf(container, rangeStart) && that.extractor.ancestorOrSelf(container, rangeEnd)) {
 				if (rangeStart.parentElement !== rangeEnd.parentElement) {
 					range = that.extractor.legalRange(range);
+					selection.removeAllRanges();
+					selection.addRange(range);
 					return range;
 				}
 				return range;
