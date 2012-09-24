@@ -38,9 +38,13 @@ var semtag = function (container, trigger, options) {
 		return false;
 	};
 	that.extractor.legalRange = function (range) {
+		console.log("Legal range called");
 		var newRange = range.cloneRange(),
-			child;
+			child,
+			start,
+			end;
 		if (range.startContainer === range.endContainer) {
+
 			return newRange;
 		}
 		child = closestChild(range.endContainer.parentElement, range.startContainer.parentElement);
@@ -51,11 +55,15 @@ var semtag = function (container, trigger, options) {
 		child = closestChild(range.startContainer.parentElement, range.endContainer.parentElement);
 		if (child) {
 			newRange.setEndAfter(child);
+			console.log(newRange);
 			return newRange;
 		}
-		newRange.setStartBefore(range.startContainer.parentElement);
-		newRange.setEndAfter(range.endContainer.parentElement);
+		start = closestChild(range.commonAncestorContainer, range.startContainer.parentElement);
+		end = closestChild(range.commonAncestorContainer, range.endContainer.parentElement);
+		newRange.setStartBefore(start);
+		newRange.setEndAfter(end);
 		return newRange;
+		
 	};
 	that.extractor.surround = function (fragment) {
 		if (!fragment) {
