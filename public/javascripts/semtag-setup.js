@@ -1,7 +1,7 @@
 /*global document */
 
 var semtag = semtag || {};
-semtag.setup = function (container) {
+semtag.setup = function (container, trigger) {
 	"use strict";
 	var container,
 		tagger;
@@ -11,7 +11,8 @@ semtag.setup = function (container) {
 //	console.dir(container.contentDocument);
 //	console.log(container.contentDocument.getElementsByTagName("body"));
 	tagger = semtag(container, "trigger");
-	container.onmouseup = function () {tagger.extractor.correctSelection(); console.log("corrected")};
+	container.onmouseup = function () {tagger.extractor.correctSelection();};
+	trigger.onmouseup = function () {tagger.extractor.tagSelection();};
 };
 
-semtag.setup(document.body);
+semtag.setup(document.body, document.getElementById("tag"));

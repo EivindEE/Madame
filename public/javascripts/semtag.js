@@ -55,11 +55,10 @@ var semtag = function (container, trigger, options) {
 		child = closestChild(range.startContainer.parentElement, range.endContainer.parentElement);
 		if (child) {
 			newRange.setEndAfter(child);
-			console.log(newRange);
 			return newRange;
 		}
-		start = closestChild(range.commonAncestorContainer, range.startContainer.parentElement);
-		end = closestChild(range.commonAncestorContainer, range.endContainer.parentElement);
+		start = closestChild(range.commonAncestorContainer, range.startContainer);
+		end = closestChild(range.commonAncestorContainer, range.endContainer);
 		newRange.setStartBefore(start);
 		newRange.setEndAfter(end);
 		return newRange;
