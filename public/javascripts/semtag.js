@@ -2,7 +2,6 @@
 /*global HTMLElement: true*/
 var semtag = function (container, trigger, options) {
 	"use strict";
-	console.dir(container);
 	if (!container) {
 		throw {name : "MissingArgumentsException", message : "Function requires both a valid container and trigger argument"};
 	}
@@ -22,7 +21,8 @@ var semtag = function (container, trigger, options) {
 			return false;
 		},
 		nodeName,
-		className;
+		className,
+		idCounter = 0;
 
 	options = options || {};
 	nodeName  = options.nodeName || "span";
@@ -38,7 +38,6 @@ var semtag = function (container, trigger, options) {
 		return false;
 	};
 	that.extractor.legalRange = function (range) {
-		console.log("Legal range called");
 		var newRange = range.cloneRange(),
 			child,
 			start,
@@ -70,6 +69,8 @@ var semtag = function (container, trigger, options) {
 		}
 		var tag = document.createElement(nodeName);
 		tag.className = className;
+		tag.setAttribute("id", className + idCounter);
+		idCounter += 1;
 		tag.appendChild(fragment);
 		return tag;
 	};
@@ -80,7 +81,7 @@ var semtag = function (container, trigger, options) {
 			nodes =  container.getElementsByClassName(className),
 			nodenum = nodes.length;
 		for (i = 0; i < nodenum; i += 1) {
-			elements[i] = nodes[i];
+			elements[i] = nodes[i].cloneNode(true);
 		}
 		return elements;
 	};

@@ -1,0 +1,36 @@
+@mixin rounded($side, $radius: 10px) {
+  border-#{$side}-radius: $radius;
+  -moz-border-radius-#{$side}: $radius;
+  -webkit-border-#{$side}-radius: $radius;
+}
+
+
+@mixin border($width: 1px, $radius: 3px, $style: solid, $color: black, $side: "") {
+	border-style : $style;
+	border-width: $width;
+	-webkit-border-radius: $radius;
+	-moz-border-radius: $radius;
+	border-radius: $radius;
+	border-color: $color;
+}
+
+@mixin border-top($width: 1px, $radius: 3px, $style: solid, $color: black, $side: "") {
+	border-top-style : $style;
+	border-top-width: $width;
+	-webkit-border-top-radius: $radius;
+	-moz-border-top-radius: $radius;
+	border-top-radius: $radius;
+	border-top-color: $color;
+}
+iframe {
+	height: 50em;
+	@include border(3 px);
+}
+
+.container {
+	min-height: 700 px;
+}
+
+#extracted:not(:empty), .footer {
+	@include border-top(2px, 3px, solid, black);
+}

@@ -1,7 +1,25 @@
+/* line 25, scss/style.scss */
 iframe {
   height: 50em;
   border-style: solid;
-  border-width: 2 px;
+  border-width: 3 px;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
-  border-radius: 3px; }
+  border-radius: 3px;
+  border-color: black;
+}
+
+/* line 30, scss/style.scss */
+.container {
+  min-height: 700 px;
+}
+
+/* line 34, scss/style.scss */
+#extracted:not(:empty), .footer {
+  border-top-style: solid;
+  border-top-width: 2px;
+  -webkit-border-top-radius: 3px;
+  -moz-border-top-radius: 3px;
+  border-top-radius: 3px;
+  border-top-color: black;
+}
