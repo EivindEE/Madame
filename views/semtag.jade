@@ -8,9 +8,7 @@ html(
 		include includes/head
 	body(
 	)
-		header.jumbotron
-			div.container
-				h1(property="foaf:name") #{title}
+		include includes/header
 
 		div.container
 			div.row
@@ -28,6 +26,8 @@ html(
 					p Short ribs chuck pancetta tail beef <em> shank venison.</em>Hamburger meatball jerky prosciutto swine ham meatloaf. Meatloaf ground round biltong cow brisket drumstick ball tip flank prosciutto swine boudin pork belly ham kielbasa pig. Ground round pork loin frankfurter chicken.
 					p Ribeye flank turkey meatball pig chuck t-bone shank filet mignon strip steak beef ribs jowl pork belly ball tip. Frankfurter beef ribs jerky strip steak, tongue ball tip ribeye. Hamburger andouille tri-tip pork chop filet mignon, pork loin short ribs tail pastrami boudin brisket turkey ball tip jerky. Turkey jowl bresaola pork sirloin meatloaf chicken flank jerky turducken cow meatball tail.
 					p Filet mignon beef turducken, strip steak fatback flank turkey rump tongue pork loin corned beef pancetta pig. Pork chop tail bacon chicken drumstick prosciutto fatback pastrami beef ribs strip steak ham pork loin pancetta. Tenderloin fatback beef ribs pancetta ham pork belly turkey biltong pork sirloin salami strip steak. Prosciutto pork loin jerky frankfurter, meatloaf turducken salami bresaola short ribs kielbasa. Pancetta ground round meatloaf chuck hamburger. Beef ribs beef turducken t-bone jowl venison. Sausage pork belly turducken pig sirloin.
-			include includes/foot
-			script(src="javascripts/semtag.js")
-			script(src="javascripts/semtag-setup.js")
+			div.row
+				div.span12#extracted
+		include includes/foot
+		script(src="javascripts/semtag.js")
+		script(src="javascripts/semtag-setup.js")

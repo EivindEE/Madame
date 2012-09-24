@@ -1,0 +1,16 @@
+doctype 5
+html( 
+	prefix="rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns# dc: http://purl.org/dc/elements/1.1/ foaf: http://xmlns.com/foaf/0.1/"
+	)
+	head
+		include includes/head
+	body
+		include includes/header
+		div.container
+			div.row
+				p.span12 The aim of this project is the further development and testing of a method for the automatic derivation of wordnets (semantic nets, concept nets - i.e., semantically classified lexical databases) from translational corpora. The method has been developed by Helge Dyvik.
+				p.span12 Wordnets are a language technology resource of increasing importance, with several applications. Among other things, they allow content-based information retrieval, automatic logical inference, and improved machine translation. Parallel corpora are text collections consisting of originals and translations in two or more languages, where the originals and their translations have been aligned on the level of sentences, or more rarely also on the level of words.
+				p.span12 The method takes translational correspondences from a parallel corpus as a starting point. On the basis of the network of translational correspondences, word senses are distinguished and semantic relations are calculated automatically, e.g. hypero- vs. hyponyms ( animal vs. dog , good vs. kind ), and the result is represented in a complex lattice structure. The aim of the project is to apply and test the method on a large scale against a Norwegian/English parallel corpus (ENPC). This involves among other things word alignment of the corpus, extraction and processing of data from the corpora, and evaluation of the algorithms and the derived lattices.
+				p.span12 A successful result would mean that parts of the work towards the development of wordnets can be automatised.
+		include includes/foot
+		script()
