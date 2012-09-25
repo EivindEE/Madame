@@ -4,6 +4,7 @@ html(
 	)
 	head
 		include includes/head
+
 	body
 		include includes/header
 		div.container
@@ -13,4 +14,5 @@ html(
 				p.span12 The method takes translational correspondences from a parallel corpus as a starting point. On the basis of the network of translational correspondences, word senses are distinguished and semantic relations are calculated automatically, e.g. hypero- vs. hyponyms ( animal vs. dog , good vs. kind ), and the result is represented in a complex lattice structure. The aim of the project is to apply and test the method on a large scale against a Norwegian/English parallel corpus (ENPC). This involves among other things word alignment of the corpus, extraction and processing of data from the corpora, and evaluation of the algorithms and the derived lattices.
 				p.span12 A successful result would mean that parts of the work towards the development of wordnets can be automatised.
 		include includes/foot
-		script()
+		script(src="javascripts/components/jquery/jquery.js")
+		script(src="javascripts/sw-semtag.js")
