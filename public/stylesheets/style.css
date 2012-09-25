@@ -1,4 +1,4 @@
-/* line 25, scss/style.scss */
+/* line 28, scss/style.scss */
 iframe {
   height: 50em;
   border-style: solid;
@@ -9,12 +9,17 @@ iframe {
   border-color: black;
 }
 
-/* line 30, scss/style.scss */
+/* line 33, scss/style.scss */
 .container {
   min-height: 700 px;
+  width: 0;
+  height: 0;
+  border-bottom: 120px solid black;
+  border-left: 60px solid transparent;
+  border-right: 60px solid transparent;
 }
 
-/* line 34, scss/style.scss */
+/* line 38, scss/style.scss */
 #extracted:not(:empty), .footer {
   border-top-style: solid;
   border-top-width: 2px;

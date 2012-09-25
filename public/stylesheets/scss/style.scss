@@ -1,3 +1,5 @@
+@import "includes/shapes";
+
 @mixin rounded($side, $radius: 10px) {
   border-#{$side}-radius: $radius;
   -moz-border-radius-#{$side}: $radius;
@@ -22,6 +24,7 @@
 	border-top-radius: $radius;
 	border-top-color: $color;
 }
+
 iframe {
 	height: 50em;
 	@include border(3 px);
@@ -29,6 +32,7 @@ iframe {
 
 .container {
 	min-height: 700 px;
+	@include up-triangle();
 }
 
 #extracted:not(:empty), .footer {

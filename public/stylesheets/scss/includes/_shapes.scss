@@ -1,0 +1,125 @@
+@mixin circle ($radius: 100px, $color: black) { 
+   width: $radius;
+   height: $radius;
+   background: $color; 
+   -moz-border-radius: ($radius/2); 
+   -webkit-border-radius: ($radius/2); 
+   border-radius: ($radius/2);
+}
+
+
+
+@mixin square ($sides: 40px, $color: black) {
+   width: $sides; 
+   height: $sides; 
+   background: $color; 
+}
+
+
+
+
+@mixin oval  ($width: 200px, $height: 100px, $color: black) {
+   width: $width; 
+   height: $height; 
+   background: $color; 
+   -moz-border-radius: #{$height} / #{$height / 2};
+   -webkit-border-radius: #{$height} / #{$height / 2};
+   border-radius: #{$height} / #{$height / 2};
+}
+
+
+
+
+@mixin up-triangle  ($height: 120px, $width: 120px, $color: black) {
+   width: 0; 
+   height: 0; 
+   border-bottom: $height solid $color; 
+   border-left: $width / 2 solid transparent; 
+   border-right: $width / 2 solid transparent; 
+}
+
+
+
+
+@mixin down-triangle  ($height: 120px, $width: 120px, $color: black) { 
+   width: 0; 
+   height: 0;
+   border-top: $height solid $color;
+   border-left: $width / 2 solid transparent; 
+   border-right: $width / 2 solid transparent; 
+}
+
+ 
+
+
+@mixin left-triangle  ($height: 120px, $width: 120px, $color: black) {
+   width: 0;
+   height: 0;
+   border-right: $height solid $color;
+   border-top: $width / 2 solid transparent;
+   border-bottom: $width / 2 solid transparent;
+}
+
+
+
+
+@mixin right-triangle  ($height: 120px, $width: 120px, $color: black) {
+   width: 0;
+   height: 0;
+   border-left: $height solid red;
+   border-top: $width / 2 solid transparent;
+   border-bottom: $width / 2 solid transparent;
+}
+
+
+
+
+@mixin trapezium  ($flattness: 80px, $extention: 80px, $color: black) {
+   height: 0; 
+   width: $flattness;
+   border-bottom: $flattness solid blue;
+   border-left: $extention solid transparent;
+   border-right: $extention solid transparent;
+}
+
+
+
+
+@mixin diamond  ($height : 80px, $width: 80px, $color: black) {
+   width: $width; 
+   height: $height; 
+   background: $color;
+   margin: 3px 0 0 30px;
+   /* Rotate */
+   -webkit-transform: rotate(-45deg);
+   -moz-transform: rotate(-45deg);
+   -ms-transform: rotate(-45deg);
+   -o-transform: rotate(-45deg);
+   transform: rotate(-45deg);
+   /* Rotate Origin */
+   -webkit-transform-origin: 0 100%;
+   -moz-transform-origin: 0 100%;
+   -ms-transform-origin: 0 100%;
+   -o-transform-origin: 0 100%;
+   transform-origin: 0 100%;
+}
+
+@mixin rectangle  ($height: 80px, $width: 140px, $color: black ) {
+   width: $width; 
+   height: $height;
+   background: $color;
+}
+
+
+
+
+@mixin parallelogram   ( $height: 80px, $width: 140px, $skew: 20deg, $color: black) {
+   width: $width; 
+   height: $height;
+   background: $color;
+   /* Skew */
+   -webkit-transform: skew($skew); 
+   -moz-transform: skew($skew); 
+   -o-transform: skew($skew);
+   transform: skew($skew);
+}
