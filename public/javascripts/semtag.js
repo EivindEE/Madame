@@ -1,9 +1,9 @@
 /*jslint browser: true */
 /*global HTMLElement: true*/
-var semtag = function (container, trigger, options) {
+var semtag = function (container, options) {
 	"use strict";
 	if (!container) {
-		throw {name : "MissingArgumentsException", message : "Function requires both a valid container and trigger argument"};
+		throw {name : "MissingArgumentsException", message : "Function requires a valid container argument"};
 	}
 	if (!(container instanceof HTMLElement)) {
 		throw {name : "InvalidTypeException", message : "Container must be a HTMLElement"};
@@ -28,7 +28,7 @@ var semtag = function (container, trigger, options) {
 	nodeName  = options.nodeName || "span";
 	className = options.className || "semtag";
 
-	that.extractor.ancestorOrSelf = function (ancestor, descendant) {
+	that.ancestorOrSelf = function (ancestor, descendant) {
 		if (ancestor === descendant) {
 			return true;
 		}
@@ -37,7 +37,7 @@ var semtag = function (container, trigger, options) {
 		}
 		return false;
 	};
-	that.extractor.legalRange = function (range) {
+	that.legalRange = function (range) {
 		var newRange = range.cloneRange(),
 			child,
 			start,
@@ -63,7 +63,7 @@ var semtag = function (container, trigger, options) {
 		return newRange;
 		
 	};
-	that.extractor.surround = function (fragment) {
+	that.surround = function (fragment) {
 		if (!fragment) {
 			throw {name: "MissingArgumentsException", message: "Function requires a range object to surround with tags"};
 		}
@@ -75,7 +75,7 @@ var semtag = function (container, trigger, options) {
 		return tag;
 	};
 
-	that.extractor.extract = function () {
+	that.extract = function () {
 		var i,
 			elements = [],
 			nodes =  container.getElementsByClassName(className),
@@ -86,25 +86,25 @@ var semtag = function (container, trigger, options) {
 		return elements;
 	};
 
-	that.extractor.tagSelection = function () {
+	that.tagSelection = function () {
 		var sel = window.getSelection(),
 			range,
 			content,
 			el;
 		if (sel.rangeCount > 0) {
 			range = sel.getRangeAt(0);
-			if (!(that.extractor.ancestorOrSelf(container, range.commonAncestorContainer))) {
+			if (!(that.ancestorOrSelf(container, range.commonAncestorContainer))) {
 				throw {name: "InvalidSelectionException", message: "Selection is outside of the scope of the semtag container"};
 			}
 			content = range.extractContents();
-			el = that.extractor.surround(content);
+			el = that.surround(content);
 			range.insertNode(el);
 			return el;
 		}
 		throw {name: "InvalidSelectionException", message: "Function should not be called when nothing is selected"};
 	};
 
-	that.extractor.correctSelection = function () {
+	that.correctSelection = function () {
 		var selection = window.getSelection(),
 			range,
 			rangeStart,
@@ -114,9 +114,9 @@ var semtag = function (container, trigger, options) {
 			range = selection.getRangeAt(0);
 			rangeStart = range.startContainer;
 			rangeEnd = range.endContainer;
-			if (that.extractor.ancestorOrSelf(container, rangeStart) && that.extractor.ancestorOrSelf(container, rangeEnd)) {
+			if (that.ancestorOrSelf(container, rangeStart) && that.ancestorOrSelf(container, rangeEnd)) {
 				if (rangeStart.parentElement !== rangeEnd.parentElement) {
-					range = that.extractor.legalRange(range);
+					range = that.legalRange(range);
 					selection.removeAllRanges();
 					selection.addRange(range);
 					return range;

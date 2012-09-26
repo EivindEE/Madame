@@ -9,22 +9,22 @@ describe("SemTag - Extractor", function () {
 		};
 	beforeEach(function () {
 		container = document.body;
-		extractor = semtag(container, "trigger", options).extractor;
+		extractor = semtag(container, options);
 	});
-	it(" should construct with provided container, should accept trigger and options", function () {
-		expect(function () {semtag(); }).toThrow({name : "MissingArgumentsException", message : "Function requires both a valid container and trigger argument"});
-		expect(function () {semtag(container); }).not.toThrow({name : "MissingArgumentsException", message : "Function requires both a valid container and trigger argument"});
-		expect(function () {semtag(container, "trigger"); }).not.toThrow({name : "MissingArgumentsException", message : "Function requires both a valid container and trigger argument"});
-		expect(function () {semtag(container, "trigger", {}); }).not.toThrow({name : "MissingArgumentsException", message : "Function requires both a valid container and trigger argument"});
-		expect(function () {semtag(container, "trigger", {}, "other"); }).not.toThrow({name : "MissingArgumentsException", message : "Function requires both a valid container and trigger argument"});
+	it(" should construct with provided container, should accept options", function () {
+		var exception = {name : "MissingArgumentsException", message : "Function requires a valid container argument"};
+		expect(function () {semtag(); }).toThrow(exception);
+		expect(function () {semtag(container); }).not.toThrow(exception);
+		expect(function () {semtag(container, {}); }).not.toThrow(exception);
+		expect(function () {semtag(container, {}, "other"); }).not.toThrow(exception);
 	});
 	it(" should require a HTMLElement as  its first argument", function () {
 		var id = document.createElement("span");
 		id.setAttribute("id", "idObject");
 		document.body.appendChild(id);
-		expect(function () {semtag("Not a HTMLNode", "trigger"); }).toThrow({name : "InvalidTypeException", message : "Container must be a HTMLElement"});
-		expect(function () {semtag(document.body, "trigger"); }).not.toThrow({name : "InvalidTypeException", message : "Container must be a HTMLElement"});
-		expect(function () {semtag(id, "trigger"); }).not.toThrow({name : "InvalidTypeException", message : "Container must be a HTMLElement"});
+		expect(function () {semtag("Not a HTMLNode"); }).toThrow({name : "InvalidTypeException", message : "Container must be a HTMLElement"});
+		expect(function () {semtag(document.body); }).not.toThrow({name : "InvalidTypeException", message : "Container must be a HTMLElement"});
+		expect(function () {semtag(id); }).not.toThrow({name : "InvalidTypeException", message : "Container must be a HTMLElement"});
 		document.body.removeChild(id);
 	});
 	describe("it should check if a node is the descendant of another node or if the nodes are equal", function () {
@@ -174,15 +174,15 @@ describe("SemTag - Extractor", function () {
 		});
 		it(" should allow the user to select the surrounding tag type (via constructor)", function () {
 			var options = {nodeName : "SPAN"};
-			extractor = semtag(container, "trigger", options).extractor;
+			extractor = semtag(container, options);
 			expect(extractor.surround(df).tagName).toContain(options.nodeName);
 			options = {nodeName : "DIV"};
-			extractor = semtag(container, "trigger", options).extractor;
+			extractor = semtag(container, options);
 			expect(extractor.surround(df).tagName).toContain(options.nodeName);
 		});
 		it(" should allow the user to select the surrounding tag class (via constructor)", function () {
 			var options = {className : "semtag"};
-			extractor = semtag(container, "trigger", options).extractor;
+			extractor = semtag(container, options);
 			expect(extractor.surround(df).className).toContain(options.className);
 		});
 	});
@@ -320,7 +320,7 @@ describe("SemTag - Extractor", function () {
 		});
 		it(" should throw an exception if selection is outside of container", function () {
 			container = document.getElementById(parent.getAttribute("id"));
-			extractor = semtag(container, "trigger").extractor;
+			extractor = semtag(container);
 			range.setStart(outsideText, 1);
 			range.setEnd(outsideText, 5);
 			selection.addRange(range);
@@ -384,7 +384,7 @@ describe("SemTag - Extractor", function () {
 			document.body.appendChild(beforeContainer);
 			document.body.appendChild(container);
 			document.body.appendChild(afterContainer);
-			extractor = semtag(container, "trigger").extractor;
+			extractor = semtag(container);
 			selection = window.getSelection();
 			range = document.createRange();
 			
