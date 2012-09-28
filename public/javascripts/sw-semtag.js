@@ -14,6 +14,20 @@ semtag.buildTag = function (id, parentId, options) {
 	return el;
 };
 
+semtag.getId = function (content) {
+	var id,
+		baseString,
+		counter = 1;
+	baseString = 'semtag-' + content.replace(/ /g, '_') + '-';
+	id =  baseString + counter;
+	while (document.getElementById(id)){
+		console.log(id);
+		counter += 1;
+		id =  baseString + counter;
+	}
+	return id;
+};
+
 semtag.buildDidYouMeanTable = function (json, tableId) {
 	var didYouMean,
 		sensCount = json.senses.length,
@@ -40,13 +54,17 @@ semtag.buildDidYouMeanTable = function (json, tableId) {
 		
 		$('.word-sense').click( function () {
 			var toTag,
-				sense;
+				sense,
+				id;
+
 			toTag = document.getElementById('toTag');
+			id = semtag.getId(toTag.textContent);
 			sense = this.getAttribute('id');
-			toTag.removeAttribute('id');
-			toTag.setAttribute('about', sense);
-			toTag.setAttribute('property', 'http://dbpedia.org/page/Meaning_(linguistics)');
+			toTag.setAttribute('id', id);
+			toTag.setAttribute('rel', 'http://purl.org/linguistics/gold/hasMeaning');
 			toTag.setAttribute('title', this.textContent);
+			toTag.setAttribute('resource', sense);
+			toTag.setAttribute('about', document.URL + '#' + id);
 			toTag.className = 'tagged';
 			didYouMean.parentNode.removeChild(didYouMean);
 		});
