@@ -1,7 +1,7 @@
 /*global describe: false, expect: false, it: false, semtag: false, beforeEach: false, afterEach: false, document: false, body: false, window: false, HTMLElement: false*/
-describe("SemTag - Extractor", function () {
+describe("SemTag - semTag", function () {
 	"use strict";
-	var extractor,
+	var semTag,
 		container,
 		options = {
 			nodeName : "SPAN",
@@ -9,7 +9,7 @@ describe("SemTag - Extractor", function () {
 		};
 	beforeEach(function () {
 		container = document.body;
-		extractor = semtag(container, options);
+		semTag = semtag(container, options);
 	});
 	it(" should construct with provided container, should accept options", function () {
 		var exception = {name : "MissingArgumentsException", message : "Function requires a valid container argument"};
@@ -52,19 +52,19 @@ describe("SemTag - Extractor", function () {
 			body.removeChild(notDescendant);
 		});
 		it(" should return true if the nodes are the same", function () {
-			expect(extractor.ancestorOrSelf(ancestor, ancestor)).toBe(true);
+			expect(semTag.ancestorOrSelf(ancestor, ancestor)).toBe(true);
 		});
 		it(" should return false if the node is not a descendant", function () {
-			expect(extractor.ancestorOrSelf(ancestor, notDescendant)).toBe(false);
+			expect(semTag.ancestorOrSelf(ancestor, notDescendant)).toBe(false);
 		});
 		it(" should return true if the node is a child", function () {
-			expect(extractor.ancestorOrSelf(ancestor, child)).toBe(true);
+			expect(semTag.ancestorOrSelf(ancestor, child)).toBe(true);
 		});
 		it(" should return true if the node is a descendant", function () {
-			expect(extractor.ancestorOrSelf(ancestor, descendant)).toBe(true);
+			expect(semTag.ancestorOrSelf(ancestor, descendant)).toBe(true);
 		});
 		it(" should return true if a text node is a descendant", function () {
-			expect(extractor.ancestorOrSelf(ancestor, textDescendant)).toBe(true);
+			expect(semTag.ancestorOrSelf(ancestor, textDescendant)).toBe(true);
 		});
 	});
 	describe("it should provide a minimal legal range", function () {
@@ -94,12 +94,12 @@ describe("SemTag - Extractor", function () {
 			CA.appendChild(CAContent);
 			range.setStart(CAContent, 0);
 			range.setEnd(CAContent, 5);
-			expect(extractor.legalRange(range)).toEqual(range);
+			expect(semTag.legalRange(range)).toEqual(range);
 			EP.appendChild(EPContent);
 			CA.appendChild(EP);
 			range.setStart(CAContent, 0);
 			range.setEnd(EPContent, 5);
-			expect(extractor.legalRange(range)).not.toBe(range);
+			expect(semTag.legalRange(range)).not.toBe(range);
 		});
 		it(" should extend range to cover the ancestor which is a direct child of the starts container, iff the end is a descendant of the starts container", function () {
 			SP.appendChild(SPContent);
@@ -108,7 +108,7 @@ describe("SemTag - Extractor", function () {
 			SP.appendChild(EP);
 			range.setStart(SPContent, 3);
 			range.setEnd(EPContent, 5);
-			expect(extractor.legalRange(range).endContainer).toEqual(SP);
+			expect(semTag.legalRange(range).endContainer).toEqual(SP);
 		});
 		it(" should extend range to cover the ancestor which is a direct child of the end container, iff the start is a descendant of the ends container", function () {
 			SP.appendChild(SPContent);
@@ -118,7 +118,7 @@ describe("SemTag - Extractor", function () {
 			range.setStart(SPContent, 3);
 			range.setEnd(EPContent, 5);
 			expect(range.startContainer).not.toEqual(EP);
-			expect(extractor.legalRange(range).startContainer).toEqual(EP);
+			expect(semTag.legalRange(range).startContainer).toEqual(EP);
 		});
 		it(" should return a range surrounding the ancestor elements, iff they are different children of the common ancestor", function () {
 			CA.appendChild(SP);
@@ -127,8 +127,8 @@ describe("SemTag - Extractor", function () {
 			EP.appendChild(EPContent);
 			range.setStart(SPContent, 3);
 			range.setEnd(EPContent, 5);
-			expect(extractor.legalRange(range).startContainer).toBe(CA);
-			expect(extractor.legalRange(range).endContainer).toBe(CA);
+			expect(semTag.legalRange(range).startContainer).toBe(CA);
+			expect(semTag.legalRange(range).endContainer).toBe(CA);
 		});
 	});
 	describe("it should surround a given range with the tag and class specified", function () {
@@ -161,29 +161,29 @@ describe("SemTag - Extractor", function () {
 			});
 		});
 		it(" should accept a range parameter as it's first parameter", function () {
-			expect(extractor.surround(df)).toBeTruthy();
+			expect(semTag.surround(df)).toBeTruthy();
 		});
 		it(" should otherwise throw an exception", function () {
-			expect(function () {extractor.surround(notDf); }).toThrow({name: "MissingArgumentsException", message: "Function requires a range object to surround with tags"});
+			expect(function () {semTag.surround(notDf); }).toThrow({name: "MissingArgumentsException", message: "Function requires a range object to surround with tags"});
 		});
 		it(" should return an Element with the same text content", function () {
-			expect(extractor.surround(df).textContent).toBe(content.textContent);
+			expect(semTag.surround(df).textContent).toBe(content.textContent);
 		});
 		it("Element returned should be an ancestor of the content of the input", function () {
-			expect(extractor.surround(df)).hasDescendant(content);
+			expect(semTag.surround(df)).hasDescendant(content);
 		});
 		it(" should allow the user to select the surrounding tag type (via constructor)", function () {
 			var options = {nodeName : "SPAN"};
-			extractor = semtag(container, options);
-			expect(extractor.surround(df).tagName).toContain(options.nodeName);
+			semTag = semtag(container, options);
+			expect(semTag.surround(df).tagName).toContain(options.nodeName);
 			options = {nodeName : "DIV"};
-			extractor = semtag(container, options);
-			expect(extractor.surround(df).tagName).toContain(options.nodeName);
+			semTag = semtag(container, options);
+			expect(semTag.surround(df).tagName).toContain(options.nodeName);
 		});
 		it(" should allow the user to select the surrounding tag class (via constructor)", function () {
 			var options = {className : "semtag"};
-			extractor = semtag(container, options);
-			expect(extractor.surround(df).className).toContain(options.className);
+			semTag = semtag(container, options);
+			expect(semTag.surround(df).className).toContain(options.className);
 		});
 	});
 	describe("it should extract the selected ranges", function () {
@@ -197,7 +197,7 @@ describe("SemTag - Extractor", function () {
 			contains = function (item, list) {
 				var i;
 				for (i = 0; i < list.length; i += 1) {
-					if (item === list[i]) {
+					if (item.getAttribute("id") === list[i].getAttribute("id")) {
 						return true;
 					}
 				}
@@ -207,12 +207,14 @@ describe("SemTag - Extractor", function () {
 			for (i = 0; i < numberOfTags; i += 1) {
 				element = document.createElement("span");
 				element.setAttribute("class", "semtag");
+				element.setAttribute("id", "semtag"+i);
 				document.body.appendChild(element);
 				tags.push(element);
 			}
 			for (i = 0; i < numberOfTags; i += 1) {
 				element = document.createElement("span");
 				element.setAttribute("class", "not-semtag");
+				element.setAttribute("id", "not-semtag"+i);
 				document.body.appendChild(element);
 				notTags.push(element);
 			}
@@ -248,13 +250,13 @@ describe("SemTag - Extractor", function () {
 			notTags = [];
 		});
 		it(" should return an array with the correct number of elements elements", function () {
-			expect(extractor.extract().length).toBe(numberOfTags);
+			expect(semTag.extract().length).toBe(numberOfTags);
 		});
 		it(" should include all the tagged elements", function () {
-			expect(extractor.extract()).toContainAll(tags);
+			expect(semTag.extract()).toContainAll(tags);
 		});
 		it(" should include none of the untagged elements", function () {
-			expect(extractor.extract()).toContainNone(notTags);
+			expect(semTag.extract()).toContainNone(notTags);
 		});
 	});
 	describe(" should tag a selection of document", function () {
@@ -298,9 +300,9 @@ describe("SemTag - Extractor", function () {
 			range.setStart(firstTextNode, 0);
 			range.setEnd(firstTextNode, 1);
 			selection.addRange(range);
-			expect(extractor.tagSelection()).toBeInstanceOf(HTMLElement);
-			expect(extractor.tagSelection().className).toBe(options.className);
-			expect(extractor.tagSelection().nodeName).toBe(options.nodeName);
+			expect(semTag.tagSelection()).toBeInstanceOf(HTMLElement);
+			expect(semTag.tagSelection().className).toBe(options.className);
+			expect(semTag.tagSelection().nodeName).toBe(options.nodeName);
 		});
 		it(" should be a direct parent if selection is within a single text node", function () {
 			var contents;
@@ -308,7 +310,7 @@ describe("SemTag - Extractor", function () {
 			range.setEnd(textNode, 5);
 			contents = range.cloneContents();
 			selection.addRange(range);
-			expect(extractor.tagSelection().childNodes[0].textContent).toEqual(contents.childNodes[0].textContent);
+			expect(semTag.tagSelection().childNodes[0].textContent).toEqual(contents.childNodes[0].textContent);
 		});
 		it(" should be a direct parent if selection is a single node", function () {
 			var contents;
@@ -316,27 +318,27 @@ describe("SemTag - Extractor", function () {
 			range.setEndAfter(pNode);
 			contents = range.cloneContents();
 			selection.addRange(range);
-			expect(extractor.tagSelection().childNodes[1].getAttribute("id")).toEqual(contents.childNodes[0].getAttribute("id"));
+			expect(semTag.tagSelection().childNodes[1].getAttribute("id")).toEqual(contents.childNodes[0].getAttribute("id"));
 		});
 		it(" should throw an exception if selection is outside of container", function () {
 			container = document.getElementById(parent.getAttribute("id"));
-			extractor = semtag(container);
+			semTag = semtag(container);
 			range.setStart(outsideText, 1);
 			range.setEnd(outsideText, 5);
 			selection.addRange(range);
-			expect(function () {extractor.tagSelection(); }).toThrow({name: "InvalidSelectionException", message: "Selection is outside of the scope of the semtag container"});
+			expect(function () {semTag.tagSelection(); }).toThrow({name: "InvalidSelectionException", message: "Selection is outside of the scope of the semtag container"});
 			selection.removeAllRanges();
 			range.setStart(outsideText, 1);
 			range.setEndAfter(parent);
 			selection.addRange(range);
-			expect(function () {extractor.tagSelection(); }).toThrow({name: "InvalidSelectionException", message: "Selection is outside of the scope of the semtag container"});
+			expect(function () {semTag.tagSelection(); }).toThrow({name: "InvalidSelectionException", message: "Selection is outside of the scope of the semtag container"});
 		});
 		it(" should tag the selected section of the document", function () {
 			expect(container.getElementsByClassName("semtag").length).toBe(0);
 			range.setStartBefore(pNode);
 			range.setEndAfter(pNode);
 			selection.addRange(range);
-			extractor.tagSelection();
+			semTag.tagSelection();
 			expect(container.getElementsByClassName("semtag").length).toBe(1);
 		});
 	});
@@ -384,7 +386,7 @@ describe("SemTag - Extractor", function () {
 			document.body.appendChild(beforeContainer);
 			document.body.appendChild(container);
 			document.body.appendChild(afterContainer);
-			extractor = semtag(container);
+			semTag = semtag(container);
 			selection = window.getSelection();
 			range = document.createRange();
 			
@@ -419,26 +421,26 @@ describe("SemTag - Extractor", function () {
 			range.setStart(beforeContainerText, 0);
 			range.setEnd(beforePNodeText, 3);
 			selection.addRange(range);
-			expect(function () {extractor.correctSelection(); }).toThrow({name: "InvalidSelectionException", message: "Selection must be fully within the container"});
+			expect(function () {semTag.correctSelection(); }).toThrow({name: "InvalidSelectionException", message: "Selection must be fully within the container"});
 		});
 		it(" should not throw an exception if both the start and end ( anchor and focus) of the selection are within the container", function () {
 			range.setStart(beforePNodeText, 0);
 			range.setEnd(afterPNodeText, 5);
 			selection.addRange(range);
-			expect(function () {extractor.correctSelection(); }).not.toThrow({name: "InvalidSelectionException", message: "Selection must be fully within the container"});
+			expect(function () {semTag.correctSelection(); }).not.toThrow({name: "InvalidSelectionException", message: "Selection must be fully within the container"});
 		});
 		it(" should throw an exception if the end ( focus) of the selection is outside of the container", function () {
 			range.setStart(beforePNodeText, 3);
 			range.setEnd(afterContainerText, 2);
 			selection.addRange(range);
-			expect(function () {extractor.correctSelection(); }).toThrow({name: "InvalidSelectionException", message: "Selection must be fully within the container"});
+			expect(function () {semTag.correctSelection(); }).toThrow({name: "InvalidSelectionException", message: "Selection must be fully within the container"});
 		});
 		
 		it(" should not modify and return the range if the start and end of the selection is in the same node", function () {
 			range.setStart(beforePNodeText, 0);
 			range.setEnd(beforePNodeText, 2);
 			selection.addRange(range);
-			expect(extractor.correctSelection()).toEqual(range);
+			expect(semTag.correctSelection()).toEqual(range);
 			expect(selection.getRangeAt(0)).toEqual(range);
 		});
 		
@@ -446,7 +448,7 @@ describe("SemTag - Extractor", function () {
 			range.setStart(beforePNodeText, 0);
 			range.setEnd(afterPNodeText, 0);
 			selection.addRange(range);
-			expect(extractor.correctSelection()).toEqual(range);
+			expect(semTag.correctSelection()).toEqual(range);
 			expect(selection.getRangeAt(0)).toEqual(range);
 		});
 		
@@ -456,21 +458,21 @@ describe("SemTag - Extractor", function () {
 			selection.addRange(range);
 			expect(selection.containsNode(pNode, partialyContained)).toBeTruthy();
 			expect(selection.containsNode(pNode, fullyContained)).toBeFalsy();
-			expect(extractor.correctSelection()).commonParentAncestor(container);
+			expect(semTag.correctSelection()).commonParentAncestor(container);
 		});
 		
 		it(" should change the range, if the start is in a child of ends parent", function () {
 			range.setStart(innerPNodeText, 0);
 			range.setEnd(pNodeTextLast, 2);
 			selection.addRange(range);
-			expect(extractor.correctSelection()).commonParentAncestor(pNode);
+			expect(semTag.correctSelection()).commonParentAncestor(pNode);
 		});
 		
 		it(" should change the range, if the end is in a child of starts parent", function () {
 			range.setStart(pNodeText, 0);
 			range.setEnd(innerPNodeText, 2);
 			selection.addRange(range);
-			expect(extractor.correctSelection()).commonParentAncestor(pNode);
+			expect(semTag.correctSelection()).commonParentAncestor(pNode);
 		});
 	});
 });
