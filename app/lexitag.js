@@ -11,6 +11,7 @@ exports.lexitag = function (req, res) {
 			body += chunk;
 		});
 		inner_res.on('end', function () {
+			res.writeHead(200, {"Content-Type": "application/json"});
 			res.write(body);
 			res.end();
 		});
