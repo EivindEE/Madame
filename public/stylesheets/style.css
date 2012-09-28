@@ -1,4 +1,4 @@
-/* line 28, scss/style.scss */
+/* line 26, scss/style.scss */
 iframe {
   height: 50em;
   border-style: solid;
@@ -9,22 +9,46 @@ iframe {
   border-color: black;
 }
 
-/* line 33, scss/style.scss */
+/* line 31, scss/style.scss */
 .container {
   min-height: 700 px;
-  width: 0;
-  height: 0;
-  border-bottom: 120px solid black;
-  border-left: 60px solid transparent;
-  border-right: 60px solid transparent;
 }
 
-/* line 38, scss/style.scss */
+/* line 35, scss/style.scss */
+.tagged {
+  background-color: #ddeecc;
+}
+
+/* line 45, scss/style.scss */
 #extracted:not(:empty), .footer {
   border-top-style: solid;
   border-top-width: 2px;
-  -webkit-border-top-radius: 3px;
-  -moz-border-top-radius: 3px;
-  border-top-radius: 3px;
   border-top-color: black;
+}
+
+/* line 49, scss/style.scss */
+#dym:not(:empty) {
+  min-width: 200px;
+  min-height: 50px;
+  max-height: 200px;
+  overflow: auto;
+}
+
+/* line 56, scss/style.scss */
+.word-sense {
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: black;
+  max-height: 40px;
+  overflow: hidden;
+}
+
+/* line 62, scss/style.scss */
+.word-sense:hover {
+  background-color: #eeeeee;
+}
+
+/* line 66, scss/style.scss */
+#dum:empty {
+  display: none;
 }

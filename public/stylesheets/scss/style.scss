@@ -1,5 +1,6 @@
 @import "includes/shapes";
-
+$highlighted: #EEEEEE;
+$tagged: #DEC;
 @mixin rounded($side, $radius: 10px) {
   border-#{$side}-radius: $radius;
   -moz-border-radius-#{$side}: $radius;
@@ -16,12 +17,9 @@
 	border-color: $color;
 }
 
-@mixin border-top($width: 1px, $radius: 3px, $style: solid, $color: black, $side: "") {
+@mixin border-top($width: 1px, $radius: 3px, $style: solid, $color: black) {
 	border-top-style : $style;
 	border-top-width: $width;
-	-webkit-border-top-radius: $radius;
-	-moz-border-top-radius: $radius;
-	border-top-radius: $radius;
 	border-top-color: $color;
 }
 
@@ -32,9 +30,40 @@ iframe {
 
 .container {
 	min-height: 700 px;
-	@include up-triangle();
 }
+
+.tagged {
+	background-color: $tagged;
+}
+
+
+
+
+
+
 
 #extracted:not(:empty), .footer {
 	@include border-top(2px, 3px, solid, black);
 }
+
+#dym:not(:empty) {
+	min-width : 200px;
+	min-height: 50px;
+	max-height: 200px;
+	overflow: auto;
+}
+
+.word-sense {
+	@include border-top();
+	max-height: 40px;
+	overflow: hidden;
+}
+
+.word-sense:hover {
+	background-color: $highlighted;
+}
+
+#dum:empty {
+	display: none;
+}
+
