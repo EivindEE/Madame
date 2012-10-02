@@ -1,6 +1,7 @@
 @import "includes/shapes";
 $highlighted: #EEEEEE;
-$tagged: #DEC;
+$dbpedia: #FF7D40;
+$synset: #BADA55;
 @mixin rounded($side, $radius: 10px) {
   border-#{$side}-radius: $radius;
   -moz-border-radius-#{$side}: $radius;
@@ -32,20 +33,24 @@ iframe {
 	min-height: 700 px;
 }
 
-.tagged {
-	background-color: $tagged;
+.tagged[resource*="dbpedia.org"] {
+	background-color: $dbpedia;
 }
 
+
+.tagged[resource*="http://www.w3.org/2006/03/wn/wn20/instances/synset"]{
+	background-color: $synset;
+}
 .remove {
 	background-color: transparent;
 }
 
 .removeIcon {
-	background-color: transparent;
+	padding-left:1px;
 	height: 5px;
 	width: 5px;
 	position: relative;
-	top: -10px;
+	top: -8px;
 }
 
 #extracted:not(:empty), .footer {

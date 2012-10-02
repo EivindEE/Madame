@@ -1,4 +1,4 @@
-/* line 26, scss/style.scss */
+/* line 27, scss/style.scss */
 iframe {
   height: 50em;
   border-style: solid;
@@ -9,38 +9,43 @@ iframe {
   border-color: black;
 }
 
-/* line 31, scss/style.scss */
+/* line 32, scss/style.scss */
 .container {
   min-height: 700 px;
 }
 
-/* line 35, scss/style.scss */
-.tagged {
-  background-color: #ddeecc;
+/* line 36, scss/style.scss */
+.tagged[resource*="dbpedia.org"] {
+  background-color: #ff7d40;
 }
 
-/* line 39, scss/style.scss */
+/* line 41, scss/style.scss */
+.tagged[resource*="http://www.w3.org/2006/03/wn/wn20/instances/synset"] {
+  background-color: #bada55;
+}
+
+/* line 44, scss/style.scss */
 .remove {
   background-color: transparent;
 }
 
-/* line 43, scss/style.scss */
+/* line 48, scss/style.scss */
 .removeIcon {
-  background-color: transparent;
+  padding-left: 1px;
   height: 5px;
   width: 5px;
   position: relative;
-  top: -10px;
+  top: -8px;
 }
 
-/* line 51, scss/style.scss */
+/* line 56, scss/style.scss */
 #extracted:not(:empty), .footer {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: black;
 }
 
-/* line 55, scss/style.scss */
+/* line 60, scss/style.scss */
 #dym:not(:empty) {
   min-width: 200px;
   min-height: 50px;
@@ -48,12 +53,12 @@ iframe {
   overflow: auto;
 }
 
-/* line 63, scss/style.scss */
+/* line 68, scss/style.scss */
 #senses {
   margin: 0;
 }
 
-/* line 66, scss/style.scss */
+/* line 71, scss/style.scss */
 .word-sense {
   border-top-style: solid;
   border-top-width: 1px;
@@ -62,12 +67,12 @@ iframe {
   overflow: hidden;
 }
 
-/* line 72, scss/style.scss */
+/* line 77, scss/style.scss */
 .word-sense:hover {
   background-color: #eeeeee;
 }
 
-/* line 76, scss/style.scss */
+/* line 81, scss/style.scss */
 #dum:empty {
   display: none;
 }
