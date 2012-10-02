@@ -3,10 +3,9 @@
 var semtag = semtag || {};
 semtag.setup = function (container, trigger, target) {
 	"use strict";
-	var container,
-		extractor;
+	var extractor;
 
-	
+
 	console.log("constructed");
 	extractor = semtag(container, "trigger").extractor;
 
@@ -14,10 +13,10 @@ semtag.setup = function (container, trigger, target) {
 
 	trigger.onmouseup = function () {
 		var extracted,
-				i,
-				length,
-				list,
-				el;
+			i,
+			length,
+			list,
+			el;
 		target.innerHTML = '';
 		extractor.tagSelection();
 		extracted = extractor.extract();
