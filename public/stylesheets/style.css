@@ -19,22 +19,27 @@ iframe {
   background-color: #ddeecc;
 }
 
-/* line 45, scss/style.scss */
+/* line 39, scss/style.scss */
 #extracted:not(:empty), .footer {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: black;
 }
 
-/* line 49, scss/style.scss */
+/* line 43, scss/style.scss */
 #dym:not(:empty) {
   min-width: 200px;
   min-height: 50px;
-  max-height: 200px;
+  max-height: 500px;
   overflow: auto;
 }
 
-/* line 56, scss/style.scss */
+/* line 51, scss/style.scss */
+#senses {
+  margin: 0;
+}
+
+/* line 54, scss/style.scss */
 .word-sense {
   border-top-style: solid;
   border-top-width: 1px;
@@ -43,12 +48,12 @@ iframe {
   overflow: hidden;
 }
 
-/* line 62, scss/style.scss */
+/* line 60, scss/style.scss */
 .word-sense:hover {
   background-color: #eeeeee;
 }
 
-/* line 66, scss/style.scss */
+/* line 64, scss/style.scss */
 #dum:empty {
   display: none;
 }

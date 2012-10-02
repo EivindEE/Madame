@@ -36,12 +36,6 @@ iframe {
 	background-color: $tagged;
 }
 
-
-
-
-
-
-
 #extracted:not(:empty), .footer {
 	@include border-top(2px, 3px, solid, black);
 }
@@ -49,10 +43,14 @@ iframe {
 #dym:not(:empty) {
 	min-width : 200px;
 	min-height: 50px;
-	max-height: 200px;
+	max-height: 500px;
 	overflow: auto;
+
 }
 
+#senses {
+	margin: 0;
+}
 .word-sense {
 	@include border-top();
 	max-height: 40px;
