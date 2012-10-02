@@ -21,7 +21,7 @@ semtag.getId = function (content) {
 	baseString = 'semtag-' + content.replace(/ /g, '_') + '-';
 	id =  baseString + counter;
 	while (document.getElementById(id)){
-		console.log(id);
+
 		counter += 1;
 		id =  baseString + counter;
 	}
