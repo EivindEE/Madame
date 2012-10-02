@@ -36,6 +36,18 @@ iframe {
 	background-color: $tagged;
 }
 
+.remove {
+	background-color: transparent;
+}
+
+.removeIcon {
+	background-color: transparent;
+	height: 5px;
+	width: 5px;
+	position: relative;
+	top: -10px;
+}
+
 #extracted:not(:empty), .footer {
 	@include border-top(2px, 3px, solid, black);
 }

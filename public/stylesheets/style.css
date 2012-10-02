@@ -20,13 +20,27 @@ iframe {
 }
 
 /* line 39, scss/style.scss */
+.remove {
+  background-color: transparent;
+}
+
+/* line 43, scss/style.scss */
+.removeIcon {
+  background-color: transparent;
+  height: 5px;
+  width: 5px;
+  position: relative;
+  top: -10px;
+}
+
+/* line 51, scss/style.scss */
 #extracted:not(:empty), .footer {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: black;
 }
 
-/* line 43, scss/style.scss */
+/* line 55, scss/style.scss */
 #dym:not(:empty) {
   min-width: 200px;
   min-height: 50px;
@@ -34,12 +48,12 @@ iframe {
   overflow: auto;
 }
 
-/* line 51, scss/style.scss */
+/* line 63, scss/style.scss */
 #senses {
   margin: 0;
 }
 
-/* line 54, scss/style.scss */
+/* line 66, scss/style.scss */
 .word-sense {
   border-top-style: solid;
   border-top-width: 1px;
@@ -48,12 +62,12 @@ iframe {
   overflow: hidden;
 }
 
-/* line 60, scss/style.scss */
+/* line 72, scss/style.scss */
 .word-sense:hover {
   background-color: #eeeeee;
 }
 
-/* line 64, scss/style.scss */
+/* line 76, scss/style.scss */
 #dum:empty {
   display: none;
 }

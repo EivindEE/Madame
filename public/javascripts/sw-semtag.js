@@ -55,7 +55,9 @@ semtag.buildDidYouMeanTable = function (json, tableId) {
 		$('.word-sense').click( function () {
 			var toTag,
 				sense,
-				id;
+				id,
+				remove,
+				removeIcon;
 
 			toTag = document.getElementById('toTag');
 			id = semtag.getId(toTag.textContent);
@@ -66,8 +68,29 @@ semtag.buildDidYouMeanTable = function (json, tableId) {
 			toTag.setAttribute('resource', sense);
 			toTag.setAttribute('about', document.URL + '#' + id);
 			toTag.className = 'tagged';
+			remove = document.createElement('span');
+			remove.className = 'remove';
+			removeIcon = document.createElement('img');
+			removeIcon.setAttribute('src', '/images/remove.png');
+			removeIcon.className = 'removeIcon';
+			removeIcon.setAttribute('alt', 'X');
+			remove.appendChild(removeIcon);
+			toTag.appendChild(remove);
+			$('.removeIcon').unbind('click');
+			$('.removeIcon').click(function () {
+				var taggedNode,
+					taggedNodeParent,
+					content;
+				taggedNode = this.parentNode.parentNode;
+				taggedNodeParent = taggedNode.parentNode;
+				content = document.createTextNode(taggedNode.textContent);
+				taggedNodeParent.replaceChild(content, taggedNode);
+			});
 			didYouMean.parentNode.removeChild(didYouMean);
+
 		});
+		
+		
 };
 
 semtag.sw = function (word) {
