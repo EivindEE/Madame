@@ -2,6 +2,7 @@
 $highlighted: #EEEEEE;
 $dbpedia: #FF7D40;
 $synset: #BADA55;
+$schema_org: #38B0DE;
 @mixin rounded($side, $radius: 10px) {
   border-#{$side}-radius: $radius;
   -moz-border-radius-#{$side}: $radius;
@@ -41,6 +42,11 @@ iframe {
 .tagged[resource*="http://www.w3.org/2006/03/wn/wn20/instances/synset"]{
 	background-color: $synset;
 }
+
+.tagged[resource*="schema.org"]{
+	background-color: $schema_org;
+}
+
 .remove {
 	background-color: transparent;
 }

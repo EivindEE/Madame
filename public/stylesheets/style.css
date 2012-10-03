@@ -1,4 +1,4 @@
-/* line 27, scss/style.scss */
+/* line 28, scss/style.scss */
 iframe {
   height: 50em;
   border-style: solid;
@@ -9,27 +9,32 @@ iframe {
   border-color: black;
 }
 
-/* line 32, scss/style.scss */
+/* line 33, scss/style.scss */
 .container {
   min-height: 700 px;
 }
 
-/* line 36, scss/style.scss */
+/* line 37, scss/style.scss */
 .tagged[resource*="dbpedia.org"] {
   background-color: #ff7d40;
 }
 
-/* line 41, scss/style.scss */
+/* line 42, scss/style.scss */
 .tagged[resource*="http://www.w3.org/2006/03/wn/wn20/instances/synset"] {
   background-color: #bada55;
 }
 
-/* line 44, scss/style.scss */
+/* line 46, scss/style.scss */
+.tagged[resource*="schema.org"] {
+  background-color: #38b0de;
+}
+
+/* line 50, scss/style.scss */
 .remove {
   background-color: transparent;
 }
 
-/* line 48, scss/style.scss */
+/* line 54, scss/style.scss */
 .removeIcon {
   padding-left: 1px;
   height: 5px;
@@ -38,14 +43,14 @@ iframe {
   top: -8px;
 }
 
-/* line 56, scss/style.scss */
+/* line 62, scss/style.scss */
 #extracted:not(:empty), .footer {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: black;
 }
 
-/* line 60, scss/style.scss */
+/* line 66, scss/style.scss */
 #dym:not(:empty) {
   min-width: 200px;
   min-height: 50px;
@@ -53,12 +58,12 @@ iframe {
   overflow: auto;
 }
 
-/* line 68, scss/style.scss */
+/* line 74, scss/style.scss */
 #senses {
   margin: 0;
 }
 
-/* line 71, scss/style.scss */
+/* line 77, scss/style.scss */
 .word-sense {
   border-top-style: solid;
   border-top-width: 1px;
@@ -67,12 +72,12 @@ iframe {
   overflow: hidden;
 }
 
-/* line 77, scss/style.scss */
+/* line 83, scss/style.scss */
 .word-sense:hover {
   background-color: #eeeeee;
 }
 
-/* line 81, scss/style.scss */
+/* line 87, scss/style.scss */
 #dum:empty {
   display: none;
 }
