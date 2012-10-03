@@ -92,9 +92,33 @@ semtag.buildDidYouMeanTable = function (json, tableId) {
 		
 		
 };
+semtag.schema = function (word) {
+	var i,
+		sense,
+		schema_senses = [];
+	word = word.replace(/s$/,"s?"); // Simple hack to make most plural forms optional
+	for (i = 0; i < schema.org.length; i += 1) {
+		if (schema.org[i].label.search(new RegExp("(\s|^)" + word, "i")) != -1 ) {
+			sense = {};
+			sense.senseid = "http://schema.org/" + schema.org[i].id;
+			sense.explanation = schema.org[i].comment;
+			schema_senses.push(sense);
+		}
+	}
+	return schema_senses;
+}
 
 semtag.sw = function (word) {
+	var schema_senses = [];
+	word = word.replace(/^\s*|\s*$/g,'') // Removes leading and trailing white space
+	
+	schema_senses = semtag.schema(word);
+	 
+	word = word.replace(/ /g, '_'); // Replaces inner white space with underscores
 	$.getJSON('http://localhost:3000/lex?data={"word":"' + word + '"}', function (data) {
+
+	
+	data.senses = schema_senses.concat(data.senses);
 	semtag.buildDidYouMeanTable(data, 'dym');
 	});
 };
@@ -129,7 +153,7 @@ $('#content').mouseup(function () {
 	if (range && range.toString() !== '') {
 		semtag.resetToTag('toTag', function () {	
 			semtag.surround(range, 'toTag');
-			semtag.sw(range.toString().replace(/ /g, '_'));
+			semtag.sw(range.toString());
 			document.getSelection().addRange(range);
 		});
 	}
