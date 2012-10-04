@@ -1,7 +1,7 @@
 var http = require("http"),
 	url = require('url'),
 	schema = require('./schema.org').declaration;
-function findSchemaTypes(searchTerm) {
+function findSchemaTypes(searchTerm, callback) {
 	'use strict';
 	var schema_senses = [],
 		sense,
@@ -20,21 +20,36 @@ function findSchemaTypes(searchTerm) {
 			}
 		}
 	} catch (e) {
-
 	}
-	return schema_senses;
+	callback(schema_senses);
+}
+function schemaRunner(run, q, callback) {
+	'use strict';
+	var i,
+		counter = 0,
+		matches = [],
+		onMatch = function (matchList) {
+			counter += 1;
+			matches = matches.concat(matchList);
+			if (counter === run.length) {
+				callback(matches);
+			}
+		};
+	for (i = 0; i < run.length; i += 1) {
+		run[i](q, onMatch);
+	}
 }
 function findSchemaTerms(searchString, callback) {
 	'use strict';
 	var searchTerm,
-		findWord,
-		schema_senses;
+		findWord;
 	findWord = /:%22(.*?)%22\}$/g;
 	searchTerm = findWord.exec(searchString)[1];
 	searchTerm = searchTerm.replace(/s$/, "s?"); // Catches a lot of plurals and makes them optional
 	searchTerm = searchTerm.replace(/\./g, "\\.");
-	schema_senses = findSchemaTypes(searchTerm);
-	callback(schema_senses);
+	schemaRunner([findSchemaTypes], searchTerm, function (schema_senses) {
+		callback({senses: schema_senses});
+	});
 }
 function findLexitagTerms(searchString, callback) {
 	'use strict';
@@ -54,7 +69,7 @@ function runQueries(run, query, callback) {
 	'use strict';
 	var i,
 		counter = 0,
-		json = {word: "unset", senses: []},
+		json = {word: '', senses: []},
 		onComplete = function (jsonResult) {
 			counter += 1;
 			json.word = jsonResult.word || json.word;
