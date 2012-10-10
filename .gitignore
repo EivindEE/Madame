@@ -1,6 +1,7 @@
 node_modules
 out
 logs
+*.min.*
 *.css
 .DS_Store
 .sass-cache/
