@@ -3,12 +3,11 @@
 var semtag = semtag || {};
 semtag.setup = function (container, trigger, target) {
 	"use strict";
-	var extractor;
-	extractor = semtag(container, "trigger").extractor;
+	var extractor = semtag(container, "trigger").extractor;
 
-	container.addEventListener("onmouseup", function () {extractor.correctSelection(); });
+	container.addEventListener("onmouseup", function () {extractor.correctSelection(); }, false);
 
-	trigger.addEventListener("onmouseup", function () {
+	function triggered() {
 		var extracted,
 			i,
 			length,
@@ -26,5 +25,6 @@ semtag.setup = function (container, trigger, target) {
 			el.appendChild(extracted[i]);
 			list.appendChild(el);
 		}
-	});
+	}
+	trigger.addEventListener("onmouseup", triggered, false);
 };
