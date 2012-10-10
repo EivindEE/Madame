@@ -12,5 +12,5 @@ exports.sw = function(req, res){
 };
 
 exports.test = function(req, res){
-  res.render('testrunner', {title: 'SpecRunner', specs: ['javascripts/spec/semtag_spec.js'], sources: ['javascripts/semtag.js'] });
+  res.render('testrunner', {title: 'SpecRunner', specs: ['javascripts/spec/semtag_spec.js'], sources: ['javascripts/dist/SemTag.min.js'] });
 };
