@@ -87,7 +87,6 @@ semtag.buildDidYouMeanTable = function (json, tableId) {
 };
 semtag.sw = function (word) {
 	'use strict';
-	var schema_senses = [];
 	word = word.replace(/^\s*|\s*$/g, ''); // Removes leading and trailing white space
 	word = word.replace(/ /g, '_'); // Replaces inner white space with underscores
 	$.getJSON('http://localhost:3000/lex?data={"word":"' + word + '"}', function (data) {
@@ -106,7 +105,6 @@ semtag.resetToTag = function (id, callback) {
 	'use strict';
 	var toRemove,
 		parent,
-		child,
 		contents;
 	toRemove = document.getElementById(id);
 	if (toRemove) {

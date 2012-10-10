@@ -10,6 +10,7 @@ var semtag = function (container, options) {
 	}
 	var that = { extractor: {}},
 		closestChild = function (node, descendant) {
+			console.log(node === descendant);
 			var parent;
 			if (descendant.parentElement) {
 				parent = descendant.parentElement;
@@ -23,11 +24,9 @@ var semtag = function (container, options) {
 		nodeName,
 		className,
 		idCounter = 0;
-
 	options = options || {};
 	nodeName  = options.nodeName || "span";
 	className = options.className || "semtag";
-
 	that.ancestorOrSelf = function (ancestor, descendant) {
 		if (ancestor === descendant) {
 			return true;
@@ -43,7 +42,6 @@ var semtag = function (container, options) {
 			start,
 			end;
 		if (range.startContainer === range.endContainer) {
-
 			return newRange;
 		}
 		child = closestChild(range.endContainer.parentElement, range.startContainer.parentElement);
@@ -56,12 +54,15 @@ var semtag = function (container, options) {
 			newRange.setEndAfter(child);
 			return newRange;
 		}
+		console.log("*****");
+		console.log(range.commonAncestorContainer);
+		console.log(range.startContainer);
+		console.log(range.endContainer);
 		start = closestChild(range.commonAncestorContainer, range.startContainer);
 		end = closestChild(range.commonAncestorContainer, range.endContainer);
 		newRange.setStartBefore(start);
 		newRange.setEndAfter(end);
 		return newRange;
-		
 	};
 	that.surround = function (fragment) {
 		if (!fragment) {
@@ -74,7 +75,6 @@ var semtag = function (container, options) {
 		tag.appendChild(fragment);
 		return tag;
 	};
-
 	that.extract = function () {
 		var i,
 			elements = [],
@@ -85,7 +85,6 @@ var semtag = function (container, options) {
 		}
 		return elements;
 	};
-
 	that.tagSelection = function () {
 		var sel = window.getSelection(),
 			range,
@@ -103,13 +102,11 @@ var semtag = function (container, options) {
 		}
 		throw {name: "InvalidSelectionException", message: "Function should not be called when nothing is selected"};
 	};
-
 	that.correctSelection = function () {
 		var selection = window.getSelection(),
 			range,
 			rangeStart,
 			rangeEnd;
-
 		if (selection.rangeCount > 0) {
 			range = selection.getRangeAt(0);
 			rangeStart = range.startContainer;
@@ -125,8 +122,13 @@ var semtag = function (container, options) {
 			}
 			throw {name: "InvalidSelectionException", message: "Selection must be fully within the container"};
 		}
-
 	};
-
-	return that;
+	return {
+		correctSelection : that.correctSelection,
+		tagSelection : that.tagSelection,
+		extract : that.extract,
+		surround : that.surround,
+		legalRange : that.legalRange,
+		ancestorOrSelf: that.ancestorOrSelf
+	};
 };

@@ -4,9 +4,6 @@ var semtag = semtag || {};
 semtag.setup = function (container, trigger, target) {
 	"use strict";
 	var extractor;
-
-
-	console.log("constructed");
 	extractor = semtag(container, "trigger").extractor;
 
 	container.onmouseup = function () {extractor.correctSelection(); };

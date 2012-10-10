@@ -74,8 +74,6 @@ describe("SemTag - semTag", function () {
 			SPContent,
 			EP,
 			EPContent,
-			S,
-			E,
 			range;
 		beforeEach(function () {
 			CA = document.createElement("div");
@@ -135,8 +133,6 @@ describe("SemTag - semTag", function () {
 		var df,
 			content,
 			notDf,
-			tagType = "span",
-			className = "tag",
 			hasDescendant = function (ancestor, descendant) {
 				if (ancestor === descendant) {
 					return true;
@@ -193,7 +189,6 @@ describe("SemTag - semTag", function () {
 			numberNotTags = 4,
 			element,
 			i,
-			totalElements = numberOfTags + numberNotTags,
 			contains = function (item, list) {
 				var i;
 				for (i = 0; i < list.length; i += 1) {
@@ -207,14 +202,14 @@ describe("SemTag - semTag", function () {
 			for (i = 0; i < numberOfTags; i += 1) {
 				element = document.createElement("span");
 				element.setAttribute("class", "semtag");
-				element.setAttribute("id", "semtag"+i);
+				element.setAttribute("id", "semtag" + i);
 				document.body.appendChild(element);
 				tags.push(element);
 			}
-			for (i = 0; i < numberOfTags; i += 1) {
+			for (i = 0; i < numberNotTags; i += 1) {
 				element = document.createElement("span");
 				element.setAttribute("class", "not-semtag");
-				element.setAttribute("id", "not-semtag"+i);
+				element.setAttribute("id", "not-semtag" + i);
 				document.body.appendChild(element);
 				notTags.push(element);
 			}
@@ -389,12 +384,11 @@ describe("SemTag - semTag", function () {
 			semTag = semtag(container);
 			selection = window.getSelection();
 			range = document.createRange();
-			
 			this.addMatchers({
 				commonParentAncestor: function (expected) {
-					var start = this.actual.startContainer.nodeName !== "#text" ? 
-								this.actual.startContainer : this.actual.startContainer.parentNode ,
-						end = this.actual.endContainer.nodeName !== "#text" ? 
+					var start = this.actual.startContainer.nodeName !== "#text" ?
+								this.actual.startContainer : this.actual.startContainer.parentnode,
+						end = this.actual.endContainer.nodeName !== "#text" ?
 								 this.actual.endContainer : this.actual.endContainer.parentNode;
 					this.message = function () {
 						var message = "";
@@ -406,7 +400,6 @@ describe("SemTag - semTag", function () {
 						}
 						return message + ", should be :" + expected;
 					};
-					
 					return start === expected && end === expected;
 				}
 			});
@@ -435,7 +428,6 @@ describe("SemTag - semTag", function () {
 			selection.addRange(range);
 			expect(function () {semTag.correctSelection(); }).toThrow({name: "InvalidSelectionException", message: "Selection must be fully within the container"});
 		});
-		
 		it(" should not modify and return the range if the start and end of the selection is in the same node", function () {
 			range.setStart(beforePNodeText, 0);
 			range.setEnd(beforePNodeText, 2);
@@ -443,7 +435,6 @@ describe("SemTag - semTag", function () {
 			expect(semTag.correctSelection()).toEqual(range);
 			expect(selection.getRangeAt(0)).toEqual(range);
 		});
-		
 		it(" should leave range the same and return if the start and end are children of the same node", function () {
 			range.setStart(beforePNodeText, 0);
 			range.setEnd(afterPNodeText, 0);
@@ -451,7 +442,6 @@ describe("SemTag - semTag", function () {
 			expect(semTag.correctSelection()).toEqual(range);
 			expect(selection.getRangeAt(0)).toEqual(range);
 		});
-		
 		it(" should change the range, if the start and end are not children of the same node", function () {
 			range.setStart(beforePNodeText, 0);
 			range.setEnd(pNodeText, 2);
@@ -460,14 +450,12 @@ describe("SemTag - semTag", function () {
 			expect(selection.containsNode(pNode, fullyContained)).toBeFalsy();
 			expect(semTag.correctSelection()).commonParentAncestor(container);
 		});
-		
 		it(" should change the range, if the start is in a child of ends parent", function () {
 			range.setStart(innerPNodeText, 0);
 			range.setEnd(pNodeTextLast, 2);
 			selection.addRange(range);
 			expect(semTag.correctSelection()).commonParentAncestor(pNode);
 		});
-		
 		it(" should change the range, if the end is in a child of starts parent", function () {
 			range.setStart(pNodeText, 0);
 			range.setEnd(innerPNodeText, 2);
