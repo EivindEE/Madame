@@ -4,6 +4,11 @@
 	"author": {"name": "Eivind Elseth"},
 	"private": true,
 	"homepage":"https://github.com/EivindEE/SemTag",
+	"licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/EivindEE/SemTag/blob/master/MIT.LICENCE"
+    }],
 	"scripts": {
 		"start": "node app"
 	},
