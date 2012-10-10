@@ -2,6 +2,8 @@
 module.exports = function (grunt) {
 	"use strict";
 	grunt.loadNpmTasks('grunt-jslint');
+	grunt.loadNpmTasks('grunt-contrib');
+
 	// Project configuration.
 	grunt.initConfig({
 		pkg: '<json:package.json>',
@@ -15,9 +17,13 @@ module.exports = function (grunt) {
 		jslint: {
 			files: ['grunt.js', 'public/javascripts/spec/**/*.js', 'public/javascripts/*.js', 'test/**/*.js', 'app/**/*.js']
 		},
-//		qunit: {
-//			files: ['public/**/*.html']
-//		},
+		mincss: {
+			compress: {
+				files: {
+					'public/stylesheets/style.min.css': ['public/stylesheets/reset.css', 'public/stylesheets/bootstrap.css', 'public/stylesheets/style.css']
+				}
+			}
+		},
 		concat: {
 			dist: {
 				src: ['public/javascripts/semtag.js', 'public/javascripts/sw-semtag.js'],
@@ -31,7 +37,7 @@ module.exports = function (grunt) {
 			}
 		},
 		watch: {
-			files: ['public/javascripts/*.js'],
+			files: ['public/javascripts/*.js', 'public/stylesheets/style.css'],
 			tasks: 'default' // removed qunit
 		},
 		jslint_directives: { // example directives
@@ -52,6 +58,6 @@ module.exports = function (grunt) {
 	});
 
 	// Default task.
-	grunt.registerTask('default', 'jslint concat min');
+	grunt.registerTask('default', 'jslint concat min mincss');
 
 };

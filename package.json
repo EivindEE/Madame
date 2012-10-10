@@ -17,6 +17,7 @@
 		"jade": "*",
 		"uglify-js": "1.3.x",
 		"grunt-jslint": "*",
-		"gzippo": "0.1.x"
+		"gzippo": "0.1.x",
+		"grunt-contrib": "x"
 	}
 }
