@@ -4,10 +4,11 @@
  */
 
 var express = require('express'),
-	 routes = require('./routes'),
-	 http = require('http'),
-	 path = require('path'),
-	 tag = require('./app/lexitag.js');
+	gzippo = require('gzippo'),
+	routes = require('./routes'),
+	http = require('http'),
+	path = require('path'),
+	tag = require('./app/lexitag.js');
 
 var app = express();
 
@@ -20,7 +21,8 @@ app.configure(function(){
 	app.use(express.bodyParser());
 	app.use(express.methodOverride());
 	app.use(app.router);
-	app.use(express.static(path.join(__dirname, 'public')));
+	app.use(gzippo.staticGzip(path.join(__dirname, 'public')));
+	app.use(gzippo.compress());
 });
 
 app.configure('development', function(){
