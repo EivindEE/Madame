@@ -1,3 +1,5 @@
+/*jslint regexp: true */
+
 var http = require("http"),
 	url = require('url'),
 	schema = require('./schema.org').declaration;
@@ -11,7 +13,8 @@ function findSchemaTypes(searchTerm, callback) {
 		for (termName in schema.types) {
 			if (schema.types.hasOwnProperty(termName)) {
 				term = schema.types[termName];
-				if (term.label.search(new RegExp("(\s|^)" + searchTerm, "i")) !== -1) {
+				if (term.label.search(new RegExp("(\\s|^)" + searchTerm, "i")) !== -1) {
+					console.log("Matched!");
 					sense = {};
 					sense.senseid = "http://schema.org/" + term.id;
 					sense.explanation = term.comment;
@@ -84,8 +87,7 @@ function runQueries(run, query, callback) {
 }
 exports.lexitag = function (req, res) {
 	'use strict';
-	var body = "",
-		q = url.parse(req.url, true);
+	var q = url.parse(req.url, true);
 	runQueries([findSchemaTerms, findLexitagTerms], q.search, function (json) {
 		res.writeHead(200, {"Content-Type" : "application/json"});
 		res.write(JSON.stringify(json));

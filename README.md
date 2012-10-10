@@ -9,6 +9,10 @@ The tests will then be run in your browser.
 This package will be tested on Safari, Chrome and FireFox as these are the ones I have access to.
 Support for IE might be added at a later time.
 
+# Dependencies
+This project runs on [node.js](http://nodejs.org), which needs to be installed to use the artefact.
+Most of the dependencies are included in the `package.json` file and can be installed by running `npm install` in root project.
+For dev there is also a dependency for grunt.js which can be installed by running `[sudo] npm install -g grunt`.
 # Purpose of SemTagExtractor
 
 SemTagExtractor should take a pice of text, let the user mark the parts that have an important semantic meaning,
