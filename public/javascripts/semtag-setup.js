@@ -6,9 +6,9 @@ semtag.setup = function (container, trigger, target) {
 	var extractor;
 	extractor = semtag(container, "trigger").extractor;
 
-	container.onmouseup = function () {extractor.correctSelection(); };
+	container.addEventListener("onmouseup", function () {extractor.correctSelection(); });
 
-	trigger.onmouseup = function () {
+	trigger.addEventListener("onmouseup", function () {
 		var extracted,
 			i,
 			length,
@@ -26,7 +26,5 @@ semtag.setup = function (container, trigger, target) {
 			el.appendChild(extracted[i]);
 			list.appendChild(el);
 		}
-	};
+	});
 };
-
-semtag.setup(document.body, document.getElementById("tag"), document.getElementById("extracted"));
