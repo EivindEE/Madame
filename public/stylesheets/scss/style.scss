@@ -76,11 +76,13 @@ iframe {
 }
 .word-sense {
 	@include border-top();
-	max-height: 40px;
+	max-height: 80px;
 	overflow: hidden;
 }
 
+
 .word-sense:hover {
+	max-height: inherit;
 	background-color: $highlighted;
 }
 
