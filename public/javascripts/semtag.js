@@ -10,7 +10,7 @@ var semtag = function (container, options) {
 	}
 	var that = { extractor: {}},
 		closestChild = function (node, descendant) {
-			console.log(node === descendant);
+
 			var parent;
 			if (descendant.parentElement) {
 				parent = descendant.parentElement;
@@ -54,10 +54,10 @@ var semtag = function (container, options) {
 			newRange.setEndAfter(child);
 			return newRange;
 		}
-		console.log("*****");
-		console.log(range.commonAncestorContainer);
-		console.log(range.startContainer);
-		console.log(range.endContainer);
+
+
+
+
 		start = closestChild(range.commonAncestorContainer, range.startContainer);
 		end = closestChild(range.commonAncestorContainer, range.endContainer);
 		newRange.setStartBefore(start);
