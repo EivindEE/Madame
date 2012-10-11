@@ -3,6 +3,7 @@ module.exports = function (grunt) {
 	"use strict";
 	grunt.loadNpmTasks('grunt-jslint');
 	grunt.loadNpmTasks('grunt-contrib');
+	grunt.loadNpmTasks('grunt-compass');
 
 	// Project configuration.
 	grunt.initConfig({
@@ -37,27 +38,33 @@ module.exports = function (grunt) {
 			}
 		},
 		watch: {
-			files: ['public/javascripts/*.js', 'public/stylesheets/style.css'],
-			tasks: 'default' // removed qunit
+			files: ['public/javascripts/*.js', 'public/stylesheets/scss/*', 'grunt.js', 'app/**.*'],
+			tasks: ['default']
 		},
 		jslint_directives: { // example directives
-            browser: true,
-            unparam: true,
-            node: true,
-            predef: [ // array of pre-defined globals
-                'jQuery'
-            ]
-        },
-
-        jslint_options: {
-            junit: 'log/junit.xml', // write the output to a JUnit XML
-            log: 'log/lint.log',
-            errorsOnly: true // only display errors
+			browser: true,
+			unparam: true,
+			node: true,
+			predef: [ // array of pre-defined globals
+				'jQuery'
+			]
 		},
-		uglify: {}
+		jslint_options: {
+			junit: 'logs/junit.xml', // write the output to a JUnit XML
+			log: 'logs/lint.log',
+			errorsOnly: true // only display errors
+		},
+		uglify: {},
+		compass: {
+			dev: {
+				src: 'public/stylesheets/scss/',
+				dest: 'public/stylesheets/',
+				linecomments: true
+			}
+		}
 	});
 
 	// Default task.
-	grunt.registerTask('default', 'jslint concat min mincss');
+	grunt.registerTask('default', 'jslint concat min compass:dev mincss');
 
 };
