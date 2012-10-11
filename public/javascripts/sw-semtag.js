@@ -1,15 +1,25 @@
 /*global  $ */
 var semtag = semtag || {};
-semtag.buildTag = function (id, parentId, options) {
+semtag.buildTag = function (id, parentId, type, options) {
 	'use strict';
 	var el,
-		type,
-		className;
-	type = options.type || 'div';
-	className = options.className || '';
+		attr,
+		attrName;
+	if (typeof type === 'object') {
+		options = type;
+		type = 'div';
+	}
+
 	el = document.createElement(type);
 	el.setAttribute('id', id);
-	el.className = className;
+
+	for (attr in options) {
+		if (options.hasOwnProperty(attr)) {
+			attrName = attr === 'className' ? 'class' : attr;
+			el.setAttribute(attrName, options[attr]);
+		}
+	}
+
 	document.getElementById(parentId).appendChild(el);
 	return el;
 };
@@ -54,17 +64,28 @@ semtag.wordSenseClicked = function (wordSense) {
 	toTag.className = 'tagged';
 	remove = document.createElement('span');
 	remove.className = 'remove';
-	removeIcon = document.createElement('img');
-	removeIcon.setAttribute('src', '/images/remove.png');
-	removeIcon.className = 'removeIcon';
-	removeIcon.setAttribute('alt', 'X');
-	remove.appendChild(removeIcon);
+	removeIcon = semtag.buildTag('', id, 'img', {"src": '/images/remove.png', "alt": 'X', "className": 'removeIcon'});
+//	document.createElement('img');
+//	removeIcon.setAttribute('src', '/images/remove.png');
+//	removeIcon.className = 'removeIcon';
+//	removeIcon.setAttribute('alt', 'X');
+//	remove.appendChild(removeIcon);
 	toTag.appendChild(remove);
 	$('.removeIcon').unbind('click');
 	$('.removeIcon').click(function () {
 		semtag.removeSense(this);
 	});
 };
+
+semtag.buildInputBox = function () {
+	"use strict";
+	var input;
+	input = document.createElement('input');
+	input.setAttribute('id', 'alt-meaning');
+	input.setAttribute('type', 'text');
+	return input;
+};
+
 semtag.buildDidYouMeanTable = function (json, tableId) {
 	'use strict';
 	var didYouMean,
@@ -72,14 +93,18 @@ semtag.buildDidYouMeanTable = function (json, tableId) {
 		i,
 		list,
 		el,
-		header;
+		header,
+		input;
 	didYouMean = document.getElementById(tableId) || semtag.buildTag(tableId, 'content-container', {className: "span4"});
-	list = document.getElementById('senses') || semtag.buildTag('senses', tableId, {type: "ul"});
-	header = document.createElement('h5');
-	header.innerText = 'When you say "' + json.word + '" did you mean:';
+	list = document.getElementById('senses') || semtag.buildTag('senses', tableId, 'ul');
 	didYouMean.innerHTML = "";
 	list.innerHTML = "";
+
+	header = semtag.buildTag('dym-head', 'content-container', {});
+	input = semtag.buildTag('dym-input', 'content-container', 'input', {type: 'text'});
+	header.innerText = 'Pick the term describes "' + json.word + '", describe it with another word, or enter a URL connected to the term';
 	didYouMean.appendChild(header);
+	didYouMean.appendChild(input);
 	for (i = 0; i < sensCount; i += 1) {
 		el = document.createElement('li');
 		el.setAttribute('id', json.senses[i].senseid);
