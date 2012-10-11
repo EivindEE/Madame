@@ -21,8 +21,9 @@ app.configure(function(){
 	app.use(express.bodyParser());
 	app.use(express.methodOverride());
 	app.use(app.router);
-	app.use(gzippo.staticGzip(path.join(__dirname, 'public')));
-	app.use(gzippo.compress());
+	app.use(express.static(__dirname + '/public'));
+//	app.use(gzippo.staticGzip(path.join(__dirname, 'public')));
+//	app.use(gzippo.compress());
 });
 
 app.configure('development', function(){
