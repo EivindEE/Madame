@@ -1,6 +1,7 @@
 node_modules
 out
 logs
+public/javascripts/dist
 *.min.*
 *.css
 .DS_Store
