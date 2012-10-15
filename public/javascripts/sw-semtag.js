@@ -1,6 +1,6 @@
 /*global  $ */
 var semtag = semtag || {};
-semtag.buildTag = function (id, parentId, type, options) {
+semtag.buildTag = function (parent, type, options) {
 	'use strict';
 	var el,
 		attr,
@@ -11,7 +11,6 @@ semtag.buildTag = function (id, parentId, type, options) {
 	}
 
 	el = document.createElement(type);
-	el.setAttribute('id', id);
 
 	for (attr in options) {
 		if (options.hasOwnProperty(attr)) {
@@ -19,8 +18,11 @@ semtag.buildTag = function (id, parentId, type, options) {
 			el.setAttribute(attrName, options[attr]);
 		}
 	}
-
-	document.getElementById(parentId).appendChild(el);
+	if (typeof parent === 'string') {
+		document.getElementById(parent).appendChild(el);
+	} else if (typeof parent === 'object') {
+		parent.appendChild(el);
+	}
 	return el;
 };
 semtag.getId = function (content) {
@@ -62,28 +64,13 @@ semtag.wordSenseClicked = function (wordSense) {
 	toTag.setAttribute('resource', sense);
 	toTag.setAttribute('about', document.URL + '#' + id);
 	toTag.className = 'tagged';
-	remove = document.createElement('span');
-	remove.className = 'remove';
-	removeIcon = semtag.buildTag('', id, 'img', {"src": '/images/remove.png', "alt": 'X', "className": 'removeIcon'});
-//	document.createElement('img');
-//	removeIcon.setAttribute('src', '/images/remove.png');
-//	removeIcon.className = 'removeIcon';
-//	removeIcon.setAttribute('alt', 'X');
-//	remove.appendChild(removeIcon);
-	toTag.appendChild(remove);
+	remove = semtag.buildTag(toTag, 'span', {className: 'remove'});
+	removeIcon = semtag.buildTag(remove, 'img', {'id': id, 'src': '/images/remove.png', 'alt': 'X', 'className': 'removeIcon'});
+
 	$('.removeIcon').unbind('click');
 	$('.removeIcon').click(function () {
 		semtag.removeSense(this);
 	});
-};
-
-semtag.buildInputBox = function () {
-	"use strict";
-	var input;
-	input = document.createElement('input');
-	input.setAttribute('id', 'alt-meaning');
-	input.setAttribute('type', 'text');
-	return input;
 };
 
 semtag.buildDidYouMeanTable = function (json, tableId) {
@@ -95,16 +82,20 @@ semtag.buildDidYouMeanTable = function (json, tableId) {
 		el,
 		header,
 		input;
-	didYouMean = document.getElementById(tableId) || semtag.buildTag(tableId, 'content-container', {className: "span4"});
-	list = document.getElementById('senses') || semtag.buildTag('senses', tableId, 'ul');
+	didYouMean = document.getElementById(tableId) || semtag.buildTag('content-container', {id: tableId, className: "span4"});
+	list = document.getElementById('senses') || semtag.buildTag(tableId, 'ul', {id: 'senses'});
 	didYouMean.innerHTML = "";
 	list.innerHTML = "";
 
-	header = semtag.buildTag('dym-head', 'content-container', {});
-	input = semtag.buildTag('dym-input', 'content-container', 'input', {type: 'text'});
+	header = semtag.buildTag(didYouMean, 'h5', {id : 'dym-head'});
+	input = semtag.buildTag(didYouMean, 'input', {id: 'dym-input', type: 'text', placeholder: 'Write an URL or term here'});
+	$('#dym-input').keypress(function (kp) {
+		if (kp.charCode === 13) { // Charcode 13 === Enter keypress
+
+			semtag.sw(input.value);
+		}
+	});
 	header.innerText = 'Pick the term describes "' + json.word + '", describe it with another word, or enter a URL connected to the term';
-	didYouMean.appendChild(header);
-	didYouMean.appendChild(input);
 	for (i = 0; i < sensCount; i += 1) {
 		el = document.createElement('li');
 		el.setAttribute('id', json.senses[i].senseid);
@@ -120,9 +111,11 @@ semtag.buildDidYouMeanTable = function (json, tableId) {
 };
 semtag.sw = function (word) {
 	'use strict';
+
 	word = word.replace(/^\s*|\s*$/g, ''); // Removes leading and trailing white space
 	word = word.replace(/ /g, '_'); // Replaces inner white space with underscores
-	$.getJSON('http://localhost:3000/lex?data={"word":"' + word + '"}', function (data) {
+	$.getJSON('/lex?data={"word":"' + word + '"}', function (data) {
+
 		semtag.buildDidYouMeanTable(data, 'dym');
 	});
 };
