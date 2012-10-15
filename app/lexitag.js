@@ -3,8 +3,56 @@
 var http = require("http"),
 	url = require('url'),
 	schema = require('./schema.org').declaration;
+function findSchemaDatatypes(searchTerm, callback) {
+	'use strict';
+
+	var schema_senses = [],
+		sense,
+		termName,
+		term;
+	try {
+		for (termName in schema.datatypes) {
+			if (schema.datatypes.hasOwnProperty(termName)) {
+				term = schema.datatypes[termName];
+
+				if (term.label.search(new RegExp("(\\s|^)" + searchTerm, "i")) !== -1) {
+					sense = {};
+					sense.senseid = "http://schema.org/" + term.id;
+					sense.explanation = term.comment;
+					schema_senses.push(sense);
+				}
+			}
+		}
+	} catch (e) {
+	}
+	callback(schema_senses);
+}
+function findSchemaProperties(searchTerm, callback) {
+	'use strict';
+
+	var schema_senses = [],
+		sense,
+		termName,
+		term;
+	try {
+		for (termName in schema.properties) {
+			if (schema.properties.hasOwnProperty(termName)) {
+				term = schema.properties[termName];
+				if (term.label.search(new RegExp("(\\s|^)" + searchTerm, "i")) !== -1) {
+					sense = {};
+					sense.senseid = "http://schema.org/" + term.id;
+					sense.explanation = term.comment;
+					schema_senses.push(sense);
+				}
+			}
+		}
+	} catch (e) {
+	}
+	callback(schema_senses);
+}
 function findSchemaTypes(searchTerm, callback) {
 	'use strict';
+
 	var schema_senses = [],
 		sense,
 		termName,
@@ -14,7 +62,6 @@ function findSchemaTypes(searchTerm, callback) {
 			if (schema.types.hasOwnProperty(termName)) {
 				term = schema.types[termName];
 				if (term.label.search(new RegExp("(\\s|^)" + searchTerm, "i")) !== -1) {
-					console.log("Matched!");
 					sense = {};
 					sense.senseid = "http://schema.org/" + term.id;
 					sense.explanation = term.comment;
@@ -32,9 +79,11 @@ function schemaRunner(run, q, callback) {
 		counter = 0,
 		matches = [],
 		onMatch = function (matchList) {
+
 			counter += 1;
 			matches = matches.concat(matchList);
-			if (counter === run.length) {
+
+			if (counter >= run.length) {
 				callback(matches);
 			}
 		};
@@ -50,7 +99,7 @@ function findSchemaTerms(searchString, callback) {
 	searchTerm = findWord.exec(searchString)[1];
 	searchTerm = searchTerm.replace(/s$/, "s?"); // Catches a lot of plurals and makes them optional
 	searchTerm = searchTerm.replace(/\./g, "\\.");
-	schemaRunner([findSchemaTypes], searchTerm, function (schema_senses) {
+	schemaRunner([findSchemaDatatypes, findSchemaProperties, findSchemaTypes], searchTerm, function (schema_senses) {
 		callback({senses: schema_senses});
 	});
 }
