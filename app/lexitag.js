@@ -2,7 +2,9 @@
 
 var http = require("http"),
 	url = require('url'),
-	schema = require('./schema.org').declaration;
+	properties = require('./schema.org').declaration.properties,
+	datatypes = require('./schema.org').declaration.datatypes,
+	types = require('./schema.org').declaration.types;
 function findSchemaDatatypes(searchTerm, callback) {
 	'use strict';
 
@@ -11,10 +13,9 @@ function findSchemaDatatypes(searchTerm, callback) {
 		termName,
 		term;
 	try {
-		for (termName in schema.datatypes) {
-			if (schema.datatypes.hasOwnProperty(termName)) {
-				term = schema.datatypes[termName];
-
+		for (termName in datatypes) {
+			if (datatypes.hasOwnProperty(termName)) {
+				term = datatypes[termName];
 				if (term.label.search(new RegExp("(\\s|^)" + searchTerm, "i")) !== -1) {
 					sense = {};
 					sense.senseid = "http://schema.org/" + term.id;
@@ -29,15 +30,14 @@ function findSchemaDatatypes(searchTerm, callback) {
 }
 function findSchemaProperties(searchTerm, callback) {
 	'use strict';
-
 	var schema_senses = [],
 		sense,
 		termName,
 		term;
 	try {
-		for (termName in schema.properties) {
-			if (schema.properties.hasOwnProperty(termName)) {
-				term = schema.properties[termName];
+		for (termName in properties) {
+			if (properties.hasOwnProperty(termName)) {
+				term = properties[termName];
 				if (term.label.search(new RegExp("(\\s|^)" + searchTerm, "i")) !== -1) {
 					sense = {};
 					sense.senseid = "http://schema.org/" + term.id;
@@ -58,9 +58,9 @@ function findSchemaTypes(searchTerm, callback) {
 		termName,
 		term;
 	try {
-		for (termName in schema.types) {
-			if (schema.types.hasOwnProperty(termName)) {
-				term = schema.types[termName];
+		for (termName in types) {
+			if (types.hasOwnProperty(termName)) {
+				term = types[termName];
 				if (term.label.search(new RegExp("(\\s|^)" + searchTerm, "i")) !== -1) {
 					sense = {};
 					sense.senseid = "http://schema.org/" + term.id;
