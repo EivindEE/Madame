@@ -11,6 +11,7 @@ $highlighted: #EEEEEE;
 $dbpedia: #FF7D40;
 $synset: #BADA55;
 $schema_org: #38B0DE;
+$base: #6495ed;
 @mixin rounded($side, $radius: 10px) {
   border-#{$side}-radius: $radius;
   -moz-border-radius-#{$side}: $radius;
@@ -40,6 +41,10 @@ iframe {
 
 .container {
 	min-height: 700 px;
+}
+
+.tagged {
+	background-color: $base;
 }
 
 .tagged[resource*="dbpedia.org"] {
