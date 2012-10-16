@@ -9,9 +9,7 @@ semtag.buildTag = function (parent, type, options) {
 		options = type;
 		type = 'div';
 	}
-
 	el = document.createElement(type);
-
 	for (attr in options) {
 		if (options.hasOwnProperty(attr)) {
 			attrName = attr === 'className' ? 'class' : attr;
@@ -48,31 +46,36 @@ semtag.removeSense = function (sense) {
 	content = document.createTextNode(taggedNode.textContent);
 	taggedNodeParent.replaceChild(content, taggedNode);
 };
-semtag.wordSenseClicked = function (wordSense) {
+semtag.wordSenseClicked = function (wordSense, options) {
 	'use strict';
 	var toTag,
 		sense,
 		id,
+		title,
 		remove,
-		removeIcon;
+		removeIcon,
+		about,
+		content;
+	options = options || {};
 	toTag = document.getElementById('toTag');
-	id = semtag.getId(toTag.textContent);
-	sense = wordSense.getAttribute('id');
+	content = options.text || toTag.textContent;
+	id = semtag.getId(content);
+	sense = options.wordSense || wordSense.getAttribute('id');
+	title = options.title  || wordSense.textContent;
+	about = options.about || document.URL + '#' + id;
 	toTag.setAttribute('id', id);
 	toTag.setAttribute('rel', 'http://purl.org/linguistics/gold/hasMeaning');
-	toTag.setAttribute('title', wordSense.textContent);
+	toTag.setAttribute('title', title);
 	toTag.setAttribute('resource', sense);
-	toTag.setAttribute('about', document.URL + '#' + id);
+	toTag.setAttribute('about', about);
 	toTag.className = 'tagged';
 	remove = semtag.buildTag(toTag, 'span', {className: 'remove'});
 	removeIcon = semtag.buildTag(remove, 'img', {'id': id, 'src': '/images/remove.png', 'alt': 'X', 'className': 'removeIcon'});
-
 	$('.removeIcon').unbind('click');
 	$('.removeIcon').click(function () {
 		semtag.removeSense(this);
 	});
 };
-
 semtag.buildDidYouMeanTable = function (json, tableId) {
 	'use strict';
 	var didYouMean,
@@ -81,27 +84,42 @@ semtag.buildDidYouMeanTable = function (json, tableId) {
 		list,
 		el,
 		header,
-		input;
+		input,
+		word;
+	word = document.getElementById('toTag').textContent;
 	didYouMean = document.getElementById(tableId) || semtag.buildTag('content-container', {id: tableId, className: "span4"});
 	list = document.getElementById('senses') || semtag.buildTag(tableId, 'ul', {id: 'senses'});
 	didYouMean.innerHTML = "";
 	list.innerHTML = "";
-
 	header = semtag.buildTag(didYouMean, 'h5', {id : 'dym-head'});
 	input = semtag.buildTag(didYouMean, 'input', {id: 'dym-input', type: 'text', placeholder: 'Write an URL or term here'});
 	$('#dym-input').keypress(function (kp) {
+		var inputString,
+			// RegExp Pattern lifted from  http://stackoverflow.com/questions/6667029/using-regex-to-match-url-pattern-invalid-quantifier
+			URLPattern = new RegExp('^(https?:\\/\\/)?' + // protocol
+						'((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+						'((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+						'(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+						'(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+						'(\\#[-a-z\\d_]*)?$', 'i'), // fragment locater
+			twitterPattern = new RegExp('^@', 'i');
 		if (kp.charCode === 13) { // Charcode 13 === Enter keypress
-
-			semtag.sw(input.value);
+			inputString = input.value;
+			if (inputString.search(URLPattern) !== -1) {
+				semtag.wordSenseClicked(inputString, {wordSense: inputString, title: "external reference", text: word});
+				didYouMean.parentNode.removeChild(didYouMean);
+			} else if (inputString.search(twitterPattern) !== -1) {
+				semtag.wordSenseClicked(inputString, {wordSense: 'http://twitter.com/' + inputString.substring(1), title: "Twitter handle", text: word});
+				didYouMean.parentNode.removeChild(didYouMean);
+			} else {
+				semtag.sw(input.value);
+			}
 		}
 	});
 	header.innerText = 'Pick the term describes "' + json.word + '", describe it with another word, or enter a URL connected to the term';
 	for (i = 0; i < sensCount; i += 1) {
-		el = document.createElement('li');
-		el.setAttribute('id', json.senses[i].senseid);
-		el.className = 'word-sense';
+		el = semtag.buildTag(list, 'li', {id: json.senses[i].senseid, className: 'word-sense'});
 		el.innerText = json.senses[i].explanation;
-		list.appendChild(el);
 	}
 	didYouMean.appendChild(list);
 	$('.word-sense').click(function () {
@@ -111,12 +129,10 @@ semtag.buildDidYouMeanTable = function (json, tableId) {
 };
 semtag.sw = function (word) {
 	'use strict';
-
-	word = word.replace(/^\s*|\s*$/g, ''); // Removes leading and trailing white space
+	word = word.replace(/^\\s*|\\s*$/g, ''); // Removes leading and trailing white space
 	word = word.replace(/ /g, '_'); // Replaces inner white space with underscores
 	$.getJSON('/lex?data={"word":"' + word + '"}', function (data) {
-
-		semtag.buildDidYouMeanTable(data, 'dym');
+		semtag.buildDidYouMeanTable(data, 'dym', word);
 	});
 };
 semtag.surround = function (range, className) {
