@@ -96,7 +96,8 @@ function findSchemaTerms(searchString, callback) {
 	var searchTerm,
 		findWord;
 	findWord = /:%22(.*?)%22\}$/g;
-	searchTerm = findWord.exec(searchString)[1];
+
+	searchTerm = JSON.parse(searchString).word;
 	searchTerm = searchTerm.replace(/s$/, "s?"); // Catches a lot of plurals and makes them optional
 	searchTerm = searchTerm.replace(/\./g, "\\.");
 	schemaRunner([findSchemaDatatypes, findSchemaProperties, findSchemaTypes], searchTerm, function (schema_senses) {
@@ -105,17 +106,20 @@ function findSchemaTerms(searchString, callback) {
 }
 function findLexitagTerms(searchString, callback) {
 	'use strict';
-	var body = "";
-	http.get('http://lexitags.dyndns.org:8080/server/lexitags2/Semtags' + searchString, function (response) {
-		response.on('data', function (chunk) {
-			body += chunk;
+	var body = '',
+		url = 'http://lexitags.dyndns.org:8080/server/lexitags2/Semtags?data=';
+	console.log(url + searchString);
+	http.get(url + searchString,
+		function (response) {
+			response.on('data', function (chunk) {
+				body += chunk;
+			});
+			response.on('end', function () {
+				callback(JSON.parse(body));
+			}).on('error', function (e) {
+				callback({});
+			});
 		});
-		response.on('end', function () {
-			callback(JSON.parse(body));
-		}).on('error', function (e) {
-			callback({});
-		});
-	});
 }
 function runQueries(run, query, callback) {
 	'use strict';
@@ -137,9 +141,14 @@ function runQueries(run, query, callback) {
 exports.lexitag = function (req, res) {
 	'use strict';
 	var q = url.parse(req.url, true);
-	runQueries([findSchemaTerms, findLexitagTerms], q.search, function (json) {
+	runQueries([findSchemaTerms, findLexitagTerms], q.query.data, function (json) {
 		res.writeHead(200, {"Content-Type" : "application/json"});
-		res.write(JSON.stringify(json));
+		console.log(req.query.callback);
+		if (req.query.callback) {
+			res.write(req.query.callback + '(' + JSON.stringify(json) + ')');
+		} else {
+			res.write(JSON.stringify(json));
+		}
 		res.end();
 	});
 };

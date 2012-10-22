@@ -131,9 +131,12 @@ semtag.sw = function (word) {
 	'use strict';
 	word = word.replace(/^\\s*|\\s*$/g, ''); // Removes leading and trailing white space
 	word = word.replace(/ /g, '_'); // Replaces inner white space with underscores
-	$.getJSON('/lex?data={"word":"' + word + '"}', function (data) {
-		semtag.buildDidYouMeanTable(data, 'dym', word);
-	});
+	$.getJSON('/lex?callback=?',
+		{
+			data: '{\"word\":\"' + word + '\"}'
+		}, function (data) {
+			semtag.buildDidYouMeanTable(data, 'dym', word);
+		});
 };
 semtag.surround = function (range, className) {
 	'use strict';
