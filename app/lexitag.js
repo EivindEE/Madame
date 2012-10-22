@@ -81,7 +81,7 @@ function schemaRunner(run, q, callback) {
 		onMatch = function (matchList) {
 
 			counter += 1;
-			matches = matches.concat(matchList);
+			matches = matchList.concat(matches);
 
 			if (counter >= run.length) {
 				callback(matches);
@@ -125,7 +125,7 @@ function runQueries(run, query, callback) {
 		onComplete = function (jsonResult) {
 			counter += 1;
 			json.word = jsonResult.word || json.word;
-			json.senses = jsonResult.senses ? jsonResult.senses.concat(json.senses) : json.senses;
+			json.senses = jsonResult.senses ? json.senses.concat(jsonResult.senses) : json.senses;
 			if (counter === run.length) {
 				callback(json);
 			}

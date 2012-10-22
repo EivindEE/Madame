@@ -7,11 +7,14 @@
  * Hacked together to make my master artefact look OK
  */
 @import "includes/shapes";
-$highlighted: #EEEEEE;
-$dbpedia: #FF7D40;
-$synset: #BADA55;
-$schema_org: #38B0DE;
-$base: #6495ed;
+
+$highlighted: 	#EEEEEE;
+$alpha: 		0.3;
+$dbpedia: 		rgba(255,125,64,$alpha);	// #FF7D40;
+$synset: 		rgba(186, 218, 85, $alpha);	// #BADA55;
+$schema_org: 	rgba(153, 0, 0, $alpha); 	// Schema.org color (#990000), pluss alpha
+$base: 			rgba(100, 149, 237, $alpha);// #6495ED;
+
 @mixin rounded($side, $radius: 10px) {
   border-#{$side}-radius: $radius;
   -moz-border-radius-#{$side}: $radius;
