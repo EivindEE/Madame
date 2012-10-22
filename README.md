@@ -13,6 +13,8 @@ Support for IE might be added at a later time.
 This project runs on [node.js](http://nodejs.org), which needs to be installed to use the artefact.
 Most of the dependencies are included in the `package.json` file and can be installed by running `npm install` in root project.
 For dev there is also a dependency for grunt.js which can be installed by running `[sudo] npm install -g grunt`.
+To make sure the web page is running the latest build, run grunt before opening the page.
+
 # Purpose of SemTagExtractor
 
 SemTagExtractor should take a pice of text, let the user mark the parts that have an important semantic meaning,
