@@ -8,7 +8,8 @@ var express = require('express'),
 	routes = require('./routes'),
 	http = require('http'),
 	path = require('path'),
-	tag = require('./app/lexitag.js');
+	tag = require('./app/lexitag.js'),
+	wn = require('./app/wn');
 
 var app = express();
 
@@ -32,6 +33,7 @@ app.configure('development', function(){
 });
 
 app.get('/', routes.index);
+app.get('/wn/hyponymes', wn.hyponymes);
 app.get('/test', routes.test);
 app.get('/sw', routes.sw);
 app.get('/lex', tag.lexitag);
