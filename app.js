@@ -1,4 +1,5 @@
-
+/*jslint nomen: true, es5:true*/
+'use strict';
 /**
  * Module dependencies.
  */
@@ -9,11 +10,12 @@ var express = require('express'),
 	http = require('http'),
 	path = require('path'),
 	tag = require('./app/lexitag.js'),
-	wn = require('./app/wn');
+	wn = require('./app/wn'),
+	exec = require('child_process').exec;
 
 var app = express();
 
-app.configure(function(){
+app.configure(function () {
 	app.set('port', process.env.PORT || 3000);
 	app.set('jsonp callback', true);
 	app.set('views', __dirname + '/views');
@@ -28,7 +30,7 @@ app.configure(function(){
 //	app.use(gzippo.compress());
 });
 
-app.configure('development', function(){
+app.configure('development', function () {
 	app.use(express.errorHandler());
 });
 
@@ -37,7 +39,20 @@ app.get('/wn/hyponymes', wn.hyponymes);
 app.get('/test', routes.test);
 app.get('/sw', routes.sw);
 app.get('/lex', tag.lexitag);
+app.get('/hyper', function (req, res) {
+	exec('perl app/perl/wn.pl', function (error, stout, stderr) {
+		if (error) {
+			console.log(error);
+			res.writeHead(500, {"Content-Type": "application/json"});
+			res.end(JSON.stringify(error));
+		} else {
+			res.writeHead(200, {"Content-Type": "application/json"});
+			res.end(stout);
+		}
+	});
+});
+app.get('/wn/schema-mapping', wn.mapping);
 
-http.createServer(app).listen(app.get('port'), function(){
+http.createServer(app).listen(app.get('port'), function () {
 	console.log("Express server listening on port " + app.get('port'));
 });
