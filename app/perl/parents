@@ -1,0 +1,27 @@
+#!/usr/bin/perl
+
+use WordNet::QueryData;
+use JSON;
+my $wn = WordNet::QueryData->new(
+	dir => "/usr/local/Wordnet-3.0/dict",
+	noload => 1);
+my $json = JSON->new->allow_nonref;
+# Takes an argument in the form synset-wordsens-gramaticalcategory-senscount
+my @stripped = ($ARGV[0] =~ /.*-(.*)-(.).*-(.*)/);
+my $synset = join('#', @stripped);
+
+my @parent = parent($synset);
+my $parent = @parent;
+my @result;
+push(@result, @parent);
+while ($parent = @parent){
+	@parent = parent(@parent);
+	$parent = @parent;
+	push(@result, @parent);
+}
+print encode_json {"chain" => [@result]};
+
+
+sub parent {
+	return $wn->querySense($_[0], "hype");
+}
