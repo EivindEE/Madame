@@ -108,7 +108,6 @@ function findLexitagTerms(searchString, callback) {
 	'use strict';
 	var body = '',
 		url = 'http://lexitags.dyndns.org:8080/server/lexitags2/Semtags?data=';
-	console.log(url + searchString);
 	http.get(url + searchString,
 		function (response) {
 			response.on('data', function (chunk) {
@@ -143,7 +142,6 @@ exports.lexitag = function (req, res) {
 	var q = url.parse(req.url, true);
 	runQueries([findSchemaTerms, findLexitagTerms], q.query.data, function (json) {
 		res.writeHead(200, {"Content-Type" : "application/json"});
-		console.log(req.query.callback);
 		if (req.query.callback) {
 			res.write(req.query.callback + '(' + JSON.stringify(json) + ')');
 		} else {
