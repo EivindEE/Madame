@@ -39,18 +39,7 @@ app.get('/wn/hyponymes', wn.hyponymes);
 app.get('/test', routes.test);
 app.get('/sw', routes.sw);
 app.get('/lex', tag.lexitag);
-app.get('/hyper', function (req, res) {
-	exec('perl app/perl/wn.pl', function (error, stout, stderr) {
-		if (error) {
-			console.log(error);
-			res.writeHead(500, {"Content-Type": "application/json"});
-			res.end(JSON.stringify(error));
-		} else {
-			res.writeHead(200, {"Content-Type": "application/json"});
-			res.end(stout);
-		}
-	});
-});
+app.get('/wn/hyper', wn.hypernymes);
 app.get('/wn/schema-mapping', wn.mapping);
 
 http.createServer(app).listen(app.get('port'), function () {
