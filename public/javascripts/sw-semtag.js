@@ -133,7 +133,7 @@ semtag.sw = function (word) {
 	word = word.replace(/ /g, '_'); // Replaces inner white space with underscores
 	$.getJSON('/lex?callback=?',
 		{
-			data: '{\"word\":\"' + word + '\"}'
+			word: word
 		}, function (data) {
 			semtag.buildDidYouMeanTable(data, 'dym', word);
 		});
