@@ -1,13 +1,18 @@
 /*jslint regexp: true */
-
+'use strict';
 var http = require("http"),
 	url = require('url'),
 	properties = require('./schema.org').declaration.properties,
 	datatypes = require('./schema.org').declaration.datatypes,
-	types = require('./schema.org').declaration.types;
+	types = require('./schema.org').declaration.types,
+	saneString = function (searchString, callback) {
+		if (searchString.length > 60) {
+			callback(new Error('Search string <' + searchString + '> was to long'));
+		} else {
+			callback(null, searchString);
+		}
+	};
 function findSchemaDatatypes(searchTerm, callback) {
-	'use strict';
-
 	var schema_senses = [],
 		sense,
 		termName,
@@ -29,7 +34,7 @@ function findSchemaDatatypes(searchTerm, callback) {
 	callback(schema_senses);
 }
 function findSchemaProperties(searchTerm, callback) {
-	'use strict';
+
 	var schema_senses = [],
 		sense,
 		termName,
@@ -51,7 +56,7 @@ function findSchemaProperties(searchTerm, callback) {
 	callback(schema_senses);
 }
 function findSchemaTypes(searchTerm, callback) {
-	'use strict';
+
 
 	var schema_senses = [],
 		sense,
@@ -74,7 +79,7 @@ function findSchemaTypes(searchTerm, callback) {
 	callback(schema_senses);
 }
 function schemaRunner(run, q, callback) {
-	'use strict';
+
 	var i,
 		counter = 0,
 		matches = [],
@@ -92,36 +97,45 @@ function schemaRunner(run, q, callback) {
 	}
 }
 function findSchemaTerms(searchString, callback) {
-	'use strict';
-	var searchTerm,
-		findWord;
-	findWord = /:%22(.*?)%22\}$/g;
 
-	searchTerm = JSON.parse(searchString).word;
+	var searchTerm;
+
+	searchTerm = searchString;
 	searchTerm = searchTerm.replace(/s$/, "s?"); // Catches a lot of plurals and makes them optional
 	searchTerm = searchTerm.replace(/\./g, "\\.");
 	schemaRunner([findSchemaDatatypes, findSchemaProperties, findSchemaTypes], searchTerm, function (schema_senses) {
 		callback({senses: schema_senses});
 	});
 }
+
+
+
 function findLexitagTerms(searchString, callback) {
-	'use strict';
+
 	var body = '',
-		url = 'http://lexitags.dyndns.org:8080/server/lexitags2/Semtags?data=';
-	http.get(url + searchString,
-		function (response) {
-			response.on('data', function (chunk) {
-				body += chunk;
-			});
-			response.on('end', function () {
-				callback(JSON.parse(body));
-			}).on('error', function (e) {
-				callback({});
-			});
-		});
+		url = 'http://lexitags.dyndns.org:8080/server/lexitags2/Semtags?data={"word": "',
+		queryEnd = '"}';
+	saneString(searchString, function (error, saneSearchString) {
+		if (error) {
+			console.log(error);
+			callback(JSON.parse('{"senses": []}'));
+		} else {
+			http.get(url + saneSearchString + queryEnd,
+				function (response) {
+					response.on('data', function (chunk) {
+						body += chunk;
+					});
+					response.on('end', function () {
+						callback(JSON.parse(body));
+					}).on('error', function (e) {
+						callback({});
+					});
+				});
+		}
+	});
 }
 function runQueries(run, query, callback) {
-	'use strict';
+
 	var i,
 		counter = 0,
 		json = {word: '', senses: []},
@@ -138,9 +152,10 @@ function runQueries(run, query, callback) {
 	}
 }
 exports.lexitag = function (req, res) {
-	'use strict';
+
+	console.log('Starting to lexitag');
 	var q = url.parse(req.url, true);
-	runQueries([findSchemaTerms, findLexitagTerms], q.query.data, function (json) {
+	runQueries([findSchemaTerms, findLexitagTerms], q.query.word, function (json) {
 		res.writeHead(200, {"Content-Type" : "application/json"});
 		if (req.query.callback) {
 			res.write(req.query.callback + '(' + JSON.stringify(json) + ')');
