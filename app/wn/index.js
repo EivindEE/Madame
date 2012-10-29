@@ -16,6 +16,20 @@ var http = require('http'),
 			}
 		});
 	};
+
+exports.hypernymes = function (req, res) {
+	exec('perl app/perl/wn.pl', function (error, stout, stderr) {
+		if (error) {
+			console.log(error);
+			res.writeHead(500, {"Content-Type": "application/json"});
+			res.end(JSON.stringify(error));
+		} else {
+			res.writeHead(200, {"Content-Type": "application/json"});
+			res.end(stout);
+		}
+	});
+};
+
 exports.hyponymes = function (req, res) {
 	var body = '',
 		endpoint = 'http://wordnet.rkbexplorer.com/sparql/?format=json&query=',
