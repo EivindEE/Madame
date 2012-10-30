@@ -10,18 +10,42 @@ my $json = JSON->new->allow_nonref;
 my @stripped = ($ARGV[0] =~ /.*-(.*)-(.).*-(.*)/);
 my $synset = join('#', @stripped);
 
-my @parent = parent($synset);
-my $parent = @parent;
-my @result;
-push(@result, @parent);
-while ($parent = @parent){
-	@parent = parent(@parent);
-	$parent = @parent;
-	push(@result, @parent);
+my @parents = parent($synset);
+my @all_parents;
+while ( @parents){ # Does a breadth first search through the WordNet graph, can be switched to depth first by substituting shift with pop
+	my $parent = shift @parents;
+	push(@parents, parent($parent));
+	push(@all_parents, $parent);
 }
-print encode_json {"chain" => [@result]};
 
+my @all_parents_with_siblings;
+push(@all_parents_with_siblings, {"ancestor" => $_, "siblings" => [siblings($_)]}) for @all_parents;
+
+my %json = ("chain" => [uniq(@all_parents_with_siblings)], "synset" => $synset, "siblings" => [siblings($synset)]);
+
+print encode_json \%json;
+
+
+sub uniq { # Copied from http://stackoverflow.com/questions/7651/how-do-i-remove-duplicate-items-from-an-array-in-perl#answer-7657
+    my %seen = ();
+    my @r = ();
+    foreach my $a (@_) {
+        unless ($seen{$a}) {
+            push @r, $a;
+            $seen{$a} = 1;
+        }
+    }
+    return @r;
+}
 
 sub parent {
 	return $wn->querySense($_[0], "hype");
+}
+
+
+sub siblings {
+	my @parents = parent($_[0]); # Find parents of synset
+	my @siblings;
+	push(@siblings, $wn->querySense($_, "hypo")) for @parents;
+	return @siblings;
 }
