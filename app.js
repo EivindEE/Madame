@@ -41,6 +41,8 @@ app.get('/sw', routes.sw);
 app.get('/lex', tag.lexitag);
 app.get('/wn/hyper', wn.hypernymes);
 app.get('/wn/schema-mapping', wn.mapping);
+app.get('/wn/parents', wn.parents);
+app.get('/wn/parent', wn.parent);
 
 http.createServer(app).listen(app.get('port'), function () {
 	console.log("Express server listening on port " + app.get('port'));
