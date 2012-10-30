@@ -2,17 +2,12 @@
 var http = require('http'),
 	url = require('url'),
 	exec = require('child_process').exec,
-	findParents = function (synset) {
+	findParents = function (synset, callback) {
 		exec('perl app/perl/parents ' + synset, function (error, stout, stderr) {
 			if (error) {
-				console.log(error);
-//				res.writeHead(500, {"Content-Type": "application/json"});
-//				res.end(JSON.stringify(error));
-				console.log(error);
+				callback(new Error(error));
 			} else {
-//				res.writeHead(200, {"Content-Type": "application/json"});
-//				res.end(stout);
-				console.log(JSON.parse(stout));
+				callback(null, stout);
 			}
 		});
 	};
@@ -93,4 +88,30 @@ exports.mapping = function (req, res) {
 			});
 	findParents(urlQuery.wn);
 	request.end();
+};
+
+exports.parents = function (req, res) {
+	var synset = url.parse(req.url, true).query.q;
+	findParents(synset, function (error, data) {
+		if (error) {
+			res.writeHead(500, {'Content-Type': 'application/json'});
+			res.end('{"error": "Could not word with synset: ' + synset + '", "msg": ' + error + '}');
+		} else {
+			res.writeHead(200, {'Content-Type': 'application/json'});
+			res.end(data);
+		}
+	});
+};
+
+exports.parent = function (req, res) {
+	var synset = url.parse(req.url, true).query.q;
+	exec('perl app/perl/parent ' + synset, function (error, stout, stderr) {
+		if (error) {
+			res.writeHead(500, {'Content-Type': 'application/json'});
+			res.end('{"error": ' + error + '}');
+		} else {
+			res.writeHead(200, {'Content-Type': 'application/json'});
+			res.end(stout);
+		}
+	});
 };
