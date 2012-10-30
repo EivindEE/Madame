@@ -27,7 +27,7 @@ module.exports = function (grunt) {
 		},
 		concat: {
 			dist: {
-				src: ['public/javascripts/semtag.js', 'public/javascripts/sw-semtag.js'],
+				src: ['public/javascripts/lib/bootstrap.js', 'public/javascripts/semtag.js', 'public/javascripts/sw-semtag.js'],
 				dest: 'public/javascripts/dist/<%= pkg.name %>.js'
 			}
 		},
