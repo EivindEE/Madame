@@ -167,10 +167,14 @@ $('#content').mouseup(function () {
 	'use strict';
 	var range = window.getSelection().getRangeAt(0);
 	if (range && range.toString().length > 0) {
-		semtag.resetToTag('toTag', function () {
-			semtag.surround(range, 'toTag');
-			semtag.sw(range.toString());
-			document.getSelection().addRange(range);
-		});
+		if (range.toString().length > 50) {
+			$('header .container').append('<div class="alert span6 fade in"><button type="button" class="close" data-dismiss="alert">×</button><strong>Warning!</strong> Selections should be less than 50 letters.</div>');
+		} else {
+			semtag.resetToTag('toTag', function () {
+				semtag.surround(range, 'toTag');
+				semtag.sw(range.toString());
+				document.getSelection().addRange(range);
+			});
+		}
 	}
 });
