@@ -5,7 +5,6 @@ use JSON;
 my $wn = WordNet::QueryData->new(
 	dir => "/usr/local/Wordnet-3.0/dict",
 	noload => 1);
-my $json = JSON->new->allow_nonref;
 # Takes an argument in the form synset-wordsens-gramaticalcategory-senscount
 my @stripped = ($ARGV[0] =~ /.*-(.*)-(.).*-(.*)/);
 my $synset = join('#', @stripped);
@@ -22,8 +21,8 @@ my @all_parents_with_siblings;
 push(@all_parents_with_siblings, {"ancestor" => $_, "siblings" => [siblings($_)]}) for @all_parents;
 
 my %json = ("chain" => [uniq(@all_parents_with_siblings)], "synset" => $synset, "siblings" => [siblings($synset)]);
-
-print encode_json \%json;
+my $json = JSON->new->utf8->pretty->encode(\%json);
+print $json;
 
 
 sub uniq { # Copied from http://stackoverflow.com/questions/7651/how-do-i-remove-duplicate-items-from-an-array-in-perl#answer-7657
@@ -44,8 +43,16 @@ sub parent {
 
 
 sub siblings {
-	my @parents = parent($_[0]); # Find parents of synset
+	my $synset = $_[0];
+	my @parents = parent($synset); # Find parents of synset
 	my @siblings;
 	push(@siblings, $wn->querySense($_, "hypo")) for @parents;
+	my $index = 0;
+	for my $value (@siblings) { # Removes term from siblings
+		if ($value eq $synset) {
+			splice @siblings, $index, 1;
+		}
+		$index += 1;
+	}
 	return @siblings;
 }
