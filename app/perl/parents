@@ -18,9 +18,9 @@ while ( @parents){ # Does a breadth first search through the WordNet graph, can 
 }
 
 my @all_parents_with_siblings;
-push(@all_parents_with_siblings, {"ancestor" => $_, "siblings" => [siblings($_)]}) for @all_parents;
+push(@all_parents_with_siblings, {"ancestor" => $_ , "offset" => $wn->offset($_) ,"siblings" => [siblings($_)]}) for @all_parents;
 
-my %json = ("chain" => [uniq(@all_parents_with_siblings)], "synset" => $synset, "siblings" => [siblings($synset)]);
+my %json = ("chain" => [uniq(@all_parents_with_siblings)], "synset" => $synset, "offset"=> $wn->offset($synset), "siblings" => [siblings($synset)]);
 my $json = JSON->new->utf8->pretty->encode(\%json);
 print $json;
 
@@ -38,7 +38,8 @@ sub uniq { # Copied from http://stackoverflow.com/questions/7651/how-do-i-remove
 }
 
 sub parent {
-	return $wn->querySense($_[0], "hype");
+	my @parents = $wn->querySense($_[0], "hype");
+	return @parents;
 }
 
 
@@ -46,6 +47,7 @@ sub siblings {
 	my $synset = $_[0];
 	my @parents = parent($synset); # Find parents of synset
 	my @siblings;
+	my @sibling_and_offset;
 	push(@siblings, $wn->querySense($_, "hypo")) for @parents;
 	my $index = 0;
 	for my $value (@siblings) { # Removes term from siblings
@@ -54,5 +56,8 @@ sub siblings {
 		}
 		$index += 1;
 	}
-	return @siblings;
+	for my $sibling (@siblings) {
+		push (@sibling_and_offset, {$sibling => $wn->offset($sibling)});
+	}
+	return @sibling_and_offset;
 }
