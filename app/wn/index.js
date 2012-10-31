@@ -129,7 +129,7 @@ exports.parents = function (req, res) {
 					is_ancestor = true;
 				}
 
-				for (j = 0; j < json.chain[i].siblings.length; j += 1) {
+				for (j = 0; j < json.chain[i].siblings.length && (i < json.chain.length - 4); j += 1) {
 					if (mappings[json.chain[i].siblings[j]]) {
 						is_ancestor = true;
 						if (!ancestor.siblings) {
