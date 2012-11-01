@@ -3,12 +3,49 @@ var http = require('http'),
 	url = require('url'),
 	exec = require('child_process').exec,
 	mappings = require('./mapping').mapping,
+	wn_sumo = require('./wn_sumo').mapping,
 	findParents = function (synset, callback) {
 		exec('perl app/perl/parents ' + synset, function (error, stout, stderr) {
 			if (error) {
 				callback(new Error(error));
 			} else {
 				callback(null, stout);
+			}
+		});
+	},
+	addMappings = function (object, callback) {
+		var	mapping = {"synset": object.synset};
+		if (mappings[object.synset]) {
+			mapping.schema_dot_org = mappings[object.synset];
+		}
+		if (wn_sumo[object.offset]) {
+			mapping.sumo = wn_sumo[object.offset].sumo;
+		}
+		callback(null, mapping);
+	},
+	findLinkMapping = function (link, callback) {
+		addMappings(link, function (error, mapping) {
+			if (error) {
+				callback(error);
+			} else {
+				var siblings = [],
+					i,
+					addSiblingMappings = function (error, mappings) {
+						if (error) {
+							console.log("Error received: " + error);
+						} else {
+							if (mappings) {
+								siblings.push(mappings);
+							}
+						}
+					};
+				for (i = 0; i < link.siblings.length; i += 1) {
+					addMappings(link.siblings[i], addSiblingMappings);
+				}
+				if (siblings.length > 0) {
+					mapping.siblings = siblings;
+				}
+				callback(null, mapping);
 			}
 		});
 	};
@@ -90,14 +127,7 @@ exports.mapping = function (req, res) {
 exports.parents = function (req, res) {
 	var synset = url.parse(req.url, true).query.q,
 		json,
-		i,
-		j,
-		ancestor,
-		is_ancestor,
-		schema_senses = {synset: synset},
-		wn_synset,
-		schema_mapping,
-		mapping;
+		i;
 	findParents(synset, function (error, data) {
 		if (error) {
 			res.writeHead(500, {'Content-Type': 'application/json'});
@@ -105,52 +135,31 @@ exports.parents = function (req, res) {
 		} else {
 			res.writeHead(200, {'Content-Type': 'application/json'});
 			json = JSON.parse(data);
-			if (mappings[json.synset]) {
-				schema_senses.direct_mapping = mappings[json.synset];
-			}
-			for (i = 0; i < json.siblings.length; i += 1) {
-				if (mappings[json.siblings[i]]) {
-					if (!schema_senses.siblings) {
-						schema_senses.siblings = [];
-					}
-					mapping = {};
-					wn_synset = json.siblings[i];
-					schema_mapping = mappings[json.siblings[i]];
-					mapping[schema_mapping] = wn_synset;
-					schema_senses.siblings.push(mapping);
-				}
-			}
-			for (i = 0; i < json.chain.length; i += 1) {
-				ancestor = {synset: json.chain[i].ancestor};
-				is_ancestor = false;
-
-				if (mappings[json.chain[i].ancestor]) {
-					ancestor.mapping = mappings[json.chain[i].ancestor];
-					is_ancestor = true;
-				}
-
-				for (j = 0; j < json.chain[i].siblings.length && (i < json.chain.length - 4); j += 1) {
-					if (mappings[json.chain[i].siblings[j]]) {
-						is_ancestor = true;
-						if (!ancestor.siblings) {
-							ancestor.siblings = [];
+			addMappings(json, function (error, mapping) {
+				var addSiblingMappings = function (error, siblings) {
+						if (siblings) {
+							if (!mapping.siblings) {
+								mapping.siblings = [];
+							}
+							mapping.siblings.push(siblings);
 						}
-						mapping = {};
-						wn_synset = json.chain[i].siblings[j];
-						schema_mapping = mappings[json.chain[i].siblings[j]];
-						mapping[schema_mapping] = wn_synset;
-						ancestor.siblings.push(mapping);
-					}
+					},
+					addLinkMappings = function (error, link) {
+						if (link) {
+							if (!mapping.chain) {
+								mapping.chain = [];
+							}
+							mapping.chain.push(link);
+						}
+					};
+				for (i = 0; i < json.siblings.length; i += 1) {
+					addMappings(json.siblings[i], addSiblingMappings);
 				}
-				if (is_ancestor) {
-					if (!schema_senses.chain) {
-						schema_senses.chain = [];
-					}
-					schema_senses.chain.push(ancestor);
+				for (i = 0; i < json.chain.length; i += 1) {
+					findLinkMapping(json.chain[i], addLinkMappings);
 				}
-			}
-
-			res.end(JSON.stringify(schema_senses));
+				res.end(JSON.stringify(mapping));
+			});
 		}
 	});
 };
