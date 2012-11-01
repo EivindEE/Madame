@@ -16,7 +16,7 @@ module.exports = function (grunt) {
 				' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */'
 		},
 		jslint: {
-			files: ['grunt.js', 'public/javascripts/spec/**/*.js', 'public/javascripts/*.js', 'test/**/*.js', 'app/**/*.js', 'app.js']
+			files: ['grunt.js', 'public/javascripts/spec/**/*.js', 'public/javascripts/*.js', 'test/**/*.js', 'app/*.js', 'app/wn/index.js',  'app.js']
 		},
 		mincss: {
 			compress: {
