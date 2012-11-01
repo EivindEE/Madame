@@ -18,7 +18,7 @@ while ( @parents){ # Does a breadth first search through the WordNet graph, can 
 }
 
 my @all_parents_with_siblings;
-push(@all_parents_with_siblings, {"ancestor" => $_ , "offset" => $wn->offset($_) ,"siblings" => [siblings($_)]}) for @all_parents;
+push(@all_parents_with_siblings, {"synset" => $_ , "offset" => $wn->offset($_) ,"siblings" => [siblings($_)]}) for @all_parents;
 
 my %json = ("chain" => [uniq(@all_parents_with_siblings)], "synset" => $synset, "offset"=> $wn->offset($synset), "siblings" => [siblings($synset)]);
 my $json = JSON->new->utf8->pretty->encode(\%json);
@@ -57,7 +57,7 @@ sub siblings {
 		$index += 1;
 	}
 	for my $sibling (@siblings) {
-		push (@sibling_and_offset, {$sibling => $wn->offset($sibling)});
+		push (@sibling_and_offset, {"synset" => $sibling, "offset" => $wn->offset($sibling)});
 	}
 	return @sibling_and_offset;
 }
