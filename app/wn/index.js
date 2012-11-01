@@ -95,7 +95,16 @@ var http = require('http'),
 	},
 	findBestFit = function (mapping, callback) {
 		var schema_dot_org = mapping.schema_dot_org,
-			sumo = mapping.sumo;
+			sumo = mapping.sumo,
+			i;
+		if (!(schema_dot_org && sumo)) {
+			if (mapping.chain) {
+				for (i = 0; i < mapping.chain.length; i += 1) {
+					schema_dot_org = schema_dot_org || mapping.chain[i].schema_dot_org;
+					sumo = sumo || mapping.chain[i].sumo;
+				}
+			}
+		}
 		callback(null, {"synset": mapping.synset, "schema_dot_org": schema_dot_org, "sumo": sumo});
 	};
 
