@@ -35,12 +35,9 @@ app.configure('development', function () {
 });
 
 app.get('/', routes.index);
-app.get('/wn/hyponymes', wn.hyponymes);
 app.get('/test', routes.test);
 app.get('/sw', routes.sw);
 app.get('/lex', tag.lexitag);
-app.get('/wn/hyper', wn.hypernymes);
-app.get('/wn/schema-mapping', wn.mapping);
 app.get('/wn/parents', wn.parents);
 app.get('/wn/parent', wn.parent);
 
