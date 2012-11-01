@@ -58,33 +58,66 @@ var http = require('http'),
 			} else {
 				json = JSON.parse(data);
 				addMappings(json, function (error, mapping) {
-					var addSiblingMappings = function (error, siblings) {
-							if (siblings) {
-								if (!mapping.siblings) {
-									mapping.siblings = [];
+					if (error) {
+						callback(error);
+					} else {
+						var addSiblingMappings = function (error, siblings) {
+								if (siblings) {
+									if (!mapping.siblings) {
+										mapping.siblings = [];
+									}
+									mapping.siblings.push(siblings);
 								}
-								mapping.siblings.push(siblings);
-							}
-						},
-						addLinkMappings = function (error, link) {
-							if (link) {
-								if (!mapping.chain) {
-									mapping.chain = [];
+							},
+							addLinkMappings = function (error, link) {
+								if (link) {
+									if (!mapping.chain) {
+										mapping.chain = [];
+									}
+									mapping.chain.push(link);
 								}
-								mapping.chain.push(link);
+							};
+						if (json.siblings && json.siblings.length) {
+							for (i = 0; i < json.siblings.length; i += 1) {
+								addMappings(json.siblings[i], addSiblingMappings);
 							}
-						};
-					for (i = 0; i < json.siblings.length; i += 1) {
-						addMappings(json.siblings[i], addSiblingMappings);
+						}
+						if (json.chain && json.chain.length) {
+							for (i = 0; i < json.chain.length; i += 1) {
+								findLinkMapping(json.chain[i], addLinkMappings);
+							}
+						}
+						callback(null, mapping);
 					}
-					for (i = 0; i < json.chain.length; i += 1) {
-						findLinkMapping(json.chain[i], addLinkMappings);
-					}
-					callback(null, mapping);
 				});
 			}
 		});
+	},
+	findBestFit = function (mapping, callback) {
+		var schema_dot_org = mapping.schema_dot_org,
+			sumo = mapping.sumo;
+		callback(null, {"synset": mapping.synset, "schema_dot_org": schema_dot_org, "sumo": sumo});
 	};
+
+exports.bestFit = function (req, res) {
+	var synset = url.parse(req.url, true).query.q;
+	mapSynset(synset, function (error, mapping) {
+		if (error) {
+			res.writeHead(500, {'Content-Type': "application/json"});
+			res.end(JSON.stringify(error));
+		} else {
+			findBestFit(mapping, function (error, bestFit) {
+				if (error) {
+					res.writeHead(500, {'Content-Type': "application/json"});
+					res.end(JSON.stringify(error));
+				} else {
+					res.writeHead(200, {'Content-Type': "application/json"});
+					res.end(JSON.stringify(bestFit));
+				}
+			});
+		}
+	});
+};
 
 exports.mappings = function (req, res) {
 	var synset = url.parse(req.url, true).query.q;
