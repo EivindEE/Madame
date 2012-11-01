@@ -48,6 +48,42 @@ var http = require('http'),
 				callback(null, mapping);
 			}
 		});
+	},
+	mapSynset = function (synset, callback) {
+		var	json,
+			i;
+		findParents(synset, function (error, data) {
+			if (error) {
+				callback(error);
+			} else {
+				json = JSON.parse(data);
+				addMappings(json, function (error, mapping) {
+					var addSiblingMappings = function (error, siblings) {
+							if (siblings) {
+								if (!mapping.siblings) {
+									mapping.siblings = [];
+								}
+								mapping.siblings.push(siblings);
+							}
+						},
+						addLinkMappings = function (error, link) {
+							if (link) {
+								if (!mapping.chain) {
+									mapping.chain = [];
+								}
+								mapping.chain.push(link);
+							}
+						};
+					for (i = 0; i < json.siblings.length; i += 1) {
+						addMappings(json.siblings[i], addSiblingMappings);
+					}
+					for (i = 0; i < json.chain.length; i += 1) {
+						findLinkMapping(json.chain[i], addLinkMappings);
+					}
+					callback(null, mapping);
+				});
+			}
+		});
 	};
 
 exports.hypernymes = function (req, res) {
@@ -125,41 +161,14 @@ exports.mapping = function (req, res) {
 };
 
 exports.parents = function (req, res) {
-	var synset = url.parse(req.url, true).query.q,
-		json,
-		i;
-	findParents(synset, function (error, data) {
+	var synset = url.parse(req.url, true).query.q;
+	mapSynset(synset, function (error, mapping) {
 		if (error) {
-			res.writeHead(500, {'Content-Type': 'application/json'});
-			res.end('{"error": "Could not word with synset: ' + synset + '", "msg": ' + error + '}');
+			res.writeHead(500, {'Content-Type': "application/json"});
+			res.end(JSON.stringify(error));
 		} else {
-			res.writeHead(200, {'Content-Type': 'application/json'});
-			json = JSON.parse(data);
-			addMappings(json, function (error, mapping) {
-				var addSiblingMappings = function (error, siblings) {
-						if (siblings) {
-							if (!mapping.siblings) {
-								mapping.siblings = [];
-							}
-							mapping.siblings.push(siblings);
-						}
-					},
-					addLinkMappings = function (error, link) {
-						if (link) {
-							if (!mapping.chain) {
-								mapping.chain = [];
-							}
-							mapping.chain.push(link);
-						}
-					};
-				for (i = 0; i < json.siblings.length; i += 1) {
-					addMappings(json.siblings[i], addSiblingMappings);
-				}
-				for (i = 0; i < json.chain.length; i += 1) {
-					findLinkMapping(json.chain[i], addLinkMappings);
-				}
-				res.end(JSON.stringify(mapping));
-			});
+			res.writeHead(200, {'Content-Type': "application/json"});
+			res.end(JSON.stringify(mapping));
 		}
 	});
 };
