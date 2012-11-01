@@ -86,7 +86,7 @@ var http = require('http'),
 		});
 	};
 
-exports.parents = function (req, res) {
+exports.mappings = function (req, res) {
 	var synset = url.parse(req.url, true).query.q;
 	mapSynset(synset, function (error, mapping) {
 		if (error) {

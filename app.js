@@ -38,7 +38,7 @@ app.get('/', routes.index);
 app.get('/test', routes.test);
 app.get('/sw', routes.sw);
 app.get('/lex', tag.lexitag);
-app.get('/wn/parents', wn.parents);
+app.get('/wn/parents', wn.mappings);
 app.get('/wn/parent', wn.parent);
 
 http.createServer(app).listen(app.get('port'), function () {
