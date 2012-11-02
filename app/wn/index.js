@@ -2,8 +2,9 @@
 var http = require('http'),
 	url = require('url'),
 	exec = require('child_process').exec,
-	mappings = require('./mapping').mapping,
-	wn_sumo = require('./wn_sumo').mapping,
+	wn2schema = require('../../mappings/wn2schema').mapping,
+	wn2sumo = require('../../mappings/wn2sumo').mapping,
+	schemaParent = require('../../mappings/schema2parent').mapping,
 	findParents = function (synset, callback) {
 		exec('perl app/perl/parents ' + synset, function (error, stout, stderr) {
 			if (error) {
@@ -15,11 +16,11 @@ var http = require('http'),
 	},
 	addMappings = function (object, callback) {
 		var	mapping = {"synset": object.synset};
-		if (mappings[object.synset]) {
-			mapping.schema_dot_org = mappings[object.synset];
+		if (wn2schema[object.synset]) {
+			mapping.schema_dot_org = wn2schema[object.synset];
 		}
-		if (wn_sumo[object.offset]) {
-			mapping.sumo = wn_sumo[object.offset].sumo;
+		if (wn2sumo[object.offset]) {
+			mapping.sumo = wn2sumo[object.offset].sumo;
 		}
 		callback(null, mapping);
 	},
@@ -102,6 +103,14 @@ var http = require('http'),
 				for (i = 0; i < mapping.chain.length; i += 1) {
 					schema_dot_org = schema_dot_org || mapping.chain[i].schema_dot_org;
 					sumo = sumo || mapping.chain[i].sumo;
+				}
+			}
+		}
+		if (!(schema_dot_org && sumo)) {
+			if (mapping.siblings) {
+				for (i = 0; i < mapping.siblings.length; i += 1) {
+					schema_dot_org = schema_dot_org || mapping.chain[i].schema_dot_org;
+//					sumo = sumo || mapping.chain[i].sumo;
 				}
 			}
 		}
