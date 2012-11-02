@@ -1,4 +1,4 @@
-exports.child_parent = {
+exports.mapping = {
 	"CreativeWork": "Thing",
 	"Article": "CreativeWork",
 	"BlogPosting": "Article",
