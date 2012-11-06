@@ -155,7 +155,7 @@ exports.lexitag = function (req, res) {
 
 	console.log('Starting to lexitag');
 	var q = url.parse(req.url, true);
-	runQueries([findSchemaTerms, findLexitagTerms], q.query.word, function (json) {
+	runQueries([findLexitagTerms], q.query.word, function (json) {
 		res.writeHead(200, {"Content-Type" : "application/json"});
 		if (req.query.callback) {
 			res.write(req.query.callback + '(' + JSON.stringify(json) + ')');
