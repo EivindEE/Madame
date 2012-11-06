@@ -7,7 +7,7 @@ var http = require('http'),
 	schema2parent = require('../../mappings/schema2parent').mapping,
 	sumo2parent = require('../../mappings/sumo2parent').mapping,
 	findParents = function (synset, callback) {
-		exec('perl app/perl/parents.pl ' + synset, function (error, stout, stderr) {
+		exec('perl scripts/parents.pl ' + synset, function (error, stout, stderr) {
 			if (error) {
 				callback(new Error(error));
 			} else {
@@ -201,7 +201,7 @@ exports.mappings = function (req, res) {
 
 exports.parent = function (req, res) {
 	var synset = url.parse(req.url, true).query.q;
-	exec('perl app/perl/parent.pl ' + synset, function (error, stout, stderr) {
+	exec('perl scripts/parent.pl ' + synset, function (error, stout, stderr) {
 		if (error) {
 			res.writeHead(500, {'Content-Type': 'application/json'});
 			res.end('{"error": ' + error + '}');
