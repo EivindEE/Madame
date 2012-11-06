@@ -4,7 +4,8 @@ var http = require('http'),
 	exec = require('child_process').exec,
 	wn2schema = require('../../mappings/wn2schema').mapping,
 	wn2sumo = require('../../mappings/wn2sumo').mapping,
-	schemaParent = require('../../mappings/schema2parent').mapping,
+	schema2parent = require('../../mappings/schema2parent').mapping,
+	sumo2parent = require('../../mappings/sumo2parent').mapping,
 	findParents = function (synset, callback) {
 		exec('perl app/perl/parents ' + synset, function (error, stout, stderr) {
 			if (error) {
@@ -97,24 +98,72 @@ var http = require('http'),
 	findBestFit = function (mapping, callback) {
 		var schema_dot_org = mapping.schema_dot_org,
 			sumo = mapping.sumo,
-			i;
+			siblings,
+			parents,
+			sibling,
+			parentSiblings,
+			i,
+			j;
 		if (!(schema_dot_org && sumo)) {
 			if (mapping.chain) {
+				parents = [];
 				for (i = 0; i < mapping.chain.length; i += 1) {
 					schema_dot_org = schema_dot_org || mapping.chain[i].schema_dot_org;
 					sumo = sumo || mapping.chain[i].sumo;
+					if (mapping.chain[i].sumo || mapping.chain[i].schema_dot_org) {
+						parents.push({"synset": mapping.chain[i].synset, "schema_dot_org": mapping.chain[i].schema_dot_org, "sumo": mapping.chain[i].sumo});
+					}
 				}
 			}
 		}
 		if (!(schema_dot_org && sumo)) {
 			if (mapping.siblings) {
+				siblings = [];
 				for (i = 0; i < mapping.siblings.length; i += 1) {
-					schema_dot_org = schema_dot_org || mapping.chain[i].schema_dot_org;
-//					sumo = sumo || mapping.chain[i].sumo;
+					sibling = {"synset": mapping.siblings[i].synset};
+					if (mapping.siblings[i].schema_dot_org) {
+						schema_dot_org = schema_dot_org || schema2parent[mapping.siblings[i].schema_dot_org];
+						sibling.schema_dot_org = schema2parent[mapping.siblings[i].schema_dot_org];
+					}
+					if (mapping.siblings[i].sumo) {
+						sumo = sumo || sumo2parent[mapping.siblings[i].sumo];
+						sibling.sumo = sumo2parent[mapping.siblings[i].sumo];
+					}
+					siblings.push(sibling);
 				}
 			}
 		}
-		callback(null, {"synset": mapping.synset, "schema_dot_org": schema_dot_org, "sumo": sumo});
+		if (!(schema_dot_org && sumo)) {
+			if (mapping.chain) {
+				parentSiblings = [];
+				siblings = [];
+				for (i = 0; i < mapping.chain.length; i += 1) {
+					if (mapping.chain[i].siblings) {
+						siblings = [];
+						for (j = 0; j < mapping.chain[i].siblings.length; j += 1) {
+							sibling = {};
+							if (mapping.chain[i].siblings[j].schema_dot_org) {
+								schema_dot_org = schema_dot_org || schema2parent[mapping.chain[i].siblings[j].schema_dot_org];
+								sibling.schema_dot_org = schema2parent[mapping.chain[i].siblings[j].schema_dot_org];
+								sibling.synset = mapping.chain[i].synset;
+							}
+							if (mapping.chain[i].siblings[j].schema_dot_org) {
+								sumo = sumo || mapping.chain[i].sumo;
+								sibling.sumo = sumo2parent[mapping.chain[i].siblings[j].sumo];
+								sibling.synset = mapping.chain[i].synset;
+							}
+							if (sibling.synset) {
+								siblings.push(sibling);
+							}
+						}
+						if (siblings.length) {
+							parentSiblings.push(siblings);
+						}
+					}
+				}
+			}
+		}
+		callback(null, {"synset": mapping.synset, "schema_dot_org": schema_dot_org, "sumo": sumo, "parents": parents, "siblings": siblings, "parentSiblings": parentSiblings});
 	};
 
 exports.bestFit = function (req, res) {
