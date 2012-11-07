@@ -68,7 +68,8 @@ semtag.wordSenseClicked = function (wordSense, options) {
 		removeIcon,
 		about,
 		content,
-		isWn = new RegExp('http://www.w3.org/2006/03/wn/');
+		wnId;
+
 	options = options || {};
 	toTag = document.getElementById('toTag');
 	content = options.text || toTag.textContent;
@@ -76,33 +77,42 @@ semtag.wordSenseClicked = function (wordSense, options) {
 	sense = options.wordSense || wordSense.getAttribute('id');
 	title = options.title  || wordSense.textContent;
 	about = options.about || document.URL + '#' + id;
-	if (sense.match(isWn)) {
-		$.getJSON('/wn/best-fit');
-	}
-	toTag = semtag.extendTag(toTag,
-		{
-			'id': id,
-			'attr': {
-				'rel': 'http://purl.org/linguistics/gold/hasMeaning',
-				'title': title,
-				'resource': sense,
-				'about': about
-			},
-			classes: ['tagged']
+	console.log(wordSense.dataset.source === 'schema_org');
+	if (wordSense.dataset.source === 'schema_org') {
+		wnId = sense.substring(sense.lastIndexOf('/') + 1);
+		$.getJSON('/wn/best-fit?q=' + wnId, function (json) {
+			if (json.sumo) {
+				sense += " http://www.ontologyportal.org/SUMO.owl#" + json.sumo;
+			}
+			if (json.schema_dot_org) {
+				sense += " http://schema.org/" + json.schema_dot_org;
+			}
+			toTag = semtag.extendTag(toTag,
+				{
+					'id': id,
+					'attr': {
+						'title': title,
+//						'property': 'rdf:type',
+						'typeof': sense,
+						'about': about
+					},
+					classes: ['tagged']
+				});
+			remove = semtag.buildTag('span', {classes: ['remove']});
+			toTag.appendChild(remove);
+			removeIcon = semtag.buildTag('img', {
+				'id': id,
+				'attr': {'src': '/images/remove.png',
+						'alt': 'X'},
+				'classes': ['removeIcon']
+			});
+			remove.appendChild(removeIcon);
+			$('.removeIcon').unbind('click');
+			$('.removeIcon').click(function () {
+				semtag.removeSense(this);
+			});
 		});
-	remove = semtag.buildTag('span', {classes: ['remove']});
-	toTag.appendChild(remove);
-	removeIcon = semtag.buildTag('img', {
-		'id': id,
-		'attr': {'src': '/images/remove.png',
-				'alt': 'X'},
-		'classes': ['removeIcon']
-	});
-	remove.appendChild(removeIcon);
-	$('.removeIcon').unbind('click');
-	$('.removeIcon').click(function () {
-		semtag.removeSense(this);
-	});
+	}
 };
 semtag.buildDidYouMeanTable = function (json, tableId) {
 	'use strict';
