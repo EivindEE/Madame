@@ -1,26 +1,38 @@
 /*global  $ */
 var semtag = semtag || {};
-semtag.buildTag = function (parent, type, options) {
+semtag.extendTag = function (el, options) {
 	'use strict';
-	var el,
+	var	i,
 		attr,
-		attrName;
+		data;
+	el.id = options.id;
+	if (options.classes) {
+		for (i = 0; i < options.classes.length || 0; i += 1) {
+			el.classList.add(options.classes[i]);
+		}
+	}
+	for (attr in options.attr) {
+		if (options.attr.hasOwnProperty(attr)) {
+			el.setAttribute(attr, options.attr[attr]);
+		}
+	}
+	for (data in options.data) {
+		if (options.data.hasOwnProperty(data)) {
+			el.dataset[data] = options.data[data];
+		}
+	}
+	return el;
+};
+semtag.buildTag = function (type, options) {
+	'use strict';
+	var el;
 	if (typeof type === 'object') {
 		options = type;
 		type = 'div';
 	}
-	el = document.createElement(type);
-	for (attr in options) {
-		if (options.hasOwnProperty(attr)) {
-			attrName = attr === 'className' ? 'class' : attr;
-			el.setAttribute(attrName, options[attr]);
-		}
-	}
-	if (typeof parent === 'string') {
-		document.getElementById(parent).appendChild(el);
-	} else if (typeof parent === 'object') {
-		parent.appendChild(el);
-	}
+	options = options || {};
+	el = semtag.extendTag(document.createElement(type), options);
+
 	return el;
 };
 semtag.getId = function (content) {
@@ -65,16 +77,28 @@ semtag.wordSenseClicked = function (wordSense, options) {
 	title = options.title  || wordSense.textContent;
 	about = options.about || document.URL + '#' + id;
 	if (sense.match(isWn)) {
-		console.log(sense + " matches wn");
+		$.getJSON('/wn/best-fit');
 	}
-	toTag.setAttribute('id', id);
-	toTag.setAttribute('rel', 'http://purl.org/linguistics/gold/hasMeaning');
-	toTag.setAttribute('title', title);
-	toTag.setAttribute('resource', sense);
-	toTag.setAttribute('about', about);
-	toTag.className = 'tagged';
-	remove = semtag.buildTag(toTag, 'span', {className: 'remove'});
-	removeIcon = semtag.buildTag(remove, 'img', {'id': id, 'src': '/images/remove.png', 'alt': 'X', 'className': 'removeIcon'});
+	toTag = semtag.extendTag(toTag,
+		{
+			'id': id,
+			'attr': {
+				'rel': 'http://purl.org/linguistics/gold/hasMeaning',
+				'title': title,
+				'resource': sense,
+				'about': about
+			},
+			classes: ['tagged']
+		});
+	remove = semtag.buildTag('span', {classes: ['remove']});
+	toTag.appendChild(remove);
+	removeIcon = semtag.buildTag('img', {
+		'id': id,
+		'attr': {'src': '/images/remove.png',
+				'alt': 'X'},
+		'classes': ['removeIcon']
+	});
+	remove.appendChild(removeIcon);
 	$('.removeIcon').unbind('click');
 	$('.removeIcon').click(function () {
 		semtag.removeSense(this);
@@ -91,12 +115,22 @@ semtag.buildDidYouMeanTable = function (json, tableId) {
 		input,
 		word;
 	word = document.getElementById('toTag').textContent;
-	didYouMean = document.getElementById(tableId) || semtag.buildTag('content-container', {id: tableId, className: "span4"});
-	list = document.getElementById('senses') || semtag.buildTag(tableId, 'ul', {id: 'senses'});
+	didYouMean = document.getElementById(tableId);
+	if (!didYouMean) {
+		didYouMean = semtag.buildTag({id: tableId, classes: ["span4"]});
+		document.getElementById('content-container').appendChild(didYouMean);
+	}
+	list = document.getElementById('senses');
+	if (!list) {
+		list =  semtag.buildTag('ul', {id: 'senses'});
+		document.getElementById(tableId).appendChild(list);
+	}
 	didYouMean.innerHTML = "";
 	list.innerHTML = "";
-	header = semtag.buildTag(didYouMean, 'h5', {id : 'dym-head'});
-	input = semtag.buildTag(didYouMean, 'input', {id: 'dym-input', type: 'text', placeholder: 'Write an URL or term here'});
+	header = semtag.buildTag('h5', {id : 'dym-head'});
+	input = semtag.buildTag('input', {id: 'dym-input', attr: {type: 'text', placeholder: 'Write an URL or term here'}});
+	didYouMean.appendChild(header);
+	didYouMean.appendChild(input);
 	$('#dym-input').keypress(function (kp) {
 		var inputString,
 			// RegExp Pattern lifted from  http://stackoverflow.com/questions/6667029/using-regex-to-match-url-pattern-invalid-quantifier
@@ -122,7 +156,14 @@ semtag.buildDidYouMeanTable = function (json, tableId) {
 	});
 	header.innerText = 'Pick the term describes "' + json.word + '", describe it with another word, or enter a URL connected to the term';
 	for (i = 0; i < sensCount; i += 1) {
-		el = semtag.buildTag(list, 'li', {id: json.senses[i].senseid, className: 'word-sense'});
+		el = semtag.buildTag('li', {
+			'id': json.senses[i].senseid,
+			data: {
+				source: json.senses[i].source
+			},
+			'classes': ['word-sense']
+		});
+		list.appendChild(el);
 		el.innerText = json.senses[i].explanation;
 	}
 	didYouMean.appendChild(list);
@@ -135,7 +176,6 @@ semtag.sw = function (term) {
 	'use strict';
 	term = term.replace(/^\\s*|\\s*$/g, ''); // Removes leading and trailing white space
 	term = term.replace(/ /g, '_'); // Replaces inner white space with underscores
-	console.log('"' + term + '"');
 	$.getJSON('/lex?callback=?',
 		{
 			word: term
@@ -179,7 +219,7 @@ $('#content').mouseup(function () {
 			semtag.resetToTag('toTag', function () {
 				semtag.surround(range, 'toTag');
 				semtag.sw(text);
-//				document.getSelection().addRange(range); //
+				document.getSelection().addRange(range);
 			});
 		}
 	}
