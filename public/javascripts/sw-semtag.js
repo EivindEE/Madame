@@ -55,7 +55,8 @@ semtag.wordSenseClicked = function (wordSense, options) {
 		remove,
 		removeIcon,
 		about,
-		content;
+		content,
+		isWn = new RegExp('http://www.w3.org/2006/03/wn/');
 	options = options || {};
 	toTag = document.getElementById('toTag');
 	content = options.text || toTag.textContent;
@@ -63,6 +64,9 @@ semtag.wordSenseClicked = function (wordSense, options) {
 	sense = options.wordSense || wordSense.getAttribute('id');
 	title = options.title  || wordSense.textContent;
 	about = options.about || document.URL + '#' + id;
+	if (sense.match(isWn)) {
+		console.log(sense + " matches wn");
+	}
 	toTag.setAttribute('id', id);
 	toTag.setAttribute('rel', 'http://purl.org/linguistics/gold/hasMeaning');
 	toTag.setAttribute('title', title);
@@ -127,15 +131,16 @@ semtag.buildDidYouMeanTable = function (json, tableId) {
 		didYouMean.parentNode.removeChild(didYouMean);
 	});
 };
-semtag.sw = function (word) {
+semtag.sw = function (term) {
 	'use strict';
-	word = word.replace(/^\\s*|\\s*$/g, ''); // Removes leading and trailing white space
-	word = word.replace(/ /g, '_'); // Replaces inner white space with underscores
+	term = term.replace(/^\\s*|\\s*$/g, ''); // Removes leading and trailing white space
+	term = term.replace(/ /g, '_'); // Replaces inner white space with underscores
+	console.log('"' + term + '"');
 	$.getJSON('/lex?callback=?',
 		{
-			word: word
+			word: term
 		}, function (data) {
-			semtag.buildDidYouMeanTable(data, 'dym', word);
+			semtag.buildDidYouMeanTable(data, 'dym', term);
 		});
 };
 semtag.surround = function (range, className) {
@@ -165,15 +170,16 @@ semtag.resetToTag = function (id, callback) {
 };
 $('#content').mouseup(function () {
 	'use strict';
-	var range = window.getSelection().getRangeAt(0);
-	if (range && range.toString().length > 0) {
-		if (range.toString().length > 50) {
+	var range = window.getSelection().getRangeAt(0),
+		text = range.toString();
+	if (range && text.length > 0) {
+		if (text.length > 50) {
 			$('header .container').append('<div class="alert span6 fade in"><button type="button" class="close" data-dismiss="alert">×</button><strong>Warning!</strong> Selections should be less than 50 letters.</div>');
 		} else {
 			semtag.resetToTag('toTag', function () {
 				semtag.surround(range, 'toTag');
-				semtag.sw(range.toString());
-				document.getSelection().addRange(range);
+				semtag.sw(text);
+//				document.getSelection().addRange(range); //
 			});
 		}
 	}
