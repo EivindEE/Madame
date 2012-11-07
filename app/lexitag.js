@@ -153,7 +153,6 @@ function runQueries(run, query, callback) {
 }
 exports.lexitag = function (req, res) {
 
-	console.log('Starting to lexitag');
 	var q = url.parse(req.url, true);
 	runQueries([findLexitagTerms], q.query.word, function (json) {
 		res.writeHead(200, {"Content-Type" : "application/json"});
