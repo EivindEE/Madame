@@ -60,24 +60,16 @@ semtag.removeSense = function (sense) {
 };
 semtag.wordSenseClicked = function (wordSense, options) {
 	'use strict';
-	var toTag,
-		sense,
-		id,
-		title,
-		remove,
+	options = options || {};
+	var toTag	= document.getElementById('toTag'),
+		title	= options.title  || wordSense.textContent,
+		content = options.text || toTag.textContent,
+		id		= semtag.getId(content),
+		about	= options.about || document.URL + '#' + id,
+		sense	= options.wordSense || wordSense.getAttribute('id'),
 		removeIcon,
-		about,
-		content,
 		wnId;
 
-	options = options || {};
-	toTag = document.getElementById('toTag');
-	content = options.text || toTag.textContent;
-	id = semtag.getId(content);
-	sense = options.wordSense || wordSense.getAttribute('id');
-	title = options.title  || wordSense.textContent;
-	about = options.about || document.URL + '#' + id;
-	console.log(wordSense.dataset.source === 'schema_org');
 	if (wordSense.dataset.source === 'schema_org') {
 		wnId = sense.substring(sense.lastIndexOf('/') + 1);
 		$.getJSON('/wn/best-fit?q=' + wnId, function (json) {
@@ -92,21 +84,18 @@ semtag.wordSenseClicked = function (wordSense, options) {
 					'id': id,
 					'attr': {
 						'title': title,
-//						'property': 'rdf:type',
 						'typeof': sense,
 						'about': about
 					},
 					classes: ['tagged']
 				});
-			remove = semtag.buildTag('span', {classes: ['remove']});
-			toTag.appendChild(remove);
 			removeIcon = semtag.buildTag('img', {
 				'id': id,
 				'attr': {'src': '/images/remove.png',
 						'alt': 'X'},
 				'classes': ['removeIcon']
 			});
-			remove.appendChild(removeIcon);
+			toTag.appendChild(removeIcon);
 			$('.removeIcon').unbind('click');
 			$('.removeIcon').click(function () {
 				semtag.removeSense(this);
