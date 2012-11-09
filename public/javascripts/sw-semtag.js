@@ -67,41 +67,45 @@ semtag.wordSenseClicked = function (wordSense, options) {
 		id		= semtag.getId(content),
 		about	= options.about || document.URL + '#' + id,
 		sense	= options.wordSense || wordSense.getAttribute('id'),
+		endpoint,
 		removeIcon,
-		wnId;
-
-	if (wordSense.dataset.source === 'schema_org') {
 		wnId = sense.substring(sense.lastIndexOf('/') + 1);
-		$.getJSON('/wn/best-fit?q=' + wnId, function (json) {
-			if (json.sumo) {
-				sense += " http://www.ontologyportal.org/SUMO.owl#" + json.sumo;
-			}
-			if (json.schema_dot_org) {
-				sense += " http://schema.org/" + json.schema_dot_org;
-			}
-			toTag = semtag.extendTag(toTag,
-				{
-					'id': id,
-					'attr': {
-						'title': title,
-						'typeof': sense,
-						'about': about
-					},
-					classes: ['tagged']
-				});
-			removeIcon = semtag.buildTag('img', {
-				'id': id,
-				'attr': {'src': '/images/remove.png',
-						'alt': 'X'},
-				'classes': ['removeIcon']
-			});
-			toTag.appendChild(removeIcon);
-			$('.removeIcon').unbind('click');
-			$('.removeIcon').click(function () {
-				semtag.removeSense(this);
-			});
-		});
+	if (wordSense.dataset.source === 'schema_org' || wordSense.dataset.source === 'WordNet') {
+		endpoint = '/wn/best-fit?q=';
+	} else if (wordSense.dataset.source === 'DBPedia') {
+		endpoint = 'dbp/best-fit?q=';
+	} else {
+		console.log(wordSense.dataset.source);
 	}
+	$.getJSON(endpoint + wnId, function (json) {
+		if (json.sumo) {
+			sense += " http://www.ontologyportal.org/SUMO.owl#" + json.sumo;
+		}
+		if (json.schema_dot_org) {
+			sense += " http://schema.org/" + json.schema_dot_org;
+		}
+		toTag = semtag.extendTag(toTag,
+			{
+				'id': id,
+				'attr': {
+					'title': title,
+					'typeof': sense,
+					'about': about
+				},
+				classes: ['tagged']
+			});
+		removeIcon = semtag.buildTag('img', {
+			'id': id,
+			'attr': {'src': '/images/remove.png',
+					'alt': 'X'},
+			'classes': ['removeIcon']
+		});
+		toTag.appendChild(removeIcon);
+		$('.removeIcon').unbind('click');
+		$('.removeIcon').click(function () {
+			semtag.removeSense(this);
+		});
+	});
 };
 semtag.buildDidYouMeanTable = function (json, tableId) {
 	'use strict';
