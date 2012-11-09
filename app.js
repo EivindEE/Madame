@@ -8,8 +8,7 @@ var express = require('express'),
 	gzippo = require('gzippo'),
 	routes = require('./routes'),
 	http = require('http'),
-	path = require('path'),
-	tag = require('./app/lexitag');
+	path = require('path');
 
 var app = express();
 
@@ -35,11 +34,12 @@ app.configure('development', function () {
 app.get('/', routes.index);
 app.get('/test', routes.test);
 app.get('/sw', routes.sw);
-app.get('/lex', tag.lexitag);
-app.get('/wn/mappings', routes.wn.mappings);
-app.get('/wn/best-fit', routes.wn.bestFit);
-app.get('/wn/parent', routes.wn.parent);
+app.get('/lex', routes.disambiguate.term);
+app.get('/wn/:func', routes.wn);
 app.get('/dbp/best-fit', routes.dbp.bestFit);
+app.get('/test/:test', function (req, res) {
+	console.log(req.params.test);
+});
 
 http.createServer(app).listen(app.get('port'), function () {
 	console.log("Express server listening on port " + app.get('port'));

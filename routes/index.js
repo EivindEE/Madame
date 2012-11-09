@@ -1,7 +1,23 @@
 "use strict";
 var url = require('url'),
 	wn	= require('../app/wn'),
-	dbp = require('../app/dbp');
+	dbp = require('../app/dbp'),
+	disambiguate = require('../app/disambiguate'),
+	returnJSON = function (error, json, res) {
+		if (error) {
+			res.writeHead(500, {'Content-Type': "application/json"});
+			res.end(JSON.stringify(error));
+		} else {
+			res.writeHead(200, {'Content-Type': "application/json"});
+			res.end(JSON.stringify(json));
+		}
+	},
+	wnFuncs = {
+		'best-fit' : wn.bestFit,
+		'parent' : wn.parent,
+		'mappings': wn.mappings
+	};
+
 
 exports.index = function (req, res) {
 	res.render('semtag', { title: 'SemTag', scripts: ['http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js', 'javascripts/dist/SemTag.min.js']});
@@ -11,56 +27,34 @@ exports.sw = function (req, res) {
 	res.render('sw', { title: 'Single Word SemTag', scripts: ['http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js', 'javascripts/dist/SemTag.js']});
 };
 
-exports.wn = {
-	bestFit : function (req, res) {
-		var q = url.parse(req.url, true).query.q;
-		wn.bestFit(q, function (error, bestFit) {
-			if (error) {
-				res.writeHead(500, {'Content-Type': "application/json"});
-				res.end(JSON.stringify(error));
-			} else {
-				res.writeHead(200, {'Content-Type': "application/json"});
-				res.end(JSON.stringify(bestFit));
-			}
+exports.wn = function (req, res) {
+	var func = req.params.func,
+		q = req.query.q;
+	console.log(wnFuncs[func]);
+	if (wnFuncs[func]) {
+		wnFuncs[func](q, function (error, json) {
+			returnJSON(error, json, res);
 		});
-	},
-	parent : function (req, res) {
-		var q = url.parse(req.url, true).query.q;
-		wn.parent(q, function (error, parent) {
-			if (error) {
-				res.writeHead(500, {'Content-Type': "application/json"});
-				res.end(JSON.stringify(error));
-			} else {
-				res.writeHead(200, {'Content-Type': "application/json"});
-				res.end(JSON.stringify(parent));
-			}
-		});
-	},
-	mappings : function (req, res) {
-		var q = url.parse(req.url, true).query.q;
-		wn.mappings(q, function (error, mapping) {
-			if (error) {
-				res.writeHead(500, {'Content-Type': "application/json"});
-				res.end(JSON.stringify(error));
-			} else {
-				res.writeHead(200, {'Content-Type': "application/json"});
-				res.end(JSON.stringify(mapping));
-			}
-		});
+	} else {
+		res.writeHead(404, {'Content-Type': 'text/plain'});
+		res.end('404: ' + req.url + ' not found');
 	}
 };
 
 exports.dbp = {
 	bestFit: function (req, res) {
-		var q = url.parse(req.url, true).query.q;
-		dbp.bestFit(q, function (error, bestFit) {
-			if (error) {
-				res.writeHead(500, {'Content-Type': "application/json"});
-				res.end(JSON.stringify(error));
-			} else {
-				res.writeHead(200, {'Content-Type': "application/json"});
-				res.end(JSON.stringify(bestFit));
-			}
+		var q = req.query.q;
+		dbp.bestFit(q, function (error, json) {
+			returnJSON(error, json, res);
+		});
+	}
+};
+
+exports.disambiguate = {
+	term: function (req, res) {
+		var q = req.query.q;
+		disambiguate.term(q, function (error, json) {
+			returnJSON(error, json, res);
 		});
 	}
 };
