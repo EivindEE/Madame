@@ -1,6 +1,5 @@
 'use strict';
-var http = require('http'),
-	url = require('url'),
+var url = require('url'),
 	exec = require('child_process').exec,
 	wn2schema = require('../../mappings/wn2schema').mapping,
 	wn2sumo = require('../../mappings/wn2sumo').mapping,
@@ -166,48 +165,28 @@ var http = require('http'),
 		callback(null, {"synset": mapping.synset, "schema_dot_org": schema_dot_org, "sumo": sumo, "parents": parents, "siblings": siblings, "parentSiblings": parentSiblings});
 	};
 
-exports.bestFit = function (req, res) {
-	var synset = url.parse(req.url, true).query.q;
+exports.bestFit = function (synset, callback) {
 	mapSynset(synset, function (error, mapping) {
 		if (error) {
-			res.writeHead(500, {'Content-Type': "application/json"});
-			res.end(JSON.stringify(error));
+			callback(error);
 		} else {
-			findBestFit(mapping, function (error, bestFit) {
-				if (error) {
-					res.writeHead(500, {'Content-Type': "application/json"});
-					res.end(JSON.stringify(error));
-				} else {
-					res.writeHead(200, {'Content-Type': "application/json"});
-					res.end(JSON.stringify(bestFit));
-				}
-			});
+			findBestFit(mapping, callback);
 		}
 	});
 };
 
-exports.mappings = function (req, res) {
-	var synset = url.parse(req.url, true).query.q;
-	mapSynset(synset, function (error, mapping) {
-		if (error) {
-			res.writeHead(500, {'Content-Type': "application/json"});
-			res.end(JSON.stringify(error));
-		} else {
-			res.writeHead(200, {'Content-Type': "application/json"});
-			res.end(JSON.stringify(mapping));
-		}
-	});
+exports.mappings = function (synset, callback) {
+	mapSynset(synset, callback);
 };
 
-exports.parent = function (req, res) {
-	var synset = url.parse(req.url, true).query.q;
+exports.parent = function (synset, callback) {
 	exec('perl scripts/parent.pl ' + synset, function (error, stout, stderr) {
 		if (error) {
-			res.writeHead(500, {'Content-Type': 'application/json'});
-			res.end('{"error": ' + error + '}');
+			callback({"error": error});
+		} else if (stderr) {
+			callback({"error": stderr});
 		} else {
-			res.writeHead(200, {'Content-Type': 'application/json'});
-			res.end(stout);
+			callback(null, JSON.parse(stout));
 		}
 	});
 };
