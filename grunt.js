@@ -16,7 +16,7 @@ module.exports = function (grunt) {
 				' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */'
 		},
 		jslint: {
-			files: ['grunt.js', 'public/javascripts/spec/**/*.js', 'public/javascripts/*.js', 'test/**/*.js', 'app/*.js', 'app/wn/index.js',  'app.js', 'routes/**.js']
+			files: ['grunt.js', 'public/javascripts/spec/**/*.js', 'public/javascripts/*.js', 'test/**/*.js', 'app/*.js', 'app/**/*.js',  'app.js', 'routes/**.js']
 		},
 		mincss: {
 			compress: {
@@ -38,7 +38,7 @@ module.exports = function (grunt) {
 			}
 		},
 		watch: {
-			files: ['public/javascripts/*.js', 'public/stylesheets/scss/*', 'grunt.js', 'app/**/*.js', 'app.js', 'routes/**.js'],
+			files: ['public/javascripts/*.js', 'public/stylesheets/scss/*', 'grunt.js', 'app/*.js', 'app/**/*.js', 'app.js', 'routes/**.js'],
 			tasks: ['default']
 		},
 		jslint_directives: { // example directives
