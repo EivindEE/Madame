@@ -13,7 +13,9 @@ $alpha: 		0.3;
 $dbpedia: 		rgba(255,125,64,$alpha);	// #FF7D40;
 $synset: 		rgba(186, 218, 85, $alpha);	// #BADA55;
 $schema_org: 	rgba(153, 0, 0, $alpha); 	// Schema.org color (#990000), pluss alpha
+$sumo:			rgba(204, 102, 102, $alpha); // #CC6666
 $base: 			rgba(100, 149, 237, $alpha);// #6495ED;
+
 
 @mixin rounded($side, $radius: 10px) {
   border-#{$side}-radius: $radius;
@@ -50,21 +52,20 @@ iframe {
 	background-color: $base;
 }
 
-.tagged[resource*="dbpedia.org"] {
+.tagged[typeof*="dbpedia.org"] {
 	background-color: $dbpedia;
 }
 
-
-.tagged[resource*="http://www.w3.org/2006/03/wn/wn20/instances/synset"]{
+.tagged[typeof*="http://www.w3.org/2006/03/wn/wn20/instances/synset"]{
 	background-color: $synset;
 }
 
-.tagged[resource*="schema.org"]{
-	background-color: $schema_org;
+.tagged[typeof*="http://www.ontologyportal.org/SUMO.owl"] {
+	background-color: $dbpedia;
 }
 
-.remove {
-	background-color: transparent;
+.tagged[typeof*="schema.org"]{
+	background-color: $schema_org;
 }
 
 .removeIcon {
