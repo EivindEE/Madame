@@ -9,8 +9,9 @@ var express = require('express'),
 	routes = require('./routes'),
 	http = require('http'),
 	path = require('path'),
-	tag = require('./app/lexitag.js'),
+	tag = require('./app/lexitag'),
 	wn = require('./app/wn'),
+	dbp = require('./app/dbp'),
 	exec = require('child_process').exec;
 
 var app = express();
@@ -41,6 +42,7 @@ app.get('/lex', tag.lexitag);
 app.get('/wn/mappings', wn.mappings);
 app.get('/wn/best-fit', wn.bestFit);
 app.get('/wn/parent', wn.parent);
+app.get('/dbp/best-fit', dbp.bestFit);
 
 http.createServer(app).listen(app.get('port'), function () {
 	console.log("Express server listening on port " + app.get('port'));
