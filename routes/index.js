@@ -1,6 +1,7 @@
 "use strict";
 var url = require('url'),
-	wn	= require('../app/wn');
+	wn	= require('../app/wn'),
+	dbp = require('../app/dbp');
 
 exports.index = function (req, res) {
 	res.render('semtag', { title: 'SemTag', scripts: ['http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js', 'javascripts/dist/SemTag.min.js']});
@@ -44,6 +45,21 @@ exports.wn = {
 			} else {
 				res.writeHead(200, {'Content-Type': "application/json"});
 				res.end(JSON.stringify(mapping));
+			}
+		});
+	}
+};
+
+exports.dbp = {
+	bestFit: function (req, res) {
+		var q = url.parse(req.url, true).query.q;
+		dbp.bestFit(q, function (error, bestFit) {
+			if (error) {
+				res.writeHead(500, {'Content-Type': "application/json"});
+				res.end(JSON.stringify(error));
+			} else {
+				res.writeHead(200, {'Content-Type': "application/json"});
+				res.end(JSON.stringify(bestFit));
 			}
 		});
 	}
