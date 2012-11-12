@@ -1,14 +1,10 @@
 {
 	"name": "SemTag",
 	"version": "0.0.1",
-	"author": {"name": "Eivind Elseth"},
+	"description": "A automatic mapper from WordNet to schema.org and SUMO",
+	"author": {"name": "Eivind Elseth", "email": "eivind.elseth@gmail.com"},
 	"private": true,
 	"homepage":"https://github.com/EivindEE/SemTag",
-	"licenses": [
-    {
-      "type": "MIT",
-      "url": "https://github.com/EivindEE/SemTag/blob/master/MIT.LICENCE"
-    }],
 	"scripts": {
 		"start": "node app"
 	},
@@ -19,6 +15,23 @@
 		"grunt-jslint": "*",
 		"gzippo": "0.1.x",
 		"grunt-contrib": "x",
-		"grunt-compass": "x"
-	}
+		"grunt-compass": "x",
+		"htmlparser": ">=1.7.x"
+	},
+	"keywords" : [
+		"semantic web",
+		"mapping",
+		"sumo",
+		"wordnet",
+		"schema.org"
+	],
+	"repository": {
+		  "type": "git"
+		, "url": "https://github.com/EivindEE/SemTag"
+	},
+	"licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/EivindEE/SemTag/blob/master/MIT.LICENCE"
+    }]
 }
