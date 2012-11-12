@@ -16,7 +16,8 @@
 		"gzippo": "0.1.x",
 		"grunt-contrib": "x",
 		"grunt-compass": "x",
-		"htmlparser": ">=1.7.x"
+		"htmlparser": ">=1.7.x",
+		"jsdom": "0.2.x"
 	},
 	"keywords" : [
 		"semantic web",
