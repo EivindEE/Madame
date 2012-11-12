@@ -3,6 +3,7 @@ var url = require('url'),
 	wn	= require('../app/wn'),
 	dbp = require('../app/dbp'),
 	disambiguate = require('../app/disambiguate'),
+	proxy = require('../app/proxy'),
 	returnJSON = function (error, json, res) {
 		if (error) {
 			res.writeHead(500, {'Content-Type': "application/json"});
@@ -57,6 +58,22 @@ exports.disambiguate = {
 			returnJSON(error, json, res);
 		});
 	}
+};
+
+exports.proxy = function (req, res) {
+	var url = req.query.q || req.params.url;
+	if (url.substring(0, 4) !== 'http') {
+		url = 'http://' + url;
+	}
+	proxy.get(url, function (error, html) {
+		if (error) {
+			res.writeHead(500, {'Content-Type': "application/json"});
+			res.end(JSON.stringify(error));
+		} else {
+			res.writeHead(200, {'Content-Type': "text/html"});
+			res.end(html);
+		}
+	});
 };
 
 exports.test = function (req, res) {
