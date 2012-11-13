@@ -3,7 +3,7 @@
 use WordNet::QueryData;
 use JSON;
 my $wn = WordNet::QueryData->new(
-	dir => "/usr/local/Wordnet-3.0/dict",
+	dir => "/usr/local/Wordnet-3.0/dict/",
 	noload => 1);
 # Takes an argument in the form synset-wordsens-gramaticalcategory-senscount
 my @stripped = ($ARGV[0] =~ /.*-(.*)-(.).*-(.*)/);
