@@ -36,7 +36,7 @@ exports.wn = function (req, res) {
 
 exports.dbp = {
 	bestFit: function (req, res) {
-		var q = req.query.q;
+		var q = req.params.synset;
 		dbp.bestFit(q, function (error, json) {
 			returnJSON(error, json, res);
 		});
