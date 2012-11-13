@@ -36,7 +36,9 @@ app.get('/test', routes.test);
 app.get('/sw', routes.sw);
 app.get('/lex', routes.disambiguate.term);
 app.get('/wn/:func', routes.wn);
+app.get('/wn/:func/:synset', routes.wn);
 app.get('/dbp/best-fit/:synset', routes.dbp.bestFit);
+app.get('/dbp/best-fit', routes.dbp.bestFit);
 app.get('/proxy/:url', routes.proxy);
 app.get('/proxy', routes.proxy);
 http.createServer(app).listen(app.get('port'), function () {

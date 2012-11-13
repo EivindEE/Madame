@@ -6,7 +6,6 @@ var http = require("http"),
 	datatypes = require('../schema.org').declaration.datatypes,
 	types = require('../schema.org').declaration.types,
 	saneString = function (searchString, callback) {
-		console.log(searchString);
 		if (searchString.length > 60) {
 			callback(new Error('Search string <' + searchString + '> was to long'));
 		} else {
