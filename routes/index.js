@@ -7,6 +7,7 @@ var url = require('url'),
 	proxy = require('../app/proxy'),
 	returnJSON = function (error, json, res) {
 		if (error) {
+			console.log(error);
 			res.writeHead(500, {'Content-Type': "application/json"});
 			res.end(JSON.stringify(error));
 		} else {
