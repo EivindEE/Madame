@@ -27,7 +27,7 @@ module.exports = function (grunt) {
 		},
 		concat: {
 			dist: {
-				src: ['public/javascripts/lib/bootstrap.js', 'public/javascripts/semtag.js', 'public/javascripts/sw-semtag.js'],
+				src: ['public/javascripts/lib/bootstrap.js', 'public/javascripts/semtag.js', 'public/javascripts/sw-semtag.js', 'public/javascripts/proxy.js'],
 				dest: 'public/javascripts/dist/<%= pkg.name %>.js'
 			}
 		},
@@ -46,7 +46,7 @@ module.exports = function (grunt) {
 			unparam: true,
 			node: true,
 			predef: [ // array of pre-defined globals
-				'jQuery'
+				'jQuery', 'require', 'process', '__dirname', 'console', 'exports'
 			]
 		},
 		jslint_options: {
