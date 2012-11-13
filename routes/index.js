@@ -71,6 +71,7 @@ exports.proxy = function (req, res) {
 
 // Static routes
 exports.index = function (req, res) {
+	req = null;
 	res.render(
 		'semtag',
 		{
@@ -81,6 +82,7 @@ exports.index = function (req, res) {
 };
 
 exports.sw = function (req, res) {
+	req = null;
 	res.render(
 		'sw',
 		{
@@ -88,10 +90,10 @@ exports.sw = function (req, res) {
 			scripts: ['http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js', 'javascripts/dist/SemTag.js']
 		}
 	);
-	req.end();
 };
 
 exports.test = function (req, res) {
+	req = null;
 	res.render(
 		'testrunner',
 		{
@@ -100,5 +102,4 @@ exports.test = function (req, res) {
 			sources: ['javascripts/semtag.js', 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js']
 		}
 	);
-	req.end();
 };

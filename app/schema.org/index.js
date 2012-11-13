@@ -1,3 +1,4 @@
+/*jslint node: true */
 /*global exports */
 exports.declaration = {
 	"datatypes": {

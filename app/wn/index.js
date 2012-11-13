@@ -1,3 +1,4 @@
+/*jslint node: true */
 'use strict';
 var url = require('url'),
 	exec = require('child_process').exec,
@@ -9,6 +10,8 @@ var url = require('url'),
 		exec('perl scripts/parents.pl ' + synset, function (error, stout, stderr) {
 			if (error) {
 				callback(new Error(error));
+			} else if (stderr) {
+				callback(new Error(stderr));
 			} else {
 				callback(null, stout);
 			}

@@ -1,4 +1,4 @@
-/*jslint regexp: true */
+/*jslint node: true, regexp: true */
 'use strict';
 var http = require("http"),
 	url = require('url'),

@@ -1,5 +1,5 @@
 'use strict';
-/*jslint nomen: true, es5:true*/
+/*jslint node:true, nomen: true, es5:true*/
 /**
  * Module dependencies.
  */

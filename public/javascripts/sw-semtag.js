@@ -1,3 +1,4 @@
+/*jslint browser: true */
 /*global  $ */
 var semtag = semtag || {};
 semtag.extendTag = function (el, options) {

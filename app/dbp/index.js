@@ -1,3 +1,4 @@
+/*jslint node: true */
 "use strict";
 var url = require('url'),
 	dbpedia2schema = require('../../mappings/dbpedia2schema').mapping;

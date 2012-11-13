@@ -1,4 +1,4 @@
-/*global document */
+/*jslint browser:true */
 
 var semtag = semtag || {};
 semtag.setup = function (container, trigger, target) {
