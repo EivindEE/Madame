@@ -110,14 +110,20 @@ var http = require("http"),
 			} else {
 				http.get(url + saneSearchString + queryEnd,
 					function (response) {
-						response.on('data', function (chunk) {
-							body += chunk;
-						});
-						response.on('end', function () {
-							callback(JSON.parse(body));
-						}).on('error', function () {
+						if (response.statusCode !== 200) {
+							console.log(response);
 							callback({});
-						});
+						} else {
+							response.on('data', function (chunk) {
+								body += chunk;
+							});
+							response.on('end', function () {
+								console.log(body);
+								callback(JSON.parse(body));
+							}).on('error', function () {
+								callback({});
+							});
+						}
 					});
 			}
 		});
