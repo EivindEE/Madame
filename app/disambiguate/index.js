@@ -6,6 +6,7 @@ var http = require("http"),
 	datatypes = require('../schema.org').declaration.datatypes,
 	types = require('../schema.org').declaration.types,
 	saneString = function (searchString, callback) {
+		console.log(searchString);
 		if (searchString.length > 60) {
 			callback(new Error('Search string <' + searchString + '> was to long'));
 		} else {
@@ -139,15 +140,8 @@ var http = require("http"),
 		}
 	};
 
-exports.term = function (req, res) {
-	var q = url.parse(req.url, true);
-	runQueries([findLexitagTerms], q.query.word, function (json) {
-		res.writeHead(200, {"Content-Type" : "application/json"});
-		if (req.query.callback) {
-			res.write(req.query.callback + '(' + JSON.stringify(json) + ')');
-		} else {
-			res.write(JSON.stringify(json));
-		}
-		res.end();
+exports.term = function (term, callback) {
+	runQueries([findLexitagTerms], term, function (json) {
+		callback(null, json);
 	});
 };
