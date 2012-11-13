@@ -72,9 +72,9 @@ semtag.wordSenseClicked = function (wordSense, options) {
 		removeIcon,
 		wnId = sense.substring(sense.lastIndexOf('/') + 1);
 	if (wordSense.dataset.source === 'schema_org' || wordSense.dataset.source === 'WordNet') {
-		endpoint = '/wn/best-fit?q=';
+		endpoint = '/wn/best-fit/';
 	} else if (wordSense.dataset.source === 'DBPedia') {
-		endpoint = 'dbp/best-fit?q=';
+		endpoint = 'dbp/best-fit/';
 	} else {
 		console.log(wordSense.dataset.source);
 	}
