@@ -1,3 +1,4 @@
+/*jslint node: true */
 "use strict";
 var url = require('url'),
 	wn	= require('../app/wn'),
@@ -18,15 +19,6 @@ var url = require('url'),
 		'parent' : wn.parent,
 		'mappings': wn.mappings
 	};
-
-
-exports.index = function (req, res) {
-	res.render('semtag', { title: 'SemTag', scripts: ['http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js', 'javascripts/dist/SemTag.min.js']});
-};
-
-exports.sw = function (req, res) {
-	res.render('sw', { title: 'Single Word SemTag', scripts: ['http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js', 'javascripts/dist/SemTag.js']});
-};
 
 exports.wn = function (req, res) {
 	var func = req.params.func,
@@ -53,7 +45,7 @@ exports.dbp = {
 
 exports.disambiguate = {
 	term: function (req, res) {
-		var q = req.query.q;
+		var q = req.query.word;
 		disambiguate.term(q, function (error, json) {
 			returnJSON(error, json, res);
 		});
@@ -76,6 +68,16 @@ exports.proxy = function (req, res) {
 	});
 };
 
-exports.test = function (req, res) {
+
+// Static routes
+exports.index = function () {
+	res.render('semtag', { title: 'SemTag', scripts: ['http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js', 'javascripts/dist/SemTag.min.js']});
+};
+
+exports.sw = function () {
+	res.render('sw', { title: 'Single Word SemTag', scripts: ['http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js', 'javascripts/dist/SemTag.js']});
+};
+
+exports.test = function () {
 	res.render('testrunner', {title: 'SpecRunner', specs: ['javascripts/spec/semtag_spec.js'], sources: ['javascripts/semtag.js', 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'] });
 };

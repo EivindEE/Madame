@@ -179,7 +179,7 @@ semtag.sw = function (term) {
 	'use strict';
 	term = term.replace(/^\\s*|\\s*$/g, ''); // Removes leading and trailing white space
 	term = term.replace(/ /g, '_'); // Replaces inner white space with underscores
-	$.getJSON('/lex?callback=?',
+	$.getJSON('/lex',
 		{
 			word: term
 		}, function (data) {
