@@ -24,9 +24,7 @@ var url = require('url'),
 exports.wn = function (req, res) {
 	var func = req.params.func,
 		q = req.query.q || req.params.synset;
-	console.log('query:' + q);
-	console.log('params:' + func);
-	console.log(wnFuncs[func]);
+
 	if (wnFuncs[func]) {
 		wnFuncs[func](q, function (error, json) {
 			returnJSON(error, json, res);
@@ -40,7 +38,6 @@ exports.wn = function (req, res) {
 exports.dbp = {
 	bestFit: function (req, res) {
 		var q = req.params.synset || req.query.q;
-		console.log("Got query: " + q);
 		dbp.bestFit(q, function (error, json) {
 			returnJSON(error, json, res);
 		});
