@@ -16,18 +16,35 @@ module.exports = function (grunt) {
 				' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */'
 		},
 		jslint: {
-			files: ['grunt.js', 'public/javascripts/spec/**/*.js', 'public/javascripts/*.js', 'test/**/*.js', 'app/*.js', 'app/**/*.js',  'app.js', 'routes/**.js']
+			files: [
+				'grunt.js',
+				'public/javascripts/spec/**/*.js',
+				'public/javascripts/*.js',
+				'test/**/*.js', 'app/*.js',
+				'app/**/*.js',
+				'app.js',
+				'routes/**.js'
+			]
 		},
 		mincss: {
 			compress: {
 				files: {
-					'public/stylesheets/style.min.css': ['public/stylesheets/reset.css', 'public/stylesheets/bootstrap.css', 'public/stylesheets/style.css']
+					'public/stylesheets/style.min.css': [
+						'public/stylesheets/reset.css',
+						'public/stylesheets/bootstrap.css',
+						'public/stylesheets/style.css'
+					]
 				}
 			}
 		},
 		concat: {
 			dist: {
-				src: ['public/javascripts/lib/bootstrap.js', 'public/javascripts/semtag.js', 'public/javascripts/sw-semtag.js', 'public/javascripts/proxy.js'],
+				src: [
+					'public/javascripts/lib/bootstrap.js',
+					'public/javascripts/semtag.js',
+					'public/javascripts/sw-semtag.js',
+					'public/javascripts/proxy.js'
+				],
 				dest: 'public/javascripts/dist/<%= pkg.name %>.js'
 			}
 		},
@@ -38,7 +55,15 @@ module.exports = function (grunt) {
 			}
 		},
 		watch: {
-			files: ['public/javascripts/*.js', 'public/stylesheets/scss/*', 'grunt.js', 'app/*.js', 'app/**/*.js', 'app.js', 'routes/**.js'],
+			files: [
+				'public/javascripts/*.js',
+				'public/stylesheets/scss/*',
+				'grunt.js',
+				'app/*.js',
+				'app/**/*.js',
+				'app.js',
+				'routes/**.js'
+			],
 			tasks: ['default']
 		},
 		jslint_directives: { // example directives
