@@ -1,5 +1,5 @@
 /*jslint browser: true */
-/*global  $ */
+/*global  $, console */
 var semtag = semtag || {};
 semtag.extendTag = function (el, options) {
 	'use strict';

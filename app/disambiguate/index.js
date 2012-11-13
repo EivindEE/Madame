@@ -116,7 +116,7 @@ var http = require("http"),
 						});
 						response.on('end', function () {
 							callback(JSON.parse(body));
-						}).on('error', function (e) {
+						}).on('error', function () {
 							callback({});
 						});
 					});

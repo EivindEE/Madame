@@ -66,7 +66,9 @@ var url = require('url'),
 						callback(error);
 					} else {
 						var addSiblingMappings = function (error, siblings) {
-								if (siblings) {
+								if (error) {
+									console.log(error);
+								} else if (siblings) {
 									if (!mapping.siblings) {
 										mapping.siblings = [];
 									}
@@ -74,7 +76,9 @@ var url = require('url'),
 								}
 							},
 							addLinkMappings = function (error, link) {
-								if (link) {
+								if (error) {
+									console.log(error);
+								} else if (link) {
 									if (!mapping.chain) {
 										mapping.chain = [];
 									}

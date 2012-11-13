@@ -1,5 +1,5 @@
 /*jslint browser:true */
-/*globals $ */
+/*globals $, console */
 var proxy = proxy || {};
 proxy.get = function (url) {
 	"use strict";
