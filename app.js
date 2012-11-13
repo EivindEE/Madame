@@ -1,5 +1,5 @@
-/*jslint nomen: true, es5:true*/
 'use strict';
+/*jslint nomen: true, es5:true*/
 /**
  * Module dependencies.
  */
@@ -37,9 +37,6 @@ app.get('/sw', routes.sw);
 app.get('/lex', routes.disambiguate.term);
 app.get('/wn/:func', routes.wn);
 app.get('/dbp/best-fit', routes.dbp.bestFit);
-app.get('/test/:test', function (req, res) {
-	console.log(req.params.test);
-});
 app.get('/proxy/:url', routes.proxy);
 app.get('/proxy', routes.proxy);
 http.createServer(app).listen(app.get('port'), function () {
