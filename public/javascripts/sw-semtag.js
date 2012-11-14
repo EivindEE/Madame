@@ -1,6 +1,10 @@
 /*jslint browser: true */
 /*global  $, console */
 var semtag = semtag || {};
+semtag.wantedSense = function (sense) {
+	'use strict';
+	return sense.source !== "DBPedia";
+};
 semtag.extendTag = function (el, options) {
 	'use strict';
 	var	i,
@@ -79,11 +83,20 @@ semtag.wordSenseClicked = function (wordSense, options) {
 		console.log(wordSense.dataset.source);
 	}
 	$.getJSON(endpoint + wnId, function (json) {
+		var senses = [];
 		if (json.sumo) {
 			sense += " http://www.ontologyportal.org/SUMO.owl#" + json.sumo;
+			senses.push(json.sumo);
 		}
 		if (json.schema_dot_org) {
 			sense += " http://schema.org/" + json.schema_dot_org;
+			if (senses.indexOf(json.schema_dot_org) === -1) {
+				senses.push(json.schema_dot_org);
+			}
+		}
+		if (json.sumo || json.schema_dot_org) {
+			title = content + ", meaning: ";
+			title += senses.join(', ');
 		}
 		toTag = semtag.extendTag(toTag,
 			{
@@ -160,15 +173,17 @@ semtag.buildDidYouMeanTable = function (json, tableId) {
 	});
 	header.innerText = 'Pick the term describes "' + json.word + '", describe it with another word, or enter a URL connected to the term';
 	for (i = 0; i < sensCount; i += 1) {
-		el = semtag.buildTag('li', {
-			'id': json.senses[i].senseid,
-			data: {
-				source: json.senses[i].source
-			},
-			'classes': ['word-sense']
-		});
-		list.appendChild(el);
-		el.innerText = json.senses[i].explanation;
+		if (semtag.wantedSense(json.senses[i])) {
+			el = semtag.buildTag('li', {
+				'id': json.senses[i].senseid,
+				data: {
+					source: json.senses[i].source
+				},
+				'classes': ['word-sense']
+			});
+			list.appendChild(el);
+			el.innerText = json.senses[i].explanation;
+		}
 	}
 	didYouMean.appendChild(list);
 	$('.word-sense').click(function () {
@@ -223,6 +238,21 @@ $('#content').mouseup(function () {
 			semtag.resetToTag('toTag', function () {
 				semtag.surround(range, 'toTag');
 				semtag.sw(text);
+				document.getSelection().addRange(range);
+			});
+		}
+	} else if (range.startContainer === range.endContainer) {
+		if (
+			(range.commonAncestorContainer.nodeName === 'A'
+				&&
+				range.commonAncestorContainer.childNodes[0].nodeName === 'IMG'
+			)
+				||
+				range.commonAncestorContainer.nodeName === 'IMG'
+		) {
+			semtag.resetToTag('toTag', function () {
+				semtag.surround(range, 'toTag');
+				semtag.sw("Image");
 				document.getSelection().addRange(range);
 			});
 		}
