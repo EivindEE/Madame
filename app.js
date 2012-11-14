@@ -31,7 +31,7 @@ app.configure('development', function () {
 	app.use(express.errorHandler());
 });
 
-app.get('/', routes.index);
+app.get('/', routes.sw);
 app.get('/test', routes.test);
 app.get('/sw', routes.sw);
 app.get('/lex', routes.disambiguate.term);
