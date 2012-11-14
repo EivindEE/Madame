@@ -17,6 +17,11 @@ $('#get').click(function () {
 	'use strict';
 	var url = $('#url').val();
 	proxy.get(url, function (error, html) {
-		document.getElementById('content').innerHTML = html;
+		if (error) {
+			document.getElementById('content').innerHTML = '<div class="span6"><p>No such page found</p></div>';
+		} else {
+			document.getElementById('content').innerHTML = html;
+		}
+
 	});
 });
