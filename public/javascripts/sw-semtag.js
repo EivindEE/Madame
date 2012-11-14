@@ -1,5 +1,5 @@
 /*jslint browser: true */
-/*global  $, console, HTMLAnchorElement */
+/*global  $, console */
 var semtag = semtag || {};
 semtag.wantedSense = function (sense) {
 	'use strict';
@@ -238,6 +238,21 @@ $('#content').mouseup(function () {
 			semtag.resetToTag('toTag', function () {
 				semtag.surround(range, 'toTag');
 				semtag.sw(text);
+				document.getSelection().addRange(range);
+			});
+		}
+	} else if (range.startContainer === range.endContainer) {
+		if (
+			(range.commonAncestorContainer.nodeName === 'A'
+				&&
+				range.commonAncestorContainer.childNodes[0].nodeName === 'IMG'
+			)
+				||
+				range.commonAncestorContainer.nodeName === 'IMG'
+		) {
+			semtag.resetToTag('toTag', function () {
+				semtag.surround(range, 'toTag');
+				semtag.sw("Image");
 				document.getSelection().addRange(range);
 			});
 		}
