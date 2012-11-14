@@ -17,7 +17,8 @@
 		"grunt-contrib": "x",
 		"grunt-compass": "x",
 		"htmlparser": ">=1.7.x",
-		"jsdom": "0.2.x"
+		"jsdom": "0.2.x",
+		"contextify" : "x"
 	},
 	"keywords" : [
 		"semantic web",
