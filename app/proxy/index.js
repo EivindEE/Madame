@@ -14,14 +14,22 @@ exports.get = function (url, callback) {
 				callback(errors);
 			} else {
 				document = window.document;
-				count = document.images.length;
-				for (i = 0; i < count; i += 1) {
-					tag = document.images[i].src;
-					if (tag.charAt(0) === '/') {
-						document.images[i].src = url + tag;
+				if (document && document.images) {
+					count = document.images.length;
+					for (i = 0; i < count; i += 1) {
+						tag = document.images[i].src;
+						if (tag.charAt(0) === '/') {
+							document.images[i].src = url + tag;
+						}
 					}
+					if (document.body) {
+						callback(null, document.body.innerHTML);
+					} else {
+						callback(new Error("Page didn't have a body element"));
+					}
+				} else {
+					callback(new Error('No document found in window'));
 				}
-				callback(null, window.document.body.innerHTML);
 			}
 		}
 	});
