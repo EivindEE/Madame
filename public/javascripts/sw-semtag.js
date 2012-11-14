@@ -83,11 +83,20 @@ semtag.wordSenseClicked = function (wordSense, options) {
 		console.log(wordSense.dataset.source);
 	}
 	$.getJSON(endpoint + wnId, function (json) {
+		var senses = [];
 		if (json.sumo) {
 			sense += " http://www.ontologyportal.org/SUMO.owl#" + json.sumo;
+			senses.push(json.sumo);
 		}
 		if (json.schema_dot_org) {
 			sense += " http://schema.org/" + json.schema_dot_org;
+			if (senses.indexOf(json.schema_dot_org) === -1) {
+				senses.push(json.schema_dot_org);
+			}
+		}
+		if (json.sumo || json.schema_dot_org) {
+			title = content + ", meaning: ";
+			title += senses.join(', ');
 		}
 		toTag = semtag.extendTag(toTag,
 			{
