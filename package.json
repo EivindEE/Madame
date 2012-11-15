@@ -5,8 +5,10 @@
 	"author": {"name": "Eivind Elseth", "email": "eivind.elseth@gmail.com"},
 	"private": true,
 	"homepage":"https://github.com/EivindEE/SemTag",
+	"main": "app.js",
 	"scripts": {
-		"start": "node app"
+		"start": "make start",
+		"stop": "make stop"
 	},
 	"dependencies": {
 		"express": "3.0.0rc4",
