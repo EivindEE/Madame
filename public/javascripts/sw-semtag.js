@@ -230,10 +230,16 @@ semtag.resetToTag = function (id, callback) {
 $('#content').mouseup(function () {
 	'use strict';
 	var range = window.getSelection().getRangeAt(0),
-		text = range.toString();
+		text = range.toString().replace(/^\s*/, '').replace(/\s*$/, ''); // Remove leading and trailing whitespace.
+
 	if (range && text.length > 0) {
 		if (text.length > 50) {
-			$('header .container').append('<div class="alert span6 fade in"><button type="button" class="close" data-dismiss="alert">×</button><strong>Warning!</strong> Selections should be less than 50 letters.</div>');
+			$('header .container').append(
+				'<div class="alert span6 fade in">'
+					+ '<button type="button" class="close" data-dismiss="alert">×</button>'
+					+ '<strong>Warning!</strong> Selections should be less than 50 letters.'
+					+ '</div>'
+			);
 		} else {
 			semtag.resetToTag('toTag', function () {
 				semtag.surround(range, 'toTag');
