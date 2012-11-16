@@ -88,7 +88,7 @@ exports.sw = function (req, res) {
 		'sw',
 		{
 			title: 'Single Word SemTag',
-			scripts: ['http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js', 'javascripts/dist/SemTag.js']
+			scripts: ['http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js', 'javascripts/dist/SemTag.js', 'javascripts/sw-app.js']
 		}
 	);
 };
