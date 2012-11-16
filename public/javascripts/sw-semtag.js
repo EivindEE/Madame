@@ -119,6 +119,7 @@ semtag.wordSenseClicked = function (wordSense, options) {
 		$('.removeIcon').click(function () {
 			semtag.removeSense(this);
 		});
+		$('#' + id).tooltip();
 	});
 };
 semtag.buildDidYouMeanTable = function (json, tableId) {
@@ -150,7 +151,8 @@ semtag.buildDidYouMeanTable = function (json, tableId) {
 	didYouMean.appendChild(input);
 	$('#dym-input').keypress(function (kp) {
 		var inputString,
-			// RegExp Pattern lifted from  http://stackoverflow.com/questions/6667029/using-regex-to-match-url-pattern-invalid-quantifier
+			// RegExp Pattern lifted from  
+			// http://stackoverflow.com/questions/6667029/using-regex-to-match-url-pattern-invalid-quantifier
 			URLPattern = new RegExp('^(https?:\\/\\/)?' + // protocol
 						'((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
 						'((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
@@ -164,14 +166,21 @@ semtag.buildDidYouMeanTable = function (json, tableId) {
 				semtag.wordSenseClicked(inputString, {wordSense: inputString, title: "external reference", text: word});
 				didYouMean.parentNode.removeChild(didYouMean);
 			} else if (inputString.search(twitterPattern) !== -1) {
-				semtag.wordSenseClicked(inputString, {wordSense: 'http://twitter.com/' + inputString.substring(1), title: "Twitter handle", text: word});
+				semtag.wordSenseClicked(inputString,
+					{
+						wordSense: 'http://twitter.com/' + inputString.substring(1),
+						title: "Twitter handle",
+						text: word
+					});
 				didYouMean.parentNode.removeChild(didYouMean);
 			} else {
 				semtag.sw(input.value);
 			}
 		}
 	});
-	header.innerText = 'Pick the term describes "' + json.word + '", describe it with another word, or enter a URL connected to the term';
+	header.innerText = 'Pick the term describes "' +
+						json.word +
+						'", describe it with another word, or enter a URL connected to the term';
 	for (i = 0; i < sensCount; i += 1) {
 		if (semtag.wantedSense(json.senses[i])) {
 			el = semtag.buildTag('li', {
