@@ -5,6 +5,7 @@ var	jsdom = require('jsdom');
 exports.get = function (url, callback) {
 	var document,
 		count,
+		tags,
 		tag,
 		i;
 	jsdom.env({
@@ -14,6 +15,17 @@ exports.get = function (url, callback) {
 				callback(errors);
 			} else {
 				document = window.document;
+				tags = document.getElementsByTagName('script');
+				count = tags.length;
+				for (i = 0; i < count; i += 1) {
+					tags[i].parentNode.removeChild(tags[i]);
+				}
+				tags = document.getElementsByTagName('iframe');
+				count = tags.length;
+				for (i = 0; i < count; i += 1) {
+					tags[i].parentNode.removeChild(tags[i]);
+				}
+
 				if (document && document.images) {
 					count = document.images.length;
 					for (i = 0; i < count; i += 1) {
