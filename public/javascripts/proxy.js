@@ -18,7 +18,7 @@ $('#get').click(function () {
 	var url = $('#url').val();
 	proxy.get(url, function (error, html) {
 		if (error) {
-			document.getElementById('content').innerHTML = '<div class="span6"><p>No such page found</p></div>';
+			document.getElementById('content').innerHTML = '<div class="span6"><h4>No such page found</h4></div>';
 		} else {
 			document.getElementById('content').innerHTML = html;
 		}
