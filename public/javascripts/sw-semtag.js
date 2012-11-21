@@ -1,10 +1,12 @@
 /*jslint browser: true */
 /*global  $, console */
 var semtag = semtag || {};
+
 semtag.wantedSense = function (sense) {
 	'use strict';
 	return sense.source !== "DBPedia";
 };
+
 semtag.extendTag = function (el, options) {
 	'use strict';
 	var	i,
@@ -28,6 +30,7 @@ semtag.extendTag = function (el, options) {
 	}
 	return el;
 };
+
 semtag.buildTag = function (type, options) {
 	'use strict';
 	var el;
@@ -40,6 +43,7 @@ semtag.buildTag = function (type, options) {
 
 	return el;
 };
+
 semtag.getId = function (content) {
 	'use strict';
 	var id,
@@ -53,6 +57,7 @@ semtag.getId = function (content) {
 	}
 	return id;
 };
+
 semtag.removeSense = function (sense) {
 	'use strict';
 	var taggedNode,
@@ -63,6 +68,18 @@ semtag.removeSense = function (sense) {
 	content = document.createTextNode(taggedNode.textContent);
 	taggedNodeParent.replaceChild(content, taggedNode);
 };
+
+semtag.decideEndpoint = function (source) {
+	"use strict";
+	if (source === 'schema_org' || source === 'WordNet') {
+		return '/wn/best-fit/';
+	}
+	if (source === 'DBPedia') {
+		return 'dbp/best-fit/';
+	}
+	console.log(source);
+};
+
 semtag.wordSenseClicked = function (wordSense, options) {
 	'use strict';
 	options = options || {};
@@ -75,13 +92,8 @@ semtag.wordSenseClicked = function (wordSense, options) {
 		endpoint,
 		removeIcon,
 		wnId = sense.substring(sense.lastIndexOf('/') + 1);
-	if (wordSense.dataset.source === 'schema_org' || wordSense.dataset.source === 'WordNet') {
-		endpoint = '/wn/best-fit/';
-	} else if (wordSense.dataset.source === 'DBPedia') {
-		endpoint = 'dbp/best-fit/';
-	} else {
-		console.log(wordSense.dataset.source);
-	}
+	endpoint = semtag.decideEndpoint(wordSense.dataset.source);
+
 	$.getJSON(endpoint + wnId, function (json) {
 		var senses = [];
 		if (json.sumo) {
@@ -122,33 +134,52 @@ semtag.wordSenseClicked = function (wordSense, options) {
 		$('#' + id).tooltip();
 	});
 };
+
+semtag.buildWordSenseList = function (sensList) {
+	'use strict';
+	var sensCount = sensList.length,
+		senses = [],
+		list = document.getElementById('senses'),
+		i,
+		el;
+	for (i = 0; i < sensCount; i += 1) {
+		if (semtag.wantedSense(sensList[i])) {
+			el = semtag.buildTag('li', {
+				'id': sensList[i].senseid,
+				'data': {
+					'source': sensList[i].source
+				},
+				'classes': ['word-sense']
+			});
+			el.innerText = sensList[i].explanation;
+			senses.push(el.outerHTML);
+		}
+	}
+	list.innerHTML = senses.join(' ');
+	return list;
+};
+
+semtag.resetDYM = function () {
+	'use strict';
+	semtag.senses.innerHTML = "";
+};
+
+semtag.displayHeader = function (word) {
+	'use strict';
+	semtag.header.innerText = 'Select the sense which describes"' + word + '", or write another term which descibes it';
+	semtag.header.style.display = '';
+	semtag.input.style.display = '';
+};
+
 semtag.buildDidYouMeanTable = function (json, tableId) {
 	'use strict';
 	var didYouMean,
-		sensCount = json.senses.length,
-		i,
-		list,
-		el,
-		header,
 		input,
 		word;
-	word = document.getElementById('toTag').textContent;
 	didYouMean = document.getElementById(tableId);
-	if (!didYouMean) {
-		didYouMean = semtag.buildTag({id: tableId, classes: ["span4"]});
-		document.getElementById('content-container').appendChild(didYouMean);
-	}
-	list = document.getElementById('senses');
-	if (!list) {
-		list =  semtag.buildTag('ul', {id: 'senses'});
-		document.getElementById(tableId).appendChild(list);
-	}
-	didYouMean.innerHTML = "";
-	list.innerHTML = "";
-	header = semtag.buildTag('h5', {id : 'dym-head'});
-	input = semtag.buildTag('input', {id: 'dym-input', attr: {type: 'text', placeholder: 'Write an URL or term here'}});
-	didYouMean.appendChild(header);
-	didYouMean.appendChild(input);
+	word = document.getElementById('toTag').textContent;
+	semtag.displayHeader(json.word);
+
 	$('#dym-input').keypress(function (kp) {
 		var inputString,
 			// RegExp Pattern lifted from  
@@ -164,7 +195,7 @@ semtag.buildDidYouMeanTable = function (json, tableId) {
 			inputString = input.value;
 			if (inputString.search(URLPattern) !== -1) {
 				semtag.wordSenseClicked(inputString, {wordSense: inputString, title: "external reference", text: word});
-				didYouMean.parentNode.removeChild(didYouMean);
+				semtag.resetDYM();
 			} else if (inputString.search(twitterPattern) !== -1) {
 				semtag.wordSenseClicked(inputString,
 					{
@@ -172,37 +203,23 @@ semtag.buildDidYouMeanTable = function (json, tableId) {
 						title: "Twitter handle",
 						text: word
 					});
-				didYouMean.parentNode.removeChild(didYouMean);
+				semtag.resetDYM();
 			} else {
 				semtag.sw(input.value);
 			}
 		}
 	});
-	header.innerText = 'Pick the term describes "' +
-						json.word +
-						'", describe it with another word, or enter a URL connected to the term';
-	for (i = 0; i < sensCount; i += 1) {
-		if (semtag.wantedSense(json.senses[i])) {
-			el = semtag.buildTag('li', {
-				'id': json.senses[i].senseid,
-				data: {
-					source: json.senses[i].source
-				},
-				'classes': ['word-sense']
-			});
-			list.appendChild(el);
-			el.innerText = json.senses[i].explanation;
-		}
-	}
-	didYouMean.appendChild(list);
+	didYouMean.appendChild(semtag.buildWordSenseList(json.senses));
 	$('.word-sense').click(function () {
 		semtag.wordSenseClicked(this);
-		didYouMean.parentNode.removeChild(didYouMean);
+		semtag.header.style.display = 'none';
+		semtag.input.style.display = 'none';
+		semtag.senses.innerHTML = '';
 	});
+	$('#sidebar li:nth-child(2) a:first').tab('show'); // Selector for "Meanings pane"
 };
 semtag.sw = function (term) {
 	'use strict';
-	term = term.replace(/^\\s*|\\s*$/g, ''); // Removes leading and trailing white space
 	term = term.replace(/ /g, '_'); // Replaces inner white space with underscores
 	$.getJSON('/lex',
 		{
@@ -239,7 +256,7 @@ semtag.resetToTag = function (id, callback) {
 $('#content').mouseup(function () {
 	'use strict';
 	var range = window.getSelection().getRangeAt(0),
-		text = range.toString().replace(/^\s*/, '').replace(/\s*$/, ''); // Remove leading and trailing whitespace.
+		text = range.toString().replace(/^\s*|\s*$/g, ''); // Remove leading and trailing whitespace.
 
 	if (range && text.length > 0) {
 		if (text.length > 50) {
