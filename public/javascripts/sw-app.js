@@ -12,6 +12,7 @@ $('#sidebar a:first').tab('show');
 	var semtag = window.semtag || {};
 	semtag.header = document.getElementById('dym-header');
 	semtag.header.style.display = "none";
+	semtag.word = document.getElementById('word');
 	semtag.input = document.getElementById('dym-input');
 	semtag.input.style.display = "none";
 	semtag.dym = document.getElementById('dym-input');

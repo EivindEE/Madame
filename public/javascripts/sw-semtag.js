@@ -77,7 +77,6 @@ semtag.decideEndpoint = function (source) {
 	if (source === 'DBPedia') {
 		return 'dbp/best-fit/';
 	}
-	console.log(source);
 };
 
 semtag.wordSenseClicked = function (wordSense, options) {
@@ -166,7 +165,7 @@ semtag.resetDYM = function () {
 
 semtag.displayHeader = function (word) {
 	'use strict';
-	semtag.header.innerText = 'Select the sense which describes"' + word + '", or write another term which descibes it';
+	semtag.word.innerText =  word;
 	semtag.header.style.display = '';
 	semtag.input.style.display = '';
 };
@@ -257,7 +256,6 @@ $('#content').mouseup(function () {
 	'use strict';
 	var range = window.getSelection().getRangeAt(0),
 		text = range.toString().replace(/^\s*|\s*$/g, ''); // Remove leading and trailing whitespace.
-
 	if (range && text.length > 0) {
 		if (text.length > 50) {
 			$('header .container').append(
