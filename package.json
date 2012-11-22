@@ -20,7 +20,8 @@
 		"grunt-compass": "x",
 		"htmlparser": ">=1.7.x",
 		"jsdom": "0.2.x",
-		"contextify" : "x"
+		"contextify": "x",
+		"mongoose": "3.3"
 	},
 	"keywords" : [
 		"semantic web",
