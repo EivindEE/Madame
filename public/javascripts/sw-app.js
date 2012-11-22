@@ -18,3 +18,16 @@ $('#sidebar a:first').tab('show');
 	semtag.dym = document.getElementById('dym-input');
 	semtag.senses = document.getElementById('senses');
 }());
+
+
+$('#export-btn').click(function (e) {
+	'use strict';
+	var html =  document.getElementById('content').innerHTML;
+	console.log(html);
+	$.post('/export',
+		{
+			'q' : html
+		}, function (id) {
+			console.log(id);
+		});
+});
