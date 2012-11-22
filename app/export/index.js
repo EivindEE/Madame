@@ -1,4 +1,4 @@
-/*jslint node: true */
+/*jslint node: true, regexp: true */
 'use strict';
 var mongoose = require('mongoose'),
 	db = mongoose.createConnection('mongodb://localhost:3001/pages'),
@@ -11,12 +11,19 @@ var mongoose = require('mongoose'),
 db.on('error', console.error.bind(console, 'connection error:'));
 
 exports.save = function (body, callback) {
-	var document = new Document({'body': body});
+	var document = new Document({'body': ''});
 	document.save(function (err, doc) {
 		if (err) {
 			callback(err);
 		} else {
-			callback(null, doc.id);
+			body = body.replace(/<img [^>]*class="removeIcon"[^>]*>/g, ''); // Removes x images
+			body = body.replace(/(<span [^>]*class="tagged"[^>]* about="[^#]*)([^>]*">)/g, '$1load?q=' + doc.id + '$2'); // Removes x images
+			Document.update({'_id': doc.id}, {$set: {'body': body}}, {upsert: true}, function (error, newDoc) {
+				if (error) {
+					callback(error);
+				}
+				callback(null, doc.id);
+			});
 		}
 	});
 };
