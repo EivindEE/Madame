@@ -5,6 +5,7 @@ var url = require('url'),
 	dbp = require('../app/dbp'),
 	disambiguate = require('../app/disambiguate'),
 	proxy = require('../app/proxy'),
+	exporter = require('../app/export'),
 	returnJSON = function (error, json, res) {
 		if (error) {
 			console.log(error);
@@ -82,6 +83,39 @@ exports.index = function (req, res) {
 	);
 };
 
+exports.exporter = function (req, res) {
+	exporter.save(req.body.q, function (err, response) {
+		if (err) {
+			res.writeHead(500, {'Content-Type': 'text/plain'});
+			res.end(JSON.stringify(err));
+		} else {
+			res.writeHead(200, {'Content-Type': 'text/plain'});
+			res.end(JSON.stringify(response));
+		}
+	});
+};
+
+exports.loader = function (req, res) {
+	exporter.load(req.query.q, function (err, content) {
+		if (err) {
+			res.render(
+				'export',
+				{
+					'content': 'Error :('
+				}
+			);
+		} else {
+			console.log(content);
+			res.render(
+				'export',
+				{
+					'content': content
+				}
+			);
+		}
+	});
+};
+
 exports.sw = function (req, res) {
 	req = null;
 	res.render(
@@ -92,6 +126,8 @@ exports.sw = function (req, res) {
 		}
 	);
 };
+
+
 
 exports.test = function (req, res) {
 	req = null;

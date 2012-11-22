@@ -41,6 +41,10 @@ app.get('/dbp/best-fit/:synset', routes.dbp.bestFit);
 app.get('/dbp/best-fit', routes.dbp.bestFit);
 app.get('/proxy/:url', routes.proxy);
 app.get('/proxy', routes.proxy);
+app.get('/export', routes.exporter);
+app.post('/export', routes.exporter);
+app.get('/load', routes.loader);
+
 http.createServer(app).listen(app.get('port'), function () {
 	console.log("Express server listening on port " + app.get('port'));
 });
