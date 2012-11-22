@@ -28,6 +28,7 @@ $('#export-btn').click(function (e) {
 		{
 			'q' : html
 		}, function (id) {
-			console.log(id);
+			id = id.replace(/"/g, '');
+			$('#link').html('You can view the extracted page on <a href="/load?q=' + id + '">' + document.URL + 'load?q=' + id + '</a>');
 		});
 });
