@@ -22,7 +22,7 @@ exports.save = function (body, callback) {
 				if (error) {
 					callback(error);
 				}
-				callback(null, doc.id);
+				callback(null, newDoc.id);
 			});
 		}
 	});

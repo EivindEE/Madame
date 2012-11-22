@@ -20,7 +20,7 @@ $('#sidebar a:first').tab('show');
 }());
 
 
-$('#export-btn').click(function (e) {
+$('#export-btn').click(function () {
 	'use strict';
 	var html =  document.getElementById('content').innerHTML;
 	console.log(html);
