@@ -63,7 +63,7 @@ semtag.removeSense = function (sense) {
 	var taggedNode,
 		taggedNodeParent,
 		content;
-	taggedNode = sense.parentNode.parentNode;
+	taggedNode = sense.parentNode;
 	taggedNodeParent = taggedNode.parentNode;
 	content = document.createTextNode(taggedNode.textContent);
 	taggedNodeParent.replaceChild(content, taggedNode);
