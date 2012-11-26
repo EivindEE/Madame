@@ -94,15 +94,22 @@ semtag.wordSenseClicked = function (wordSense, options) {
 	endpoint = semtag.decideEndpoint(wordSense.dataset.source);
 
 	$.getJSON(endpoint + wnId, function (json) {
-		var senses = [];
+		var senses = [],
+			i;
 		if (json.sumo) {
-			sense += " http://www.ontologyportal.org/SUMO.owl#" + json.sumo;
-			senses.push(json.sumo);
+			for (i = 0; i < json.sumo.length; i += 1) {
+				if (senses.indexOf(json.sumo[i]) === -1) {
+					sense += " http://www.ontologyportal.org/SUMO.owl#" + json.sumo[i];
+					senses.push(json.sumo[i]);
+				}
+			}
 		}
 		if (json.schema_dot_org) {
-			sense += " http://schema.org/" + json.schema_dot_org;
-			if (senses.indexOf(json.schema_dot_org) === -1) {
-				senses.push(json.schema_dot_org);
+			for (i = 0; i < json.sumo.length; i += 1) {
+				if (senses.indexOf(json.schema_dot_org) === -1) {
+					sense += " http://schema.org/" + json.schema_dot_org[i];
+					senses.push(json.schema_dot_org);
+				}
 			}
 		}
 		if (json.sumo || json.schema_dot_org) {
