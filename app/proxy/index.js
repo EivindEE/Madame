@@ -7,7 +7,8 @@ exports.get = function (url, callback) {
 		count,
 		tags,
 		tag,
-		i;
+		i,
+		dom = {};
 	jsdom.env({
 		html: url,
 		done: function (errors, window) {
@@ -35,7 +36,8 @@ exports.get = function (url, callback) {
 						}
 					}
 					if (document.body) {
-						callback(null, document.body.innerHTML);
+						dom.body = document.body.innerHTML;
+						callback(null, dom);
 					} else {
 						callback(new Error("Page didn't have a body element"));
 					}

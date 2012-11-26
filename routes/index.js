@@ -59,13 +59,13 @@ exports.proxy = function (req, res) {
 	if (url.substring(0, 4) !== 'http') {
 		url = 'http://' + url;
 	}
-	proxy.get(url, function (error, html) {
+	proxy.get(url, function (error, dom) {
 		if (error) {
 			res.writeHead(500, {'Content-Type': "application/json"});
 			res.end(JSON.stringify(error));
 		} else {
 			res.writeHead(200, {'Content-Type': "text/html"});
-			res.end(html);
+			res.end(JSON.stringify(dom));
 		}
 	});
 };
