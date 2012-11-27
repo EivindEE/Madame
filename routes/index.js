@@ -100,7 +100,7 @@ exports.exporter = function (req, res) {
 };
 
 exports.loader = function (req, res) {
-	exporter.load(req.query.q, function (err, content) {
+	exporter.load(req.query.q, function (err, document) {
 		if (err) {
 			res.render(
 				'export',
@@ -109,11 +109,11 @@ exports.loader = function (req, res) {
 				}
 			);
 		} else {
-			console.log(content);
 			res.render(
 				'export',
 				{
-					'content': content
+					'head': document.head,
+					'body': document.body
 				}
 			);
 		}

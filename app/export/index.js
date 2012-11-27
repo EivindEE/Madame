@@ -41,6 +41,6 @@ exports.load = function (id, callback) {
 		if (err) {
 			callback(err);
 		}
-		callback(null, document.body);
+		callback(null, document);
 	});
 };
