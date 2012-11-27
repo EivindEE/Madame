@@ -1,6 +1,7 @@
 /*jslint browser:true */
 /*globals $, console */
 var proxy = proxy || {};
+var semtag = semtag || {};
 proxy.get = function (url, callback) {
 	"use strict";
 	var data;
@@ -20,6 +21,9 @@ $('#get').click(function () {
 		if (error) {
 			document.getElementById('content').innerHTML = '<div class="span6"><h4>No such page found</h4></div>';
 		} else {
+			semtag.dom = {};
+			semtag.dom.URI = dom.URI || '';
+			semtag.dom.head = dom.head || '';
 			document.getElementById('content').innerHTML = dom.body;
 		}
 

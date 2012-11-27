@@ -4,6 +4,10 @@ var	jsdom = require('jsdom');
 
 exports.get = function (url, callback) {
 	var document,
+		protocol,
+		host,
+		port,
+		URI,
 		count,
 		tags,
 		tag,
@@ -16,15 +20,22 @@ exports.get = function (url, callback) {
 				callback(errors);
 			} else {
 				document = window.document;
+				protocol = document.location.protocol;
+				host = document.location.host;
+				port = document.location.port;
+				URI = protocol + '//' + host;
+				if (port) {
+					URI += ':' + port;
+				}
 				tags = document.getElementsByTagName('script');
 				count = tags.length;
 				for (i = 0; i < count; i += 1) {
-					tags[i].parentNode.removeChild(tags[i]);
+					tags[i].parentNode.replaceChild(document.createComment('SCRIPT' + tags[i].outerHTML + 'SCRIPT'), tags[i]);
 				}
 				tags = document.getElementsByTagName('iframe');
 				count = tags.length;
 				for (i = 0; i < count; i += 1) {
-					tags[i].parentNode.removeChild(tags[i]);
+					tags[i].parentNode.replaceChild(document.createComment('SCRIPT' + tags[i].outerHTML + 'SCRIPT'), tags[i]);
 				}
 
 				if (document && document.images) {
@@ -34,6 +45,10 @@ exports.get = function (url, callback) {
 						if (tag.charAt(0) === '/') {
 							document.images[i].src = url + tag;
 						}
+					}
+					dom.URI = URI;
+					if (document.head) {
+						dom.head = document.head.innerHTML;
 					}
 					if (document.body) {
 						dom.body = document.body.innerHTML;

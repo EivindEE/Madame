@@ -84,7 +84,11 @@ exports.index = function (req, res) {
 };
 
 exports.exporter = function (req, res) {
-	exporter.save(req.body.q, function (err, response) {
+	var html = {'body': req.body.q};
+	html.head = req.body.head || '';
+	html.scripts = req.body.scripts || '';
+	html.URI = req.body.URI || '';
+	exporter.save(html, function (err, response) {
 		if (err) {
 			res.writeHead(500, {'Content-Type': 'text/plain'});
 			res.end(JSON.stringify(err));

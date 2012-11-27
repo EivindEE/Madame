@@ -1,6 +1,7 @@
 /*jslint browser: true */
 /*global  $, console */
 
+var semtag = semtag || {};
 $('#sidebar a').click(function (e) {
 	'use strict';
 	e.preventDefault();
@@ -23,10 +24,11 @@ $('#sidebar a:first').tab('show');
 $('#export-btn').click(function () {
 	'use strict';
 	var html =  document.getElementById('content').innerHTML;
-	console.log(html);
 	$.post('/export',
 		{
-			'q' : html
+			'q' : html,
+			'head': semtag.dom.head,
+			'URI': semtag.dom.URI
 		}, function (id) {
 			id = id.replace(/"/g, '');
 			$('#link').html('You can view the extracted page on <a href="/load?q=' + id + '">' + document.URL + 'load?q=' + id + '</a>');

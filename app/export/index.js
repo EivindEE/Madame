@@ -4,21 +4,29 @@ var mongoose = require('mongoose'),
 	db = mongoose.createConnection('mongodb://localhost:3001/pages'),
 	documentSchema = new mongoose.Schema({
 		'body': String,
+		'head': String,
 		'created': {'type': Date, 'default': Date.now}
 	}),
 	Document = db.model('Document', documentSchema);
 
 db.on('error', console.error.bind(console, 'connection error:'));
 
-exports.save = function (body, callback) {
-	var document = new Document({'body': ''});
+exports.save = function (html, callback) {
+	var documentObject = {'body': ''},
+		head = html.head,
+		URI = html.URI,
+		document;
+	documentObject.head = head.replace(/(<link[^>]* href\s*=\s*[\"\'])(\/[^>]*)/g, '$1' + URI + '$2');
+	document = new Document(documentObject);
 	document.save(function (err, doc) {
 		if (err) {
 			callback(err);
 		} else {
-			body = body.replace(/<img [^>]*class="removeIcon"[^>]*>/g, ''); // Removes x images
-			body = body.replace(/(<span [^>]*class="tagged"[^>]* about="[^#]*)([^>]*">)/g, '$1load?q=' + doc.id + '$2'); // Removes x images
-			Document.update({'_id': doc.id}, {$set: {'body': body}}, {upsert: true}, function (error) {
+			html.body = html.body.replace(/<img [^>]*class="removeIcon"[^>]*>/g, ''); // Removes x images
+			html.body = html.body.replace(/(<span [^>]*class="tagged"[^>]* about="[^#]*)([^>]*">)/g, '$1load?q=' + doc.id + '$2'); // Removes x images
+			html.body = html.body.replace(/<!\-\-SCRIPT/g, '');
+			html.body = html.body.replace(/SCRIPT\-\->/g, '');
+			Document.update({'_id': doc.id}, {$set: {'body': html.body}}, {upsert: true}, function (error) {
 				if (error) {
 					callback(error);
 				}
