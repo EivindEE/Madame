@@ -27,14 +27,16 @@ exports.get = function (url, callback) {
 				if (port) {
 					URI += ':' + port;
 				}
-				tags = document.getElementsByTagName('script');
+				tags = document.body.getElementsByTagName('script');
 				count = tags.length;
 				for (i = 0; i < count; i += 1) {
+					tags[i].innerHTML = tags[i].innerHTML.replace(/<!\-\-/g, 'SEMTAG-START-COMMENT').replace(/\-\->/g, 'SEMTAG-END-COMMENT');
 					tags[i].parentNode.replaceChild(document.createComment('SCRIPT' + tags[i].outerHTML + 'SCRIPT'), tags[i]);
 				}
-				tags = document.getElementsByTagName('iframe');
+				tags = document.body.getElementsByTagName('iframe');
 				count = tags.length;
 				for (i = 0; i < count; i += 1) {
+					tags[i].innerHTML = tags[i].innerHTML.replace(/<!\-\-/g, 'SEMTAG-START-COMMENT').replace(/\-\->/g, 'SEMTAG-END-COMMENT');
 					tags[i].parentNode.replaceChild(document.createComment('SCRIPT' + tags[i].outerHTML + 'SCRIPT'), tags[i]);
 				}
 

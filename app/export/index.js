@@ -26,6 +26,8 @@ exports.save = function (html, callback) {
 			html.body = html.body.replace(/(<span [^>]*class="tagged"[^>]* about="[^#]*)([^>]*">)/g, '$1load?q=' + doc.id + '$2'); // Removes x images
 			html.body = html.body.replace(/<!\-\-SCRIPT/g, '');
 			html.body = html.body.replace(/SCRIPT\-\->/g, '');
+			html.body = html.body.replace(/SEMTAG-START-TAG/g, '<!--');
+			html.body = html.body.replace(/SEMTAG-END-TAG/g, '-->');
 			Document.update({'_id': doc.id}, {$set: {'body': html.body}}, {upsert: true}, function (error) {
 				if (error) {
 					callback(error);
