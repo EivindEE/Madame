@@ -143,6 +143,22 @@ var http = require("http"),
 		}
 	};
 
+/**
+*	Finds a list of possible definitions of the term
+*	@param {String} term: The term to define
+*	@param {Function} callback($error, $definitions):
+*	The function that is called when the definitions have been found
+*	$error {Object}: An error object with the error encountered, or null
+*	$definitions{Object}: An object of the form:
+*	{
+*		word {String}: The word to define
+*		senses {Array}: An array containing the possible definitions. A definition is in the form
+*		{
+*			senseid {String}: A unique URL for the sense
+*			explanation {String}: A short text explaining the definition
+*		}
+*	}
+*/
 exports.term = function (term, callback) {
 	runQueries([findLexitagTerms], term, function (json) {
 		callback(null, json);

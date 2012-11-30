@@ -232,7 +232,20 @@ var url = require('url'),
 		}
 		callback(null, {"synset": mapping.synset, "schema_dot_org": schema_dot_org, "sumo": sumo, "parents": parents, "siblings": siblings, "parentSiblings": parentSiblings});
 	};
-
+/**
+	Finds the closest mappings from a synset to several ontologies using a few different algorithms
+	@param {String} synset: a synset in the form synset-<word>-<lexical class>-<sense number>
+	@param {Function} callback($error, $result):
+	The callback is called when the best mappings have been found for each algorithm
+	$error {Object}: The error encountered or null
+	$result {Object}: An object of the form
+	{
+		synset {String}: The synset which was analysed
+		[sumo {Array}: The best mappings from the different algorithms to the SUMO ontology]
+		[schema_dot_org {Array}: The best mappings from the different algorithms to the schema.org ontology]		
+		// In addition the discovered mappings are returned for analysis purposes
+	}
+*/
 exports.bestFit = function (synset, callback) {
 	var fit = {'synset': synset, sumo: [], schema_dot_org: []};
 	mapSynset(synset, function (error, mapping) {
@@ -267,11 +280,54 @@ exports.bestFit = function (synset, callback) {
 		}
 	});
 };
+/**
+*	Creates a mapping tree of the synset.
+*	A mapping tree contains all the synsets sibling senses (hyponymes of hypernymes),
+*	all the ancestors of the synset, and all the siblings of the ancestors.
+*	@param {String} synset: a synset in the form synset-<word>-<lexical class>-<sense number>
+*	@param {Function} callback($error, $result):
+*	The callback is called when the mapping tree is completed
+*	$error {Object}: The error encountered or null
+*	$result {Object}: an Object of the form 
+*	{
+*		synset {String}: The synset which was mapped
+*		chain {Array}: The ancestor chain, each element is an object in the form: 
+*		{
+*			synset {String}: The ancestor synset
+*			[sumo {String}: The mapping to the SUMO ontology]
+*			[schema_dot_org {String}: The mapping to the schema.org ontology]
+*			siblings {Array}: The sibling senses, each element is an object in the form: 
+*			{
+*				synset {String}: The ancestor synset
+*				[sumo {String}: The mapping to the SUMO ontology]
+*				[schema_dot_org {String}: The mapping to the schema.org ontology]
+*			}
+*		}
+*		siblings {Array}: The sibling senses, each element is an object in the form: 
+*		{
+*			synset {String}: The ancestor synset
+*			[sumo {String}: The mapping to the SUMO ontology]
+*			[schema_dot_org {String}: The mapping to the schema.org ontology]
+*		}
+*		[sumo {String}: The mapping to the SUMO ontology]
+*		[schema_dot_org {String}: The mapping to the schema.org ontology]		
+*	}
+*/
 
 exports.mappings = function (synset, callback) {
 	mapSynset(synset, callback);
 };
-
+/**
+*	Finds the hypernyme(s) of the synset
+*	@param {String} synset: a synset in the form synset-<word>-<lexical class>-<sense number>
+*	@param {Function} callback($error, $result):
+*	The callback function is called when the hypernyme(s) of the word has been found
+*	$error {Object}: The error encountered or null
+*	$result {Object}: An object in the form:
+*	{
+*		parents {Array}: the hypernyme(s) of the parent
+*	}
+*/
 exports.parent = function (synset, callback) {
 	exec('perl scripts/parent.pl ' + synset, function (error, stout, stderr) {
 		if (error) {
