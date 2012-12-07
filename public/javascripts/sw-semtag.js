@@ -123,8 +123,7 @@ semtag.addSenses = function (url, callback) {
 			}
 		}
 		if (json.sumo || json.schema_dot_org) {
-			title = content + ", meaning: ";
-			title += senses.join(', ');
+			sensesString += senses.join(', ');
 		}
 		callback(sensesString, sense);
 	});
@@ -147,25 +146,25 @@ semtag.wordSenseClicked = function (wordSense, options) {
 			{
 				'id': id,
 				'attr': {
-					'title': title,
+					'title': content + ", meaning: " + senses,
 					'typeof': sense,
 					'about': about
 				},
 				classes: ['tagged']
 			});
-		removeIcon = semtag.buildTag('img', {
-			'id': id,
-			'attr': {'src': '/images/remove.png',
-					'alt': 'X'},
-			'classes': ['removeIcon']
-		});
-		toTag.appendChild(removeIcon);
-		$('.removeIcon').unbind('click');
-		$('.removeIcon').click(function () {
-			semtag.removeSense(this);
-		});
-		$('#' + id).tooltip();
 	});
+	removeIcon = semtag.buildTag('img', {
+		'id': id,
+		'attr': {'src': '/images/remove.png',
+				'alt': 'X'},
+		'classes': ['removeIcon']
+	});
+	toTag.appendChild(removeIcon);
+	$('.removeIcon').unbind('click');
+	$('.removeIcon').click(function () {
+		semtag.removeSense(this);
+	});
+	$('#' + id).tooltip();
 };
 
 semtag.buildWordSenseList = function (sensList) {
