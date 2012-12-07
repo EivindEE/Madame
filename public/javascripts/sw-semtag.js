@@ -79,35 +79,45 @@ semtag.decideEndpoint = function (source) {
 	}
 };
 
-semtag.wordSenseClicked = function (wordSense, options) {
-	'use strict';
-	options = options || {};
-	var toTag	= document.getElementById('toTag'),
-		title	= options.title  || wordSense.textContent,
-		content = options.text || toTag.textContent,
-		id		= semtag.getId(content),
-		about	= options.about || document.URL + '#' + id,
-		sense	= options.wordSense || wordSense.getAttribute('id'),
-		endpoint,
-		removeIcon,
-		wnId = sense.substring(sense.lastIndexOf('/') + 1);
-	endpoint = semtag.decideEndpoint(wordSense.dataset.source);
+semtag.prefixes = {
+	'sumo': 'http://www.ontologyportal.org/SUMO.owl# ',
+	'schema': 'http://schema.org/'
+};
 
-	$.getJSON(endpoint + wnId, function (json) {
+semtag.ensurePrefixes = function () {
+	'use strict';
+	var prefixes = document.body.getAttribute('prefix') || '',
+		prefix;
+	for (prefix in semtag.prefixes) {
+		if (semtag.prefixes.hasOwnProperty(prefix)) {
+			if (prefixes.indexOf(prefix + ':') === -1) {
+				prefixes += ' ' + prefix + ': ' + semtag.prefixes[prefix];
+			}
+		}
+	}
+	document.body.setAttribute('prefix', prefixes);
+};
+
+semtag.addSenses = function (url, callback) {
+	'use strict';
+	$.getJSON(url, function (json) {
 		var senses = [],
-			i;
+			sense = '',
+			i,
+			sensesString = '';
+		semtag.ensurePrefixes();
 		if (json.sumo) {
 			for (i = 0; i < json.sumo.length; i += 1) {
+				sense += " sumo:" + json.sumo[i];
 				if (senses.indexOf(json.sumo[i]) === -1) {
-					sense += " http://www.ontologyportal.org/SUMO.owl#" + json.sumo[i];
 					senses.push(json.sumo[i]);
 				}
 			}
 		}
 		if (json.schema_dot_org) {
 			for (i = 0; i < json.sumo.length; i += 1) {
+				sense += " schema:" + json.schema_dot_org[i];
 				if (senses.indexOf(json.schema_dot_org) === -1) {
-					sense += " http://schema.org/" + json.schema_dot_org[i];
 					senses.push(json.schema_dot_org);
 				}
 			}
@@ -116,6 +126,23 @@ semtag.wordSenseClicked = function (wordSense, options) {
 			title = content + ", meaning: ";
 			title += senses.join(', ');
 		}
+		callback(sensesString, sense);
+	});
+};
+
+semtag.wordSenseClicked = function (wordSense, options) {
+	'use strict';
+	options = options || {};
+	var toTag	= document.getElementById('toTag'),
+		content = options.text || toTag.textContent,
+		id		= semtag.getId(content),
+		about	= options.about || document.URL + '#' + id,
+		sense	= options.wordSense || wordSense.getAttribute('id'),
+		endpoint = semtag.decideEndpoint(wordSense.dataset.source),
+		wnId = sense.substring(sense.lastIndexOf('/') + 1),
+		removeIcon;
+
+	semtag.addSenses(endpoint + wnId, function (senses, sense) {
 		toTag = semtag.extendTag(toTag,
 			{
 				'id': id,
