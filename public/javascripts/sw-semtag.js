@@ -180,41 +180,10 @@ semtag.displayHeader = function (word) {
 semtag.buildDidYouMeanTable = function (json, tableId) {
 	'use strict';
 	var didYouMean,
-		input,
 		word;
 	didYouMean = document.getElementById(tableId);
 	word = document.getElementById('toTag').textContent;
 	semtag.displayHeader(json.word);
-
-	$('#dym-input').keypress(function (kp) {
-		var inputString,
-			// RegExp Pattern lifted from  
-			// http://stackoverflow.com/questions/6667029/using-regex-to-match-url-pattern-invalid-quantifier
-			URLPattern = new RegExp('^(https?:\\/\\/)?' + // protocol
-						'((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-						'((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-						'(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-						'(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-						'(\\#[-a-z\\d_]*)?$', 'i'), // fragment locater
-			twitterPattern = new RegExp('^@', 'i');
-		if (kp.charCode === 13) { // Charcode 13 === Enter keypress
-			inputString = input.value;
-			if (inputString.search(URLPattern) !== -1) {
-				semtag.wordSenseClicked(inputString, {wordSense: inputString, title: "external reference", text: word});
-				semtag.resetDYM();
-			} else if (inputString.search(twitterPattern) !== -1) {
-				semtag.wordSenseClicked(inputString,
-					{
-						wordSense: 'http://twitter.com/' + inputString.substring(1),
-						title: "Twitter handle",
-						text: word
-					});
-				semtag.resetDYM();
-			} else {
-				semtag.sw(input.value);
-			}
-		}
-	});
 	didYouMean.appendChild(semtag.buildWordSenseList(json.senses));
 	$('.word-sense').click(function () {
 		semtag.wordSenseClicked(this);
