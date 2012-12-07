@@ -52,7 +52,7 @@ iframe {
 	background-color: $base;
 }
 
-.tagged[typeof*="dbpedia.org"] {
+.tagged[typeof*="dbp:"] {
 	background-color: $dbpedia;
 }
 
@@ -60,11 +60,11 @@ iframe {
 	background-color: $synset;
 }
 
-.tagged[typeof*="http://www.ontologyportal.org/SUMO.owl"] {
+.tagged[typeof*="sumo:"] {
 	background-color: $dbpedia;
 }
 
-.tagged[typeof*="schema.org"]{
+.tagged[typeof*="schema:"]{
 	background-color: $schema_org;
 }
 
