@@ -125,7 +125,7 @@ exports.sw = function (req, res) {
 	res.render(
 		'sw',
 		{
-			title: 'Single Word SemTag',
+			title: 'Meta data made simple',
 			scripts: ['http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js', 'javascripts/dist/SemTag.js', 'javascripts/sw-app.js']
 		}
 	);
