@@ -6,6 +6,7 @@ var url = require('url'),
 	disambiguate = require('../app/disambiguate'),
 	proxy = require('../app/proxy'),
 	exporter = require('../app/export'),
+	properties = require('../app/schema.properties'),
 	returnJSON = function (error, json, res) {
 		if (error) {
 			console.log(error);
@@ -70,6 +71,18 @@ exports.proxy = function (req, res) {
 	});
 };
 
+exports.properties = function (req, res) {
+	var term = req.params.properties || req.query.q;
+	properties.propertiesList(term, function (err, properties) {
+		if (err) {
+			res.writeHead(500, {'Content-Type': "application/json"});
+			res.end(JSON.stringify(err));
+		} else {
+			res.writeHead(200, {'Content-Type': "application/json"});
+			res.end(JSON.stringify(properties));
+		}
+	});
+};
 
 // Static routes
 exports.index = function (req, res) {

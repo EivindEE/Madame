@@ -2,9 +2,9 @@
 'use strict';
 var http = require("http"),
 	url = require('url'),
-	properties = require('../schema.org').declaration.properties,
-	datatypes = require('../schema.org').declaration.datatypes,
-	types = require('../schema.org').declaration.types,
+	properties = require('../schema.properties/mapping').declaration.properties,
+	datatypes = require('../schema.properties/mapping').declaration.datatypes,
+	types = require('../schema.properties/mapping').declaration.types,
 	saneString = function (searchString, callback) {
 		if (searchString.length > 60) {
 			callback(new Error('Search string <' + searchString + '> was to long'));
