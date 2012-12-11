@@ -259,8 +259,6 @@ exports.bestFit = function (synset, callback) {
 						console.log(linError);
 						callback(new Error("Error"));
 					} else {
-						fit.lin = linResults;
-						fit.rec = recResults;
 						if (linResults.sumo) {
 							fit.sumo.push(linResults.sumo);
 						}
@@ -273,6 +271,14 @@ exports.bestFit = function (synset, callback) {
 						if (recResults.schema_dot_org) {
 							fit.schema_dot_org.push(recResults.schema_dot_org);
 						}
+						fit.lin = {
+							'schema_dot_org' : linResults.schema_dot_org,
+							'sumo' : linResults.sumo
+						};
+						fit.rec = {
+							'schema_dot_org' : recResults.schema_dot_org,
+							'sumo' : recResults.sumo
+						};
 						callback(null, fit);
 					}
 				});
