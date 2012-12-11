@@ -2,6 +2,35 @@
 /*global  $, console */
 var semtag = semtag || {};
 
+semtag.ancestors = function (el, callback, nodes) {
+	'use strict';
+	nodes = nodes || [];
+	if (el.parentNode) {
+		nodes.push(el);
+		semtag.ancestors(el.parentNode, callback, nodes);
+	} else {
+		if (typeof callback === 'function') {
+			callback(null, nodes);
+		}
+	}
+	return nodes;
+};
+
+semtag.hasAncestorWithClass = function (el, className) {
+	'use strict';
+	var hasAncestor;
+	semtag.ancestors(el.parentNode, function (err, ancestors) {
+		var i,
+			classRegExp = new RegExp('(^|\b)' + className + '(\b|$)');
+		for (i = 0; i < ancestors.length; i += 1) {
+			if (ancestors[i].className.match(classRegExp)) {
+				hasAncestor =  ancestors[i];
+			}
+		}
+	});
+	return hasAncestor;
+};
+
 semtag.wantedSense = function (sense) {
 	'use strict';
 	return sense.source !== "DBPedia";
@@ -258,35 +287,38 @@ $('#content').mouseup(function () {
 	'use strict';
 	var range = window.getSelection().getRangeAt(0),
 		text = range.toString().replace(/^\s*|\s*$/g, ''); // Remove leading and trailing whitespace.
-	if (range && text.length > 0) {
-		if (text.length > 50) {
-			$('header .container').append(
-				'<div class="alert span6 fade in">'
-					+ '<button type="button" class="close" data-dismiss="alert">×</button>'
-					+ '<strong>Warning!</strong> Selections should be less than 50 letters.'
-					+ '</div>'
-			);
-		} else {
-			semtag.resetToTag('toTag', function () {
-				semtag.surround(range, 'toTag');
-				semtag.sw(text);
-				document.getSelection().addRange(range);
-			});
-		}
-	} else if (range.startContainer === range.endContainer) {
-		if (
-			(range.commonAncestorContainer.nodeName === 'A'
-				&&
-				range.commonAncestorContainer.childNodes[0].nodeName === 'IMG'
-			)
-				||
-				range.commonAncestorContainer.nodeName === 'IMG'
-		) {
-			semtag.resetToTag('toTag', function () {
-				semtag.surround(range, 'toTag');
-				semtag.sw("Image");
-				document.getSelection().addRange(range);
-			});
+	if (!(semtag.hasAncestorWithClass(range.startContainer, 'tagged')
+			|| semtag.hasAncestorWithClass(range.endContainer, 'tagged'))) {
+		if (range && text.length > 0) {
+			if (text.length > 50) {
+				$('header .container').append(
+					'<div class="alert span6 fade in">'
+						+ '<button type="button" class="close" data-dismiss="alert">×</button>'
+						+ '<strong>Warning!</strong> Selections should be less than 50 letters.'
+						+ '</div>'
+				);
+			} else {
+				semtag.resetToTag('toTag', function () {
+					semtag.surround(range, 'toTag');
+					semtag.sw(text);
+					document.getSelection().addRange(range);
+				});
+			}
+		} else if (range.startContainer === range.endContainer) {
+			if (
+				(range.commonAncestorContainer.nodeName === 'A'
+					&&
+					range.commonAncestorContainer.childNodes[0].nodeName === 'IMG'
+				)
+					||
+					range.commonAncestorContainer.nodeName === 'IMG'
+			) {
+				semtag.resetToTag('toTag', function () {
+					semtag.surround(range, 'toTag');
+					semtag.sw("Image");
+					document.getSelection().addRange(range);
+				});
+			}
 		}
 	}
 });
