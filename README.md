@@ -1,6 +1,17 @@
 SemTag
 ============================
 
+TODO
+=====
+Add properties
+e.g.
+```
+	<span typeof='schema:Thing'>
+		<span property="schema:description" content="some thing">&nbsp;</span>
+	</span>
+```
+
+
 # Homepage
 You can view this projects homepage on [eelseth.github.com/SemTag](http://eivindee.github.com/SemTag)
 # Tests
