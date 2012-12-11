@@ -27,7 +27,7 @@ $('#export-btn').click(function () {
 	$.post('/export',
 		{
 			'q' : html,
-			'head': semtag.dom.head,
+			'head': semtag.dom.head || '',
 			'URI': semtag.dom.URI
 		}, function (id) {
 			id = id.replace(/"/g, '');
