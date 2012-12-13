@@ -111,8 +111,9 @@ semtag.hasAncestorWithClass = function (el, className) {
 	'use strict';
 	var hasAncestor;
 	semtag.ancestors(el.parentNode, function (err, ancestors) {
+		className = (className instanceof Array ? className.join('|') : className);
 		var i,
-			classRegExp = new RegExp('(^|\b)' + className + '(\b|$)');
+			classRegExp = new RegExp('(^|\\b)(' + className + ')(\\b|$)');
 		if (err) {
 			return false;
 		}
@@ -397,8 +398,8 @@ $('#content').mouseup(function () {
 	if (window.getSelection().rangeCount > 0) {
 		range = window.getSelection().getRangeAt(0);
 		text = range.toString().replace(/^\s*|\s*$/g, ''); // Remove leading and trailing whitespace.
-		if (!(semtag.hasAncestorWithClass(range.startContainer, 'tagged')
-				|| semtag.hasAncestorWithClass(range.endContainer, 'tagged'))) {
+		if (!(semtag.hasAncestorWithClass(range.startContainer, ['tagged', 'popover'])
+				|| semtag.hasAncestorWithClass(range.endContainer, ['tagged', 'popover']))) {
 			if (range && text.length > 0) {
 				if (text.length > 50) {
 					$('header .container').append(
