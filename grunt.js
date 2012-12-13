@@ -30,7 +30,6 @@ module.exports = function (grunt) {
 			compress: {
 				files: {
 					'public/stylesheets/style.min.css': [
-						'public/stylesheets/popover.css',
 						'public/stylesheets/reset.css',
 						'public/stylesheets/bootstrap.css',
 						'public/stylesheets/style.css'
@@ -41,7 +40,6 @@ module.exports = function (grunt) {
 		concat: {
 			dist: {
 				src: [
-					'public/javascripts/lib/popover.js',
 					'public/javascripts/lib/bootstrap.js',
 					'public/javascripts/semtag.js',
 					'public/javascripts/sw-semtag.js',
@@ -77,8 +75,6 @@ module.exports = function (grunt) {
 			]
 		},
 		jslint_options: {
-			junit: 'logs/junit.xml', // write the output to a JUnit XML
-			log: 'logs/lint.log',
 			errorsOnly: true // only display errors
 		},
 		uglify: {},
