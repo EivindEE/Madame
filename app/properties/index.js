@@ -1,3 +1,5 @@
+/*jslint node: true */
+'use strict';
 exports.dbLocation = 'mongodb://localhost:3001/pages';
 exports.intertalCommentStart = /<!\-\-SCRIPT/g;
 exports.intertalCommentEnd = /SCRIPT\-\->/g;
