@@ -16,6 +16,84 @@ semtag.ancestors = function (el, callback, nodes) {
 	return nodes;
 };
 
+semtag.addProperties = function (el) {
+	'use strict';
+	var properties = el.find('.property'),
+		count = properties.length,
+		i,
+		j,
+		parent = el.parent(),
+		elementProperties;
+	for (i = 0; i < count; i += 1) {
+		if (properties[i].value) {
+			elementProperties = parent.find('.tagged .property[property="' + properties[i].getAttribute('name')  + '"]');
+			for (j = 0; j < elementProperties.length; j += 1) {
+				elementProperties[j].setAttribute('content', properties[i].value);
+			}
+		}
+	}
+	$('.tagged').popover('hide');
+};
+/**
+* Is called by a tagged term. 
+* If property is already set, the function should keep this value as default
+* @return {String} inputList, HTML list of possible properties the term can have, and inputs for setting the value.
+*/
+semtag.buildPropertyInputList = function () {
+	'use strict';
+	var inputList = '<ul id="properties">',
+		self = this,
+		i,
+		el,
+		value,
+		count = self.childNodes.length;
+	for (i = 0; i < count; i += 1) {
+		el = self.childNodes[i];
+		if (el.className && el.className.match(/(^|\b)property(\b|$)/)) {
+			if (el.dataset.range === 'Text' || el.dataset.range === 'URL') {
+				value = el.getAttribute('content') || '';
+				inputList += '<li>';
+				inputList += '<span class="left">' + el.getAttribute('property') + ': </span>';
+				inputList += '<input class="property right" name="'
+					+ el.getAttribute('property') + '" type="text" class="right" value="'
+					+ value + '" placeholder="' + el.dataset.range + '"/>';
+				inputList += '</li>';
+			}
+		}
+	}
+	inputList += '<input class="right submit" type="submit" value="Go" /></ul>';
+	return inputList;
+};
+
+semtag.typeProperties = function (types, callback) {
+	'use strict';
+	var properties = [],
+		type,
+		i,
+		push = function (data) {
+			var type;
+			for (type in data) {
+				if (data.hasOwnProperty(type)) {
+					if (properties.indexOf(data[type]) === -1) {
+						if (data[type].indexOf('Text') !== -1 || data[type].indexOf('URL') !== -1) {
+							properties.push({'property': 'schema:' + type, 'range': data[type]});
+						}
+					}
+				}
+			}
+			if (i === types.length) {
+				callback(properties);
+			}
+		};
+	types = types.split(' ');
+	for (i = 1; i < types.length; i += 1) {
+		if (types[i].match(/^schema:/)) {
+			type = types[i].substring(7);
+			$.getJSON('/properties/' + type, push);
+		}
+	}
+};
+
 semtag.hasAncestorWithClass = function (el, className) {
 	'use strict';
 	var hasAncestor;
@@ -41,8 +119,13 @@ semtag.extendTag = function (el, options) {
 	var	i,
 		attr,
 		data;
-	el.id = options.id;
+	if (options.id) {
+		el.id = options.id;
+	}
 	if (options.classes) {
+		if (typeof options.classes === 'string') {
+			options.classes = [options.classes];
+		}
 		for (i = 0; i < options.classes.length || 0; i += 1) {
 			el.classList.add(options.classes[i]);
 		}
@@ -168,19 +251,28 @@ semtag.wordSenseClicked = function (wordSense, options) {
 		sense	= options.wordSense || wordSense.getAttribute('id'),
 		endpoint = semtag.decideEndpoint(wordSense.dataset.source),
 		wnId = sense.substring(sense.lastIndexOf('/') + 1),
-		removeIcon;
+		removeIcon,
+		jQueryId = '#' + id;
 
 	semtag.addSenses(endpoint + wnId, function (senses, sense) {
 		toTag = semtag.extendTag(toTag,
 			{
 				'id': id,
 				'attr': {
-					'title': content + ", meaning: " + senses,
 					'typeof': sense,
 					'about': about
 				},
 				classes: ['tagged']
 			});
+		$(jQueryId).tooltip({title: content + ", meaning: " + senses}).popover({placement: 'bottom', html: true, title: '<h4>Properties:</h4>', content: semtag.buildPropertyInputList});
+		semtag.typeProperties(sense, function (properties) {
+			var i,
+				property;
+			for (i = 0; i < properties.length; i += 1) {
+				property = semtag.buildTag('span', {'classes': 'property', 'attr' : { 'property': properties[i].property}, 'data' : {'range': properties[i].range.join(" ")}});
+				toTag.appendChild(property);
+			}
+		});
 	});
 	removeIcon = semtag.buildTag('img', {
 		'id': id,
@@ -193,7 +285,6 @@ semtag.wordSenseClicked = function (wordSense, options) {
 	$('.removeIcon').click(function () {
 		semtag.removeSense(this);
 	});
-	$('#' + id).tooltip();
 };
 
 semtag.buildWordSenseList = function (sensList) {
@@ -285,39 +376,43 @@ semtag.resetToTag = function (id, callback) {
 };
 $('#content').mouseup(function () {
 	'use strict';
-	var range = window.getSelection().getRangeAt(0),
+	var range,
+		text;
+	if (window.getSelection().rangeCount > 0) {
+		range = window.getSelection().getRangeAt(0);
 		text = range.toString().replace(/^\s*|\s*$/g, ''); // Remove leading and trailing whitespace.
-	if (!(semtag.hasAncestorWithClass(range.startContainer, 'tagged')
-			|| semtag.hasAncestorWithClass(range.endContainer, 'tagged'))) {
-		if (range && text.length > 0) {
-			if (text.length > 50) {
-				$('header .container').append(
-					'<div class="alert span6 fade in">'
-						+ '<button type="button" class="close" data-dismiss="alert">×</button>'
-						+ '<strong>Warning!</strong> Selections should be less than 50 letters.'
-						+ '</div>'
-				);
-			} else {
-				semtag.resetToTag('toTag', function () {
-					semtag.surround(range, 'toTag');
-					semtag.sw(text);
-					document.getSelection().addRange(range);
-				});
-			}
-		} else if (range.startContainer === range.endContainer) {
-			if (
-				(range.commonAncestorContainer.nodeName === 'A'
-					&&
-					range.commonAncestorContainer.childNodes[0].nodeName === 'IMG'
-				)
-					||
-					range.commonAncestorContainer.nodeName === 'IMG'
-			) {
-				semtag.resetToTag('toTag', function () {
-					semtag.surround(range, 'toTag');
-					semtag.sw("Image");
-					document.getSelection().addRange(range);
-				});
+		if (!(semtag.hasAncestorWithClass(range.startContainer, 'tagged')
+				|| semtag.hasAncestorWithClass(range.endContainer, 'tagged'))) {
+			if (range && text.length > 0) {
+				if (text.length > 50) {
+					$('header .container').append(
+						'<div class="alert span6 fade in">'
+							+ '<button type="button" class="close" data-dismiss="alert">×</button>'
+							+ '<strong>Warning!</strong> Selections should be less than 50 letters.'
+							+ '</div>'
+					);
+				} else {
+					semtag.resetToTag('toTag', function () {
+						semtag.surround(range, 'toTag');
+						semtag.sw(text);
+						document.getSelection().addRange(range);
+					});
+				}
+			} else if (range.startContainer === range.endContainer) {
+				if (
+					(range.commonAncestorContainer.nodeName === 'A'
+						&&
+						range.commonAncestorContainer.childNodes[0].nodeName === 'IMG'
+					)
+						||
+						range.commonAncestorContainer.nodeName === 'IMG'
+				) {
+					semtag.resetToTag('toTag', function () {
+						semtag.surround(range, 'toTag');
+						semtag.sw("Image");
+						document.getSelection().addRange(range);
+					});
+				}
 			}
 		}
 	}
