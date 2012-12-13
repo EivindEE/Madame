@@ -7,7 +7,7 @@
  * Hacked together to make my master artefact look OK
  */
 @import "includes/shapes";
-
+$dark:			#000;
 $highlighted: 	#EEEEEE;
 $alpha: 		0.3;
 $dbpedia: 		rgba(255,125,64,$alpha);	// #FF7D40;
@@ -107,3 +107,23 @@ iframe {
 	display: none;
 }
 
+.popover {
+	min-width: 500px;
+}
+
+.popover li {
+	height: 45px;
+	font-size: 14px;
+	color: $dark;
+}
+.popover span {
+	padding-top: 7px;
+}
+
+.left {
+	float: left;
+}
+
+.right {
+	float: right;
+}
