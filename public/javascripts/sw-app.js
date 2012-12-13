@@ -24,9 +24,11 @@ $('#sidebar a:first').tab('show');
 
 $('#export-btn').click(function () {
 	'use strict';
+	if (semtag.clean) {
+		semtag.clean();
+	}
 	var html =  document.getElementById('content').innerHTML,
 		head = semtag.dom.head || '';
-
 	$.post('/export',
 		{
 			'q' : html,

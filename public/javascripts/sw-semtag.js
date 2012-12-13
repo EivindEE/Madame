@@ -2,6 +2,19 @@
 /*global  $, console */
 var semtag = semtag || {};
 
+semtag.clean = function () {
+	'use strict';
+	var properties = $('.tagged .property'),
+		i,
+		count = properties.length;
+	for (i = 0; i < count; i += 1) {
+		if (!properties[i].getAttribute('content')) {
+			properties[i].parentElement.removeChild(properties[i]);
+		}
+	}
+	$('.tagged').popover('hide');
+};
+
 semtag.ancestors = function (el, callback, nodes) {
 	'use strict';
 	nodes = nodes || [];
