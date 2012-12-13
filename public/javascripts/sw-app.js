@@ -18,16 +18,19 @@ $('#sidebar a:first').tab('show');
 	semtag.input.style.display = "none";
 	semtag.dym = document.getElementById('dym-input');
 	semtag.senses = document.getElementById('senses');
+	semtag.dom = semtag.dom || {};
 }());
 
 
 $('#export-btn').click(function () {
 	'use strict';
-	var html =  document.getElementById('content').innerHTML;
+	var html =  document.getElementById('content').innerHTML,
+		head = semtag.dom.head || '';
+
 	$.post('/export',
 		{
 			'q' : html,
-			'head': semtag.dom.head || '',
+			'head': head,
 			'URI': semtag.dom.URI
 		}, function (id) {
 			id = id.replace(/"/g, '');
