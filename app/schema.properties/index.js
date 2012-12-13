@@ -1,3 +1,4 @@
+/*jslint node: true */
 'use strict';
 var mapping = require('./mapping').declaration;
 exports.propertiesList = function (term, callback) {

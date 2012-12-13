@@ -22,6 +22,9 @@ semtag.hasAncestorWithClass = function (el, className) {
 	semtag.ancestors(el.parentNode, function (err, ancestors) {
 		var i,
 			classRegExp = new RegExp('(^|\b)' + className + '(\b|$)');
+		if (err) {
+			return false;
+		}
 		for (i = 0; i < ancestors.length; i += 1) {
 			if (ancestors[i].className.match(classRegExp)) {
 				hasAncestor =  ancestors[i];
