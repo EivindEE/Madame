@@ -21,12 +21,8 @@ $('#sidebar a:first').tab('show');
 	semtag.dom = semtag.dom || {};
 }());
 
-
-$('#export-btn').click(function () {
+semtag.exportPage = function () {
 	'use strict';
-	if (semtag.clean) {
-		semtag.clean();
-	}
 	var html =  document.getElementById('content').innerHTML,
 		head = semtag.dom.head || '';
 	$.post('/export',
@@ -38,6 +34,15 @@ $('#export-btn').click(function () {
 			id = id.replace(/"/g, '');
 			$('#link').html('You can view the extracted page on <a href="/load?q=' + id + '">' + document.URL + 'load?q=' + id + '</a>');
 		});
+};
+
+$('#export-btn').click(function () {
+	'use strict';
+	if (semtag.clean) {
+		semtag.clean(semtag.exportPage);
+	} else {
+		semtag.exportPage();
+	}
 });
 
 $('#dym-input').keypress(function (kp) {
