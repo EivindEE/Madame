@@ -2,7 +2,7 @@
 /*global  $, console */
 var semtag = semtag || {};
 
-semtag.clean = function () {
+semtag.clean = function (callback) {
 	'use strict';
 	var properties = $('.tagged .property'),
 		i,
@@ -13,6 +13,9 @@ semtag.clean = function () {
 		}
 	}
 	$('.tagged').popover('hide');
+	if (callback) {
+		callback();
+	}
 };
 
 semtag.ancestors = function (el, callback, nodes) {
@@ -97,25 +100,30 @@ semtag.typeProperties = function (types, callback) {
 	var properties = [],
 		type,
 		i,
+		finished,
+		started,
 		push = function (data) {
 			var type;
 			for (type in data) {
 				if (data.hasOwnProperty(type)) {
-					if (properties.indexOf(data[type]) === -1) {
-						if (data[type].indexOf('Text') !== -1 || data[type].indexOf('URL') !== -1) {
-							properties.push({'property': 'schema:' + type, 'range': data[type]});
-						}
+					if (data[type].indexOf('Text') !== -1 || data[type].indexOf('URL') !== -1) {
+						properties.push({ 'property': 'schema:' + type, 'range': data[type]});
 					}
 				}
 			}
-			if (i === types.length) {
+			finished += 1;
+			if (finished === started) {
 				callback(properties);
 			}
 		};
+	console.log(types);
 	types = types.split(' ');
-	for (i = 1; i < types.length; i += 1) {
+	finished = 0;
+	started = 0;
+	for (i = 0; i < types.length; i += 1) {
 		if (types[i].match(/^schema:/)) {
 			type = types[i].substring(7);
+			started += 1;
 			$.getJSON('/properties/' + type, push);
 		}
 	}
@@ -298,10 +306,14 @@ semtag.wordSenseClicked = function (wordSense, options) {
 		$(jQueryId).tooltip({title: content + ", meaning: " + senses}).popover({placement: 'bottom', html: true, title: '<h4>Properties:</h4>', content: semtag.buildPropertyInputList});
 		semtag.typeProperties(sense, function (properties) {
 			var i,
-				property;
+				property,
+				propertiesAdded = [];
 			for (i = 0; i < properties.length; i += 1) {
-				property = semtag.buildTag('span', {'classes': 'property', 'attr' : { 'property': properties[i].property}, 'data' : {'range': properties[i].range.join(" ")}});
-				toTag.appendChild(property);
+				if (propertiesAdded.indexOf(properties[i].property) === -1) {
+					propertiesAdded.push(properties[i].property);
+					property = semtag.buildTag('span', {'classes': 'property', 'attr' : { 'property': properties[i].property}, 'data' : {'range': properties[i].range.join(" ")}});
+					toTag.appendChild(property);
+				}
 			}
 		});
 	});
