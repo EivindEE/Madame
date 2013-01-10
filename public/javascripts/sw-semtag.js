@@ -29,6 +29,17 @@ semtag.ancestors = function (el, callback, nodes) {
 	return nodes;
 };
 
+semtag.correctTypeAttribute = function (range) {
+	'use strict';
+	console.log(range);
+	switch (range) {
+	case 'Text':
+		return 'content';
+	case 'URL':
+		return 'href';
+	}
+};
+
 semtag.addProperties = function (el) {
 	'use strict';
 	var properties = el.find('.property'),
@@ -36,12 +47,15 @@ semtag.addProperties = function (el) {
 		i,
 		j,
 		parent = el.parent(),
-		elementProperties;
+		elementProperties,
+		storeType;
 	for (i = 0; i < count; i += 1) {
 		if (properties[i].value) {
 			elementProperties = parent.find('.tagged .property[property="' + properties[i].getAttribute('name')  + '"]');
 			for (j = 0; j < elementProperties.length; j += 1) {
-				elementProperties[j].setAttribute('content', properties[i].value);
+				storeType = semtag.correctTypeAttribute(elementProperties[j].dataset.range);
+				console.log(storeType);
+				elementProperties[j].setAttribute(storeType, properties[i].value);
 			}
 		}
 	}
