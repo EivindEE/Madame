@@ -40,6 +40,8 @@ semtag.correctTypeAttribute = function (range) {
 		return 'content';
 	case 'URL':
 		return 'href';
+	case 'Date':
+		return 'content';
 	}
 };
 
@@ -85,8 +87,15 @@ semtag.buildPropertyInputList = function () {
 				inputList += '<li>';
 				inputList += '<span class="left">' + el.getAttribute('property') + ': </span>';
 				inputList += '<input class="property right" name="'
-					+ el.getAttribute('property') + '" type="text" class="right" value="'
+					+ el.getAttribute('property') + '" type="text" value="'
 					+ value + '" placeholder="' + el.dataset.range + '"/>';
+				inputList += '</li>';
+			} else if (el.dataset.range === 'Date') {
+				value = el.getAttribute('content') || '';
+				inputList += '<li>';
+				inputList += '<span class="left">' + el.getAttribute('property') + ': </span>';
+				inputList += '<input class="property right" name="'
+					+ el.getAttribute('property') + '" type="text" placeholder="Format: YYYY-MM-DDTHH:MM"/>';
 				inputList += '</li>';
 			}
 		}
@@ -106,7 +115,7 @@ semtag.typeProperties = function (types, callback) {
 			var type;
 			for (type in data) {
 				if (data.hasOwnProperty(type)) {
-					if (data[type].indexOf('Text') !== -1 || data[type].indexOf('URL') !== -1) {
+					if (data[type].indexOf('Text') !== -1 || data[type].indexOf('URL') !== -1 || data[type].indexOf('Date') !== -1) {
 						properties.push({ 'property': 'schema:' + type, 'range': data[type]});
 					}
 				}
