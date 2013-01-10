@@ -3,7 +3,7 @@
 
 var props = require('../properties'),
 	mongoose = require('mongoose'),
-	db = mongoose.createConnection(props.dbLocation),
+	db = mongoose.createConnection(props.dbLocation + props.documents),
 	documentSchema = new mongoose.Schema({
 		'body': String,
 		'head': String,
