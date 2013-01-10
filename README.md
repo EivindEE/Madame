@@ -3,6 +3,11 @@ SemTag
 
 TODO
 =====
+Properties must be declared differently
+	Text: content
+	URL: href
+	etc...
+
 Add properties
 e.g.
 ```
