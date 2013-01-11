@@ -4,6 +4,7 @@ var semtag = semtag || {};
 
 semtag.clean = function (callback) {
 	'use strict';
+	console.log('cleaned');
 	var properties = $('.tagged .property'),
 		i,
 		count = properties.length;
@@ -40,10 +41,6 @@ semtag.correctTypeAttribute = function (range) {
 		return 'content';
 	case 'Date':
 		return 'content';
-//	case 'URL':
-//		return 'href';
-//	default:
-//		return 'href';
 	}
 	return 'href';
 };
@@ -57,13 +54,13 @@ semtag.addProperties = function (el, pop) {
 		parent = pop.prev(),
 		elementProperties,
 		storeType;
-	console.log(parent);
+
 	for (i = 0; i < count; i += 1) {
 		if (properties[i].value) {
 			elementProperties = parent.find('.property[property="' + properties[i].getAttribute('name')  + '"]');
 			for (j = 0; j < elementProperties.length; j += 1) {
 				storeType = semtag.correctTypeAttribute(elementProperties[j].dataset.range);
-				console.log(properties[i].value);
+
 				if (elementProperties[j].dataset.range === 'Text' || properties[i].value !== 'None') {
 					elementProperties[j].setAttribute(storeType, properties[i].value);
 				} else if (properties[i].value !== 'None') {
@@ -142,8 +139,8 @@ semtag.buildPropertyInputList = function () {
 					inputList += '<select class="property right" name="' + el.getAttribute('property') + '">';
 					inputList += '<option>None</option>';
 					for (j = 0; j < properties.length; j += 1) {
-						console.log(j + ' value:' + value);
-						console.log(j + ' properties[' + j + '][0]:' + properties[j][0]);
+
+
 						inputList += '<option value="#' + properties[j][0] + '" ';
 						if (value === '#' + properties[j][0]) {
 							inputList += 'selected';
@@ -381,7 +378,6 @@ semtag.wordSenseClicked = function (wordSense, options) {
 		});
 	});
 	removeIcon = semtag.buildTag('img', {
-//		'id': id,
 		'attr': {'src': '/images/remove.png',
 				'alt': 'X'},
 		'classes': ['removeIcon']
