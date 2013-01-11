@@ -8,7 +8,7 @@ semtag.clean = function (callback) {
 		i,
 		count = properties.length;
 	for (i = 0; i < count; i += 1) {
-		if (!properties[i].getAttribute('content')) {
+		if (!properties[i].getAttribute('content') && !properties[i].getAttribute('href')) {
 			properties[i].parentElement.removeChild(properties[i]);
 		}
 	}
@@ -34,38 +34,71 @@ semtag.ancestors = function (el, callback, nodes) {
 
 semtag.correctTypeAttribute = function (range) {
 	'use strict';
-	console.log(range);
+
 	switch (range) {
 	case 'Text':
 		return 'content';
-	case 'URL':
-		return 'href';
 	case 'Date':
 		return 'content';
+//	case 'URL':
+//		return 'href';
+//	default:
+//		return 'href';
 	}
+	return 'href';
 };
 
-semtag.addProperties = function (el) {
+semtag.addProperties = function (el, pop) {
 	'use strict';
 	var properties = el.find('.property'),
 		count = properties.length,
 		i,
 		j,
-		parent = el.parent(),
+		parent = pop.prev(),
 		elementProperties,
 		storeType;
+	console.log(parent);
 	for (i = 0; i < count; i += 1) {
 		if (properties[i].value) {
-			elementProperties = parent.find('.tagged .property[property="' + properties[i].getAttribute('name')  + '"]');
+			elementProperties = parent.find('.property[property="' + properties[i].getAttribute('name')  + '"]');
 			for (j = 0; j < elementProperties.length; j += 1) {
 				storeType = semtag.correctTypeAttribute(elementProperties[j].dataset.range);
-				console.log(storeType);
-				elementProperties[j].setAttribute(storeType, properties[i].value);
+				console.log(properties[i].value);
+				if (elementProperties[j].dataset.range === 'Text' || properties[i].value !== 'None') {
+					elementProperties[j].setAttribute(storeType, properties[i].value);
+				} else if (properties[i].value !== 'None') {
+					elementProperties[j].setAttribute(storeType, '');
+				}
 			}
 		}
 	}
 	$('.tagged').popover('hide');
 };
+
+/**
+*	@param properties, a string with one or more properties
+*	@return An array of element id value pairs for elements that have a given property
+*/
+semtag.getElementsByProperty = function (properties) {
+	'use strict';
+	var els = document.getElementsByClassName('tagged'),
+		count = els.length,
+		i,
+		j,
+		toReturn = [],
+		type;
+	properties = properties.split(" ");
+	for (i = 0; i < count; i += 1) {
+		type = els[i].getAttribute('typeof');
+		for (j = 0; j < properties.length; j += 1) {
+			if (type.match(properties[j])) {
+				toReturn.push([els[i].id, els[i].textContent]);
+			}
+		}
+	}
+	return toReturn;
+};
+
 /**
 * Is called by a tagged term. 
 * If property is already set, the function should keep this value as default
@@ -76,14 +109,16 @@ semtag.buildPropertyInputList = function () {
 	var inputList = '<ul id="properties">',
 		self = this,
 		i,
+		j,
 		el,
 		value,
-		count = self.childNodes.length;
+		count = self.childNodes.length,
+		properties;
 	for (i = 0; i < count; i += 1) {
 		el = self.childNodes[i];
 		if (el.className && el.className.match(/(^|\b)property(\b|$)/)) {
 			if (el.dataset.range === 'Text' || el.dataset.range === 'URL') {
-				value = el.getAttribute('content') || '';
+				value = el.getAttribute('content') || el.getAttribute('href') || '';
 				inputList += '<li>';
 				inputList += '<span class="left">' + el.getAttribute('property') + ': </span>';
 				inputList += '<input class="property right" name="'
@@ -94,9 +129,30 @@ semtag.buildPropertyInputList = function () {
 				value = el.getAttribute('content') || '';
 				inputList += '<li>';
 				inputList += '<span class="left">' + el.getAttribute('property') + ': </span>';
-				inputList += '<input class="property right" name="'
-					+ el.getAttribute('property') + '" type="text" placeholder="Format: YYYY-MM-DDTHH:MM"/>';
+				inputList += '<input class="property right" name="';
+				inputList += el.getAttribute('property') + '" type="text" placeholder="Format: YYYY-MM-DDTHH:MM" ';
+				inputList += 'value="' + value + '" />';
 				inputList += '</li>';
+			} else {
+				value = el.getAttribute('href') || '';
+				properties = semtag.getElementsByProperty(el.dataset.range);
+				if (properties.length > 0) {
+					inputList += '<li>';
+					inputList += '<span class="left">' + el.getAttribute('property') + ': </span>';
+					inputList += '<select class="property right" name="' + el.getAttribute('property') + '">';
+					inputList += '<option>None</option>';
+					for (j = 0; j < properties.length; j += 1) {
+						console.log(j + ' value:' + value);
+						console.log(j + ' properties[' + j + '][0]:' + properties[j][0]);
+						inputList += '<option value="#' + properties[j][0] + '" ';
+						if (value === '#' + properties[j][0]) {
+							inputList += 'selected';
+						}
+						inputList += '>' + properties[j][1] + '</option>';
+					}
+					inputList += '</select>';
+					inputList += '</li>';
+				}
 			}
 		}
 	}
@@ -115,9 +171,7 @@ semtag.typeProperties = function (types, callback) {
 			var type;
 			for (type in data) {
 				if (data.hasOwnProperty(type)) {
-					if (data[type].indexOf('Text') !== -1 || data[type].indexOf('URL') !== -1 || data[type].indexOf('Date') !== -1) {
-						properties.push({ 'property': 'schema:' + type, 'range': data[type]});
-					}
+					properties.push({ 'property': 'schema:' + type, 'range': data[type]});
 				}
 			}
 			finished += 1;
@@ -125,7 +179,7 @@ semtag.typeProperties = function (types, callback) {
 				callback(properties);
 			}
 		};
-	console.log(types);
+
 	types = types.split(' ');
 	finished = 0;
 	started = 0;
@@ -327,7 +381,7 @@ semtag.wordSenseClicked = function (wordSense, options) {
 		});
 	});
 	removeIcon = semtag.buildTag('img', {
-		'id': id,
+//		'id': id,
 		'attr': {'src': '/images/remove.png',
 				'alt': 'X'},
 		'classes': ['removeIcon']
