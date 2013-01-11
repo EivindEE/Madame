@@ -21,16 +21,17 @@ $('#sidebar a:first').tab('show');
 	semtag.dom = semtag.dom || {};
 }());
 
-semtag.exportPage = function () {
+semtag.exportPage = function (head, html) {
 	'use strict';
-	var html =  document.getElementById('content').innerHTML,
-		head = semtag.dom.head || '';
+
+
 	$.post('/export',
 		{
-			'q' : html,
+			'q' : html[0].innerHTML,
 			'head': head,
 			'URI': semtag.dom.URI
 		}, function (id) {
+
 			id = id.replace(/"/g, '');
 			$('#link').html('You can view the extracted page on <a href="/load?q=' + id + '">' + document.URL + 'load?q=' + id + '</a>');
 		});
@@ -38,10 +39,14 @@ semtag.exportPage = function () {
 
 $('#export-btn').click(function () {
 	'use strict';
+	var head = semtag.dom.head || '',
+		html = document.getElementById('content').cloneNode(true);
 	if (semtag.clean) {
-		semtag.clean(semtag.exportPage);
+		semtag.clean(html, function (cleanHTML) {
+			semtag.exportPage(head, cleanHTML);
+		});
 	} else {
-		semtag.exportPage();
+		semtag.exportPage(head, html);
 	}
 });
 

@@ -2,10 +2,10 @@
 /*global  $, console */
 var semtag = semtag || {};
 
-semtag.clean = function (callback) {
+semtag.clean = function (el, callback) {
 	'use strict';
-	console.log('cleaned');
-	var properties = $('.tagged .property'),
+	el = $(el);
+	var properties = el.find('.tagged .property'),
 		i,
 		count = properties.length;
 	for (i = 0; i < count; i += 1) {
@@ -15,7 +15,7 @@ semtag.clean = function (callback) {
 	}
 	$('.tagged').popover('hide');
 	if (callback) {
-		callback();
+		callback(el);
 	}
 };
 
