@@ -110,14 +110,17 @@ semtag.buildPropertyInputList = function () {
 		el,
 		value,
 		count = self.childNodes.length,
-		properties;
+		properties,
+		property;
 	for (i = 0; i < count; i += 1) {
 		el = self.childNodes[i];
 		if (el.className && el.className.match(/(^|\b)property(\b|$)/)) {
+			property = el.getAttribute('property').substring(7);
+			property = property.charAt(0).toUpperCase() + property.slice(1);
 			if (el.dataset.range === 'Text' || el.dataset.range === 'URL') {
 				value = el.getAttribute('content') || el.getAttribute('href') || '';
 				inputList += '<li>';
-				inputList += '<span class="left">' + el.getAttribute('property') + ': </span>';
+				inputList += '<span class="left">' + property + ': </span>';
 				inputList += '<input class="property right" name="'
 					+ el.getAttribute('property') + '" type="text" value="'
 					+ value + '" placeholder="' + el.dataset.range + '"/>';
@@ -125,7 +128,7 @@ semtag.buildPropertyInputList = function () {
 			} else if (el.dataset.range === 'Date') {
 				value = el.getAttribute('content') || '';
 				inputList += '<li>';
-				inputList += '<span class="left">' + el.getAttribute('property') + ': </span>';
+				inputList += '<span class="left">' + property + ': </span>';
 				inputList += '<input class="property right" name="';
 				inputList += el.getAttribute('property') + '" type="text" placeholder="Format: YYYY-MM-DDTHH:MM" ';
 				inputList += 'value="' + value + '" />';
@@ -135,12 +138,10 @@ semtag.buildPropertyInputList = function () {
 				properties = semtag.getElementsByProperty(el.dataset.range);
 				if (properties.length > 0) {
 					inputList += '<li>';
-					inputList += '<span class="left">' + el.getAttribute('property') + ': </span>';
+					inputList += '<span class="left">' + property + ': </span>';
 					inputList += '<select class="property right" name="' + el.getAttribute('property') + '">';
 					inputList += '<option>None</option>';
 					for (j = 0; j < properties.length; j += 1) {
-
-
 						inputList += '<option value="#' + properties[j][0] + '" ';
 						if (value === '#' + properties[j][0]) {
 							inputList += 'selected';
