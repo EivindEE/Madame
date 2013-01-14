@@ -25,6 +25,9 @@ $('#get').click(function () {
 			semtag.dom.URI = dom.URI || '';
 			semtag.dom.head = dom.head || '';
 			document.getElementById('content').innerHTML = dom.body;
+			$(document.getElementById('content')).click(function (e) {
+				e.preventDefault();
+			});
 		}
 
 	});
