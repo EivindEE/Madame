@@ -105,13 +105,17 @@ semtag.buildPropertyInputList = function () {
 	'use strict';
 	var inputList = '<ul id="properties">',
 		self = this,
+		id = self.getAttribute('id'),
 		i,
 		j,
 		el,
 		value,
 		count = self.childNodes.length,
 		properties,
-		property;
+		property,
+		notSelf = function (elem) {
+			return elem[0] !== id;
+		};
 	for (i = 0; i < count; i += 1) {
 		el = self.childNodes[i];
 		if (el.className && el.className.match(/(^|\b)property(\b|$)/)) {
@@ -136,6 +140,7 @@ semtag.buildPropertyInputList = function () {
 			} else {
 				value = el.getAttribute('href') || '';
 				properties = semtag.getElementsByProperty(el.dataset.range);
+				properties = properties.filter(notSelf);
 				if (properties.length > 0) {
 					inputList += '<li>';
 					inputList += '<span class="left">' + property + ': </span>';
