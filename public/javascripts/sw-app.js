@@ -40,7 +40,7 @@ semtag.exportPage = function (head, html) {
 $('#export-btn').click(function () {
 	'use strict';
 	if ($('#google-id').val()) {
-		$('#content').append('<span rel="author" href="' + $('#google-id').val() + '"></span>');
+		$('#content').append('<a rel="author" href="' + $('#google-id').val() + '"></a>');
 	}
 	var head = semtag.dom.head || '',
 		html = document.getElementById('content').cloneNode(true);
