@@ -298,6 +298,7 @@ semtag.removeSense = function (sense) {
 		content;
 	taggedNode = sense.parentNode;
 	taggedNodeParent = taggedNode.parentNode;
+	$('span').tooltip('hide');
 	content = document.createTextNode(taggedNode.textContent);
 	taggedNodeParent.replaceChild(content, taggedNode);
 };
