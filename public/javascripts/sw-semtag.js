@@ -155,6 +155,19 @@ semtag.buildPropertyInputList = function () {
 					}
 					inputList += '</select>';
 					inputList += '</li>';
+					inputList += '<li>';
+					inputList += '<span class="left"> or write the URL: </span>';
+					inputList += '<input class="property right" name="'
+						+ el.getAttribute('property') + '" type="text" value="'
+						+ value + '" placeholder="URL"/>';
+					inputList += '</li>';
+				} else {
+					inputList += '<li>';
+					inputList += '<span class="left">' + property + ': </span>';
+					inputList += '<input class="property right" name="'
+						+ el.getAttribute('property') + '" type="text" value="'
+						+ value + '" placeholder="URL"/>';
+					inputList += '</li>';
 				}
 			}
 		}
