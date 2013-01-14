@@ -1,6 +1,12 @@
 SemTag
-============================
+======
 
+Name Suggestions
+================
+MeDa (MEta DAta)
+MeDams (MEta Data Made Simple)
+MaDams (MetA DAta Made Simple)
+Simple Schemata
 TODO
 =====
 Properties must be declared differently
