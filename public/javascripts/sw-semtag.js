@@ -343,15 +343,15 @@ semtag.addSenses = function (url, callback) {
 		if (json.sumo) {
 			for (i = 0; i < json.sumo.length; i += 1) {
 				if (senses.indexOf(json.sumo[i]) === -1) {
-					senses.push(json.sumo[i]);
+					senses.push('sumo:' + json.sumo[i]);
 					sense += " sumo:" + json.sumo[i];
 				}
 			}
 		}
 		if (json.schema_dot_org) {
-			for (i = 0; i < json.sumo.length; i += 1) {
+			for (i = 0; i < json.schema_dot_org.length; i += 1) {
 				if (senses.indexOf(json.schema_dot_org[i]) === -1) {
-					senses.push(json.schema_dot_org[i]);
+					senses.push('schema:' + json.schema_dot_org[i]);
 					sense += " schema:" + json.schema_dot_org[i];
 				}
 			}
