@@ -15,33 +15,35 @@ html(
 					div.add-on#get Get
 			hr
 			div.row#content-container
-				div.span4#disambiuate
-						ul.nav.nav-tabs#sidebar
-							li
-								a(href="#info") Information
-							li
-								a(href="#dym") Meanings
-							li
-								a(href="#export") Export
-						div.tab-content
-							div.tab-pane#info
-								h4 Select words or sections from the box on the left
-								p We will suggest possible meanings for these, or you can write your own.
-							div.tab-pane#dym
-								h4#dym-header Select the sense which describes "<span id='word'></span>", or write another term which descibes it
-								input#dym-input(type='text', placeholder='Write the topic here')
-								ul#senses
-							div.tab-pane#export
-								div Do you want to add your image to google searches? Write your Google+ account id here before you export:
-								input(class='span4', id='google-id', placeholder="https://plus.google.com/XXXXXXXXXXXXXXXXXXXXX")
-								div Press the button to get sent to your newly created semantic webpage.
-									| Press ctrl/cmd + s to save the source code
-								button#export-btn.btn export
-								p#link
-				h2.span8 Select the words you want to disambiuate bellow
-				div.span8#content
-					p The aim of this project is the further development and testing of a method for the automatic derivation of wordnets (semantic nets, concept nets - i.e., semantically classified lexical databases) from translational corpora. The method has been developed by Helge Dyvik.
-					p Wordnets are a language technology resource of increasing importance, with several applications. Among other things, they allow content-based information retrieval, automatic logical inference, and improved machine translation. Parallel corpora are text collections consisting of originals and translations in two or more languages, where the originals and their translations have been aligned on the level of sentences, or more rarely also on the level of words.
-					p The method takes translational correspondences from a parallel corpus as a starting point. On the basis of the network of translational correspondences, word senses are distinguished and semantic relations are calculated automatically, e.g. hypero- vs. hyponyms ( animal vs. dog , good vs. kind ), and the result is represented in a complex lattice structure. The aim of the project is to apply and test the method on a large scale against a Norwegian/English parallel corpus (ENPC). This involves among other things word alignment of the corpus, extraction and processing of data from the corpora, and evaluation of the algorithms and the derived lattices.
-					p A successful result would mean that parts of the work towards the development of wordnets can be automatised.
+				div.span4#disambiuate.span4.bs-docs-sidebar
+						div.affix.span4
+							ul.nav.nav-tabs#sidebar
+								li
+									a(href="#info") Information
+								li
+									a(href="#dym") Meanings
+								li
+									a(href="#export") Export
+							div.tab-content
+								div.tab-pane#info
+									h4 Select words or sections from the box on the left
+									p We will suggest possible meanings for these, or you can write your own.
+								div.tab-pane#dym
+									h4#dym-header Select the sense which describes "<span id='word'></span>", or write another term which descibes it
+									input#dym-input(type='text', placeholder='Write the topic here')
+									ul#senses
+								div.tab-pane#export
+									div Do you want to add your image to google searches? Write your Google+ account id here before you export:
+									input(class='span4', id='google-id', placeholder="https://plus.google.com/XXXXXXXXXXXXXXXXXXXXX")
+									div Press the button to get sent to your newly created semantic webpage.
+										| Press ctrl/cmd + s to save the source code
+									button#export-btn.btn export
+									p#link
+				div.span8
+					h2(style="padding-left: 30px;") Select the words you want to tag below
+					div.span8#content
+						p The aim of this project is the further development and testing of a method for the automatic derivation of wordnets (semantic nets, concept nets - i.e., semantically classified lexical databases) from translational corpora. The method has been developed by Helge Dyvik.
+						p Wordnets are a language technology resource of increasing importance, with several applications. Among other things, they allow content-based information retrieval, automatic logical inference, and improved machine translation. Parallel corpora are text collections consisting of originals and translations in two or more languages, where the originals and their translations have been aligned on the level of sentences, or more rarely also on the level of words.
+						p The method takes translational correspondences from a parallel corpus as a starting point. On the basis of the network of translational correspondences, word senses are distinguished and semantic relations are calculated automatically, e.g. hypero- vs. hyponyms ( animal vs. dog , good vs. kind ), and the result is represented in a complex lattice structure. The aim of the project is to apply and test the method on a large scale against a Norwegian/English parallel corpus (ENPC). This involves among other things word alignment of the corpus, extraction and processing of data from the corpora, and evaluation of the algorithms and the derived lattices.
+						p A successful result would mean that parts of the work towards the development of wordnets can be automatised.
 		include includes/foot
