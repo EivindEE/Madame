@@ -55,6 +55,7 @@ exports.mapping = {
 	"duration#n#1": "Duration",
 	"embassy#n#1": "Embassy",
 	"employment_agency#n#1": "EmploymentAgency",
+	"entity#n#1" : "Thing",
 	"enumeration#n#1": "Enumeration",
 	"episode#n#3": "TVEpisode",
 	"evaluation#n#2": "Rating",
