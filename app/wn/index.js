@@ -184,8 +184,15 @@ var url = require('url'),
 			parents = [],
 			link,
 			parentSiblings = [];
-
 		if (!(schema_dot_org && sumo)) {
+			if (mapping.chain) {
+				if (mapping.chain[0].schema_dot_org) {
+					schema_dot_org = schema_dot_org || schema2parent[mapping.siblings[i].schema_dot_org];
+				}
+				if (mapping.chain[0].sumo) {
+					sumo = sumo || sumo2parent[mapping.siblings[i].sumo];
+				}
+			}
 			if (mapping.siblings) {
 				siblings = [];
 				for (i = 0; i < mapping.siblings.length; i += 1) {
