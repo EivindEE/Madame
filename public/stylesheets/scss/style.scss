@@ -44,6 +44,15 @@ iframe {
 	@include border(3 px);
 }
 
+#content-container {
+	min-height: 500px;
+}
+
+#disambiuate {
+	max-height: 400px;
+	overflow: auto;
+}
+
 #content {
 	margin-top: 8px;
 }
