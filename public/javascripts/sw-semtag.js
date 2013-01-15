@@ -110,14 +110,18 @@ semtag.buildPropertyInputList = function () {
 		j,
 		el,
 		value,
-		count = self.childNodes.length,
+		propertyList = self.getElementsByClassName('property'),
+		count = propertyList.length,
 		properties,
 		property,
 		notSelf = function (elem) {
 			return elem[0] !== id;
 		};
+	if (count === 0) {
+		return '<p>No suitable properties found for this class</p>';
+	}
 	for (i = 0; i < count; i += 1) {
-		el = self.childNodes[i];
+		el = propertyList[i];
 		if (el.className && el.className.match(/(^|\b)property(\b|$)/)) {
 			property = el.getAttribute('property').substring(7);
 			property = property.charAt(0).toUpperCase() + property.slice(1);
