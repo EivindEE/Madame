@@ -291,16 +291,14 @@ semtag.getId = function (content) {
 	return id;
 };
 
-semtag.removeSense = function (sense) {
+semtag.removeSense = function (removeImage) {
 	'use strict';
-	var taggedNode,
-		taggedNodeParent,
-		content;
-	taggedNode = sense.parentNode;
-	taggedNodeParent = taggedNode.parentNode;
+
+	var taggedNode = removeImage.parentNode;
 	$('span').tooltip('hide');
-	content = document.createTextNode(taggedNode.textContent);
-	taggedNodeParent.replaceChild(content, taggedNode);
+	$(taggedNode).children('.property').remove();
+	$(taggedNode).children('.removeIcon').remove();
+	taggedNode.outerHTML = taggedNode.innerHTML;
 };
 
 semtag.decideEndpoint = function (source) {
