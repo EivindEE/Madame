@@ -187,10 +187,10 @@ var url = require('url'),
 		if (!(schema_dot_org && sumo)) {
 			if (mapping.chain) {
 				if (mapping.chain[0].schema_dot_org) {
-					schema_dot_org = schema_dot_org || schema2parent[mapping.siblings[i].schema_dot_org];
+					schema_dot_org = schema_dot_org || mapping.chain[0].schema_dot_org;
 				}
 				if (mapping.chain[0].sumo) {
-					sumo = sumo || sumo2parent[mapping.siblings[i].sumo];
+					sumo = sumo || mapping.chain[0].sumo;
 				}
 			}
 			if (mapping.siblings) {
