@@ -416,6 +416,9 @@ semtag.wordSenseClicked = function (wordSense, options) {
 
 semtag.buildWordSenseList = function (sensList) {
 	'use strict';
+	sensList = sensList.filter(function (el) {
+		return el.senseid.match('noun-[0-9]+$') || el.senseid.match('http://dbpedia.org/');
+	});
 	var sensCount = sensList.length,
 		senses = [],
 		list = document.getElementById('senses'),
