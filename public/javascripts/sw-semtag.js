@@ -233,7 +233,7 @@ semtag.hasAncestorWithClass = function (el, className) {
 
 semtag.wantedSense = function (sense) {
 	'use strict';
-	return sense.source !== "DBPedia";
+	return true;
 };
 
 semtag.extendTag = function (el, options) {
@@ -317,7 +317,8 @@ semtag.decideEndpoint = function (source) {
 
 semtag.prefixes = {
 	'sumo': 'http://www.ontologyportal.org/SUMO.owl# ',
-	'schema': 'http://schema.org/'
+	'schema': 'http://schema.org/',
+	'dbp': 'http://dbpedia.org/resource/'
 };
 
 semtag.ensurePrefixes = function () {
@@ -357,6 +358,10 @@ semtag.addSenses = function (url, callback) {
 					sense += " schema:" + json.schema_dot_org[i];
 				}
 			}
+		}
+		if (json.term) {
+			sense = 'dbp:' + json.term;
+			sensesString = json.term;
 		}
 		if (json.sumo || json.schema_dot_org) {
 			sensesString += senses.join(', ');
@@ -417,7 +422,7 @@ semtag.wordSenseClicked = function (wordSense, options) {
 semtag.buildWordSenseList = function (sensList) {
 	'use strict';
 	sensList = sensList.filter(function (el) {
-		return el.senseid.match('noun-[0-9]+$') || el.senseid.match('http://dbpedia.org/');
+		return el.senseid.match('noun-[0-9]+$') || el.senseid.match('dbpedia.org');
 	});
 	var sensCount = sensList.length,
 		senses = [],
