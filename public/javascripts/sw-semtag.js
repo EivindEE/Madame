@@ -283,7 +283,7 @@ semtag.getId = function (content) {
 	var id,
 		baseString,
 		counter = 1;
-	if (content.length > 50) {
+	if (content.length > 50 || !content.match(/^[a-zA-Z][0-9a-zA-Z]*$/)) {
 		content = 'section';
 	}
 	baseString = 'semtag-' + content.replace(/ /g, '_') + '-';
@@ -381,7 +381,8 @@ semtag.wordSenseClicked = function (wordSense, options) {
 		endpoint = semtag.decideEndpoint(wordSense.dataset.source),
 		wnId = sense.substring(sense.lastIndexOf('/') + 1),
 		removeIcon,
-		jQueryId = '#' + id;
+		jQueryId = '#' + id,
+		tooltipContent = content;
 
 	semtag.addSenses(endpoint + wnId, function (senses, sense) {
 		toTag = semtag.extendTag(toTag,
@@ -393,7 +394,10 @@ semtag.wordSenseClicked = function (wordSense, options) {
 				},
 				classes: ['tagged']
 			});
-		$(jQueryId).tooltip({title: content + ", meaning: " + senses}).popover({placement: 'bottom', html: true, title: '<h4>Properties:</h4>', content: semtag.buildPropertyInputList});
+		if (content.length > 50) {
+			tooltipContent = 'Section';
+		}
+		$(jQueryId).tooltip({title: tooltipContent + " meaning: " + senses}).popover({placement: 'bottom', html: true, title: '<h4>Properties:</h4>', content: semtag.buildPropertyInputList});
 		semtag.typeProperties(sense, function (properties) {
 			var i,
 				property,
