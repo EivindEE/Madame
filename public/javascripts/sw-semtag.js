@@ -426,7 +426,12 @@ semtag.wordSenseClicked = function (wordSense, options) {
 semtag.buildWordSenseList = function (sensList) {
 	'use strict';
 	sensList = sensList.filter(function (el) {
-		return el.senseid.match('noun-[0-9]+$') || el.senseid.match('dbpedia.org');
+
+		return el.explanation && (el.senseid.match('noun-[0-9]+$') || el.senseid.match('dbpedia.org'));
+	}).sort(function (a, b) {
+//		if (a.senseid !== b.senseid) {
+		return a.source > b.source;
+//		}
 	});
 	var sensCount = sensList.length,
 		senses = [],
