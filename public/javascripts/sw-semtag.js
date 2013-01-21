@@ -315,11 +315,7 @@ semtag.decideEndpoint = function (source) {
 	}
 };
 
-semtag.prefixes = {
-	'sumo': 'http://www.ontologyportal.org/SUMO.owl# ',
-	'schema': 'http://schema.org/',
-	'dbp': 'http://dbpedia.org/resource/'
-};
+semtag.prefixes = {} || semtag.prefixes;
 
 semtag.ensurePrefixes = function () {
 	'use strict';
@@ -339,33 +335,24 @@ semtag.addSenses = function (url, callback) {
 	'use strict';
 	$.getJSON(url, function (json) {
 		var senses = [],
-			sense = '',
+			typeOf = '',
 			i,
-			sensesString = '';
+			sensesString = '',
+			ns,
+			sense;
+		for (ns in json.ns) {
+			if (json.ns.hasOwnProperty(ns)) {
+				semtag.prefixes[ns] = json.ns[ns];
+			}
+		}
 		semtag.ensurePrefixes();
-		if (json.sumo) {
-			for (i = 0; i < json.sumo.length; i += 1) {
-				if (senses.indexOf(json.sumo[i]) === -1) {
-					senses.push('sumo:' + json.sumo[i]);
-					sense += " sumo:" + json.sumo[i];
-				}
-			}
-		}
-		if (json.schema_dot_org) {
-			for (i = 0; i < json.schema_dot_org.length; i += 1) {
-				if (senses.indexOf(json.schema_dot_org[i]) === -1) {
-					senses.push('schema:' + json.schema_dot_org[i]);
-					sense += " schema:" + json.schema_dot_org[i];
-				}
-			}
-		}
-		if (json.term) {
-			sense = 'dbp:' + json.term;
-			sensesString = json.term;
-		}
-		if (json.sumo || json.schema_dot_org) {
-			sensesString += senses.join(', ');
-		}
+		sense = json.senses.join(" ");
+		sensesString = json.senses.map(function (el) {
+			var index = el.indexOf(':');
+			return el.substring(index + 1);
+		}).filter(function (elem, pos, self) {
+			return self.indexOf(elem) === pos;
+		}).join(", ");
 		callback(sensesString, sense);
 	});
 };

@@ -240,21 +240,21 @@ var url = require('url'),
 		callback(null, {"synset": mapping.synset, "schema_dot_org": schema_dot_org, "sumo": sumo, "parents": parents, "siblings": siblings, "parentSiblings": parentSiblings});
 	};
 /**
-	Finds the closest mappings from a synset to several ontologies using a few different algorithms
-	@param {String} synset: a synset in the form synset-<word>-<lexical class>-<sense number>
-	@param {Function} callback($error, $result):
-	The callback is called when the best mappings have been found for each algorithm
-	$error {Object}: The error encountered or null
-	$result {Object}: An object of the form
-	{
-		synset {String}: The synset which was analysed
-		[sumo {Array}: The best mappings from the different algorithms to the SUMO ontology]
-		[schema_dot_org {Array}: The best mappings from the different algorithms to the schema.org ontology]		
-		// In addition the discovered mappings are returned for analysis purposes
-	}
+*	Finds the closest mappings from a synset to several ontologies using a few different algorithms
+*	@param {String} synset: a synset in the form synset-<word>-<lexical class>-<sense number>
+*	@param {Function} callback($error, $result):
+*	The callback is called when the best mappings have been found for each algorithm
+*	$error {Object}: The error encountered or null
+*	$result {Object}: An object of the form
+*	{
+*		synset {String}: The synset which was analysed
+*		senses {Array}: An array with the senses found with namespace prefix.
+*		ns {Object}: An object containing the namespaces used. Prefix is key, URL is value
+*		// In addition the discovered mappings are returned for analysis purposes
+*	}
 */
 exports.bestFit = function (synset, callback) {
-	var fit = {'synset': synset, sumo: [], schema_dot_org: []};
+	var fit = {'synset': synset, 'senses': [], 'ns': {}};
 	mapSynset(synset, function (error, mapping) {
 		if (error) {
 			callback(error);
@@ -267,16 +267,20 @@ exports.bestFit = function (synset, callback) {
 						callback(new Error("Error"));
 					} else {
 						if (linResults.sumo) {
-							fit.sumo.push(linResults.sumo);
+							fit.senses.push("sumo:" + linResults.sumo);
+							fit.ns.sumo = 'http://www.ontologyportal.org/SUMO.owl#';
 						}
 						if (linResults.schema_dot_org) {
-							fit.schema_dot_org.push(linResults.schema_dot_org);
+							fit.senses.push("schema:" + linResults.schema_dot_org);
+							fit.ns.schema = 'http://schema.org/';
 						}
 						if (recResults.sumo) {
-							fit.sumo.push(recResults.sumo);
+							fit.senses.push("sumo:" + recResults.sumo);
+							fit.ns.sumo = 'http://www.ontologyportal.org/SUMO.owl#';
 						}
 						if (recResults.schema_dot_org) {
-							fit.schema_dot_org.push(recResults.schema_dot_org);
+							fit.senses.push("schema:" + recResults.schema_dot_org);
+							fit.ns.schema = 'http://schema.org/';
 						}
 						fit.lin = {
 							'schema_dot_org' : linResults.schema_dot_org,
@@ -286,6 +290,10 @@ exports.bestFit = function (synset, callback) {
 							'schema_dot_org' : recResults.schema_dot_org,
 							'sumo' : recResults.sumo
 						};
+						if (!fit.ns.schema) {
+							fit.senses.push('scheme:Thing');
+							fit.ns.schema = 'http://schema.org/';
+						}
 						callback(null, fit);
 					}
 				});
