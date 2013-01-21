@@ -88,7 +88,7 @@ semtag.getElementsByProperty = function (properties) {
 	for (i = 0; i < count; i += 1) {
 		type = els[i].getAttribute('typeof');
 		for (j = 0; j < properties.length; j += 1) {
-			if (type.match(properties[j])) {
+			if (type && type.match(properties[j])) {
 				toReturn.push([els[i].id, els[i].textContent]);
 			}
 		}
@@ -315,7 +315,7 @@ semtag.decideEndpoint = function (source) {
 	}
 };
 
-semtag.prefixes = {} || semtag.prefixes;
+semtag.prefixes = semtag.prefixes || {};
 
 semtag.ensurePrefixes = function () {
 	'use strict';
@@ -444,7 +444,15 @@ semtag.buildWordSenseList = function (sensList) {
 
 semtag.resetDYM = function () {
 	'use strict';
-	semtag.senses.innerHTML = "";
+	if (semtag.senses) {
+		semtag.senses.innerHTML = "";
+	}
+	if (semtag.input) {
+		semtag.input.value = "";
+	}
+	if (semtag.header && semtag.header.style.display) {
+		semtag.header.style.display = 'none';
+	}
 };
 
 semtag.displayHeader = function (word) {
@@ -464,9 +472,8 @@ semtag.buildDidYouMeanTable = function (json, tableId) {
 	didYouMean.appendChild(semtag.buildWordSenseList(json.senses));
 	$('.word-sense').click(function () {
 		semtag.wordSenseClicked(this);
-		semtag.header.style.display = 'none';
-		semtag.input.style.display = 'none';
-		semtag.senses.innerHTML = '';
+		semtag.resetDYM();
+		$('#sidebar li:first a:first').tab('show');
 	});
 	$('#sidebar li:nth-child(2) a:first').tab('show'); // Selector for "Meanings pane"
 };

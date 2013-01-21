@@ -58,7 +58,7 @@ iframe {
 }
 
 .tagged {
-	background-color: $base;
+	background-color: $schema_org;
 }
 
 .tagged[typeof*="dbp:"] {
