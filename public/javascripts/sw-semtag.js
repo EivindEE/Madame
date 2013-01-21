@@ -212,6 +212,28 @@ semtag.typeProperties = function (types, callback) {
 	}
 };
 
+semtag.hasAncestorWithId = function (el, id) {
+	'use strict';
+	var hasAncestor;
+	semtag.ancestors(el.parentNode, function (err, ancestors) {
+		id = (id instanceof Array ? id.join('|') : id);
+		var i,
+			idRegExp = new RegExp('^(' + id + ')$');
+		if (err) {
+			return false;
+		}
+		for (i = 0; i < ancestors.length; i += 1) {
+			if (ancestors[i].id) {
+				if (ancestors[i].id.match(idRegExp)) {
+					hasAncestor =  ancestors[i];
+					return ancestors[i];
+				}
+			}
+		}
+	});
+	console.log(hasAncestor);
+	return hasAncestor;
+};
 semtag.hasAncestorWithClass = function (el, className) {
 	'use strict';
 	var hasAncestor;
@@ -224,7 +246,8 @@ semtag.hasAncestorWithClass = function (el, className) {
 		}
 		for (i = 0; i < ancestors.length; i += 1) {
 			if (ancestors[i].className.match(classRegExp)) {
-				hasAncestor =  ancestors[i];
+				hasAncestor = ancestors[i];
+				return ancestors[i];
 			}
 		}
 	});
@@ -516,39 +539,42 @@ $('#content').mouseup(function () {
 	'use strict';
 	var range,
 		text;
-	if (window.getSelection().rangeCount > 0) {
+	if (window.getSelection().rangeCount === 1) {
 		range = window.getSelection().getRangeAt(0);
 		text = range.toString().replace(/^\s*|\s*$/g, ''); // Remove leading and trailing whitespace.
-		if (!(semtag.hasAncestorWithClass(range.startContainer, ['tagged', 'popover'])
-				|| semtag.hasAncestorWithClass(range.endContainer, ['tagged', 'popover']))) {
-			if (range && text.length > 0) {
-				if (text.length > 50) {
-					semtag.resetToTag('toTag', function () {
-						semtag.surround(range, 'toTag');
-						semtag.sw('Topic');
-						document.getSelection().addRange(range);
-					});
-				} else {
-					semtag.resetToTag('toTag', function () {
-						semtag.surround(range, 'toTag');
-						semtag.sw(text);
-						document.getSelection().addRange(range);
-					});
-				}
-			} else if (range.startContainer === range.endContainer) {
-				if (
-					(range.commonAncestorContainer.nodeName === 'A'
-						&&
-						range.commonAncestorContainer.childNodes[0].nodeName === 'IMG'
-					)
-						||
-						range.commonAncestorContainer.nodeName === 'IMG'
-				) {
-					semtag.resetToTag('toTag', function () {
-						semtag.surround(range, 'toTag');
-						semtag.sw("Image");
-						document.getSelection().addRange(range);
-					});
+		if (semtag.hasAncestorWithId(range.startContainer, ['content']) &&
+				semtag.hasAncestorWithId(range.endContainer, ['content'])) {
+			if (!(semtag.hasAncestorWithClass(range.startContainer, ['tagged', 'popover'])
+					|| semtag.hasAncestorWithClass(range.endContainer, ['tagged', 'popover']))) {
+				if (range && text.length > 0) {
+					if (text.length > 50) {
+						semtag.resetToTag('toTag', function () {
+							semtag.surround(range, 'toTag');
+							semtag.sw('Topic');
+							document.getSelection().addRange(range);
+						});
+					} else {
+						semtag.resetToTag('toTag', function () {
+							semtag.surround(range, 'toTag');
+							semtag.sw(text);
+							document.getSelection().addRange(range);
+						});
+					}
+				} else if (range.startContainer === range.endContainer) {
+					if (
+						(range.commonAncestorContainer.nodeName === 'A'
+							&&
+							range.commonAncestorContainer.childNodes[0].nodeName === 'IMG'
+						)
+							||
+							range.commonAncestorContainer.nodeName === 'IMG'
+					) {
+						semtag.resetToTag('toTag', function () {
+							semtag.surround(range, 'toTag');
+							semtag.sw("Image");
+							document.getSelection().addRange(range);
+						});
+					}
 				}
 			}
 		}
