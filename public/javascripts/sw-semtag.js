@@ -525,13 +525,7 @@ semtag.resetToTag = function (id, callback) {
 		contents;
 	toRemove = document.getElementById(id);
 	if (toRemove) {
-		contents = toRemove.childNodes[0];
-		parent = toRemove.parentNode;
-		if (contents) {
-			parent.replaceChild(contents, toRemove);
-		} else {
-			parent.removeChild(toRemove);
-		}
+		toRemove.outerHTML = toRemove.innerHTML;
 	}
 	callback();
 };
