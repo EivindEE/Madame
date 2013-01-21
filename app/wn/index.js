@@ -254,7 +254,7 @@ var url = require('url'),
 *	}
 */
 exports.bestFit = function (synset, callback) {
-	var fit = {'synset': synset, 'senses': [], 'ns': {}};
+	var fit = {'synset': synset, 'senses': [], 'ns': {'wn': 'http://www.w3.org/2006/03/wn/wn20/instances/'}, origin: 'wn/best-fit/' + synset};
 	mapSynset(synset, function (error, mapping) {
 		if (error) {
 			callback(error);
@@ -294,6 +294,7 @@ exports.bestFit = function (synset, callback) {
 							fit.senses.push('scheme:Thing');
 							fit.ns.schema = 'http://schema.org/';
 						}
+						fit.senses.push('wn:' + synset);
 						callback(null, fit);
 					}
 				});

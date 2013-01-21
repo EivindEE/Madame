@@ -16,14 +16,11 @@ var url = require('url'),
 *	}
 */
 exports.bestFit = function (term, callback) {
-	var fit = {'synset': term, 'senses': [], 'ns':
-		{
-			'schema': 'http://schema.org/'
-		}
-		};
+	var fit = {'synset': term, 'senses': [], origin: 'dbp/best-fit/' + term, 'ns': {'schema': 'http://schema.org/'}};
+	fit.senses.push('dbp:' + term);
+	fit.ns.dbp = 'http://dbpedia.org/resource/';
 	if (dbpedia2schema[term]) {
 		fit.senses.push('dbp:' + dbpedia2schema[term]);
-		fit.ns.dbp = 'http://dbpedia.org/resource/';
 	}
 	fit.senses.push('schema:Thing');
 	callback(null, fit);
