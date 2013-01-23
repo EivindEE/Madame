@@ -97,7 +97,7 @@ semtag.getElementsByProperty = function (properties) {
 };
 
 /**
-* Is called by a tagged term. 
+* Is called by a tagged term.
 * If property is already set, the function should keep this value as default
 * @return {String} inputList, HTML list of possible properties the term can have, and inputs for setting the value.
 */
@@ -256,6 +256,7 @@ semtag.hasAncestorWithClass = function (el, className) {
 
 semtag.wantedSense = function (sense) {
 	'use strict';
+	sense = [];
 	return true;
 };
 
@@ -357,12 +358,9 @@ semtag.ensurePrefixes = function () {
 semtag.addSenses = function (url, callback) {
 	'use strict';
 	$.getJSON(url, function (json) {
-		var senses = [],
-			typeOf = '',
-			i,
-			sensesString = '',
+		var sense,
 			ns,
-			sense;
+			sensesString;
 		for (ns in json.ns) {
 			if (json.ns.hasOwnProperty(ns)) {
 				semtag.prefixes[ns] = json.ns[ns];
@@ -520,9 +518,7 @@ semtag.surround = function (range, className) {
 };
 semtag.resetToTag = function (id, callback) {
 	'use strict';
-	var toRemove,
-		parent,
-		contents;
+	var toRemove;
 	toRemove = document.getElementById(id);
 	if (toRemove) {
 		toRemove.outerHTML = toRemove.innerHTML;
