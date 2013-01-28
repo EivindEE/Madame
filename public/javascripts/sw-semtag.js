@@ -255,6 +255,7 @@ semtag.hasAncestorWithClass = function (el, className) {
 
 semtag.wantedSense = function (sense) {
 	'use strict';
+	sense = [];
 	return true;
 };
 
@@ -356,12 +357,9 @@ semtag.ensurePrefixes = function () {
 semtag.addSenses = function (url, callback) {
 	'use strict';
 	$.getJSON(url, function (json) {
-		var senses = [],
-			typeOf = '',
-			i,
-			sensesString = '',
+		var sense,
 			ns,
-			sense;
+			sensesString;
 		for (ns in json.ns) {
 			if (json.ns.hasOwnProperty(ns)) {
 				semtag.prefixes[ns] = json.ns[ns];
@@ -550,9 +548,7 @@ semtag.strip = function (string) {
 };
 semtag.resetToTag = function (id, callback) {
 	'use strict';
-	var toRemove,
-		parent,
-		contents;
+	var toRemove;
 	toRemove = document.getElementById(id);
 	if (toRemove) {
 		toRemove.outerHTML = toRemove.innerHTML;
