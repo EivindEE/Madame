@@ -231,7 +231,6 @@ semtag.hasAncestorWithId = function (el, id) {
 			}
 		}
 	});
-	console.log(hasAncestor);
 	return hasAncestor;
 };
 semtag.hasAncestorWithClass = function (el, className) {
@@ -518,6 +517,11 @@ semtag.surround = function (range, className) {
 	tag.appendChild(fragment);
 	range.insertNode(tag);
 };
+
+semtag.strip = function (string) {
+	'use strict';
+	return string.replace(/^\s*|\s*$/g, ''); // Remove leading and trailing whitespace.
+};
 semtag.resetToTag = function (id, callback) {
 	'use strict';
 	var toRemove,
@@ -535,7 +539,7 @@ $('#content').mouseup(function () {
 		text;
 	if (window.getSelection().rangeCount === 1) {
 		range = window.getSelection().getRangeAt(0);
-		text = range.toString().replace(/^\s*|\s*$/g, ''); // Remove leading and trailing whitespace.
+		text = semtag.strip(range.toString());
 		if (semtag.hasAncestorWithId(range.startContainer, ['content']) &&
 				semtag.hasAncestorWithId(range.endContainer, ['content'])) {
 			if (!(semtag.hasAncestorWithClass(range.startContainer, ['tagged', 'popover'])
