@@ -39,6 +39,9 @@ sub uniq { # Copied from http://stackoverflow.com/questions/7651/how-do-i-remove
 
 sub parent {
 	my @parents = $wn->querySense($_[0], "hype");
+	if ($#parents > 0) {
+		return ();
+	}
 	return @parents;
 }
 
