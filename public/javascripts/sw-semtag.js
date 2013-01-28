@@ -97,7 +97,7 @@ semtag.getElementsByProperty = function (properties) {
 };
 
 /**
-* Is called by a tagged term. 
+* Is called by a tagged term.
 * If property is already set, the function should keep this value as default
 * @return {String} inputList, HTML list of possible properties the term can have, and inputs for setting the value.
 */
@@ -434,19 +434,45 @@ semtag.wordSenseClicked = function (wordSense, options) {
 
 semtag.buildWordSenseList = function (sensList) {
 	'use strict';
-	sensList = sensList.filter(function (el) {
-
-		return el.explanation && (el.senseid.match('noun-[0-9]+$') || el.senseid.match('dbpedia.org'));
-	}).sort(function (a, b) {
-//		if (a.senseid !== b.senseid) {
-		return a.source > b.source;
-//		}
-	});
-	var sensCount = sensList.length,
+	var sensCount,
 		senses = [],
 		list = document.getElementById('senses'),
 		i,
-		el;
+		el,
+		filterFunction,
+		hasWordNetMapping = function (list) {
+			var i;
+			for (i = 0; i < list.length; i += 1) {
+				if (list[i].source === 'WordNet') {
+					return true;
+				}
+			}
+			return false;
+		};
+	if (hasWordNetMapping(sensList)) {
+		filterFunction = function (el) {
+			return el.explanation && el.senseid.match('noun-[0-9]+$');
+		};
+	} else {
+		filterFunction = function (el) {
+			return el.explanation;
+		};
+	}
+	sensList = sensList.filter(filterFunction).map(function (el) {
+		var index;
+		if (el.source === 'WordNet') {
+			index = el.word.indexOf(')');
+			el.word = el.word.substring(index + 1);
+			el.word = semtag.strip(el.word);
+			el.word = el.word.charAt(0).toUpperCase() + el.word.substring(1);
+		} else if (el.source === 'schema_org') {
+			el.word = el.word.charAt(0) + el.word.substring(1).toLowerCase();
+		}
+		return el;
+	}).sort(function (a, b) {
+		return a.source > b.source;
+	});
+	sensCount = sensList.length;
 	for (i = 0; i < sensCount; i += 1) {
 		if (semtag.wantedSense(sensList[i])) {
 			el = semtag.buildTag('li', {
@@ -456,7 +482,7 @@ semtag.buildWordSenseList = function (sensList) {
 				},
 				'classes': ['word-sense']
 			});
-			el.innerText = sensList[i].explanation;
+			el.innerHTML = '<em class="word">' + sensList[i].word + '</em>: ' + sensList[i].explanation;
 			senses.push(el.outerHTML);
 		}
 	}
