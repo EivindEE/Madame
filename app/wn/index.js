@@ -291,7 +291,7 @@ exports.bestFit = function (synset, callback) {
 							'sumo' : recResults.sumo
 						};
 						if (!fit.ns.schema) {
-							fit.senses.push('scheme:Thing');
+							fit.senses.push('schema:Thing');
 							fit.ns.schema = 'http://schema.org/';
 						}
 						fit.senses.push('wn:' + synset);
