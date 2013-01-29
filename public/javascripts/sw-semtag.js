@@ -574,7 +574,7 @@ semtag.legalRange = function (range) {
 		child,
 		start,
 		end;
-	if (range.startContainer === range.endContainer) {
+	if ((range.startContainer === range.endContainer) || (range.startContainer.parentNode === range.endContainer.parentNode)) {
 		return newRange;
 	}
 	child = semtag.closestChild(range.endContainer.parentElement, range.startContainer.parentElement);
