@@ -84,3 +84,10 @@ $('#dym-input').keypress(function (kp) {
 		}
 	}
 });
+
+$(document).keyup(function (e) {
+	'use strict';
+	if (e.keyCode === 27) {
+		$('.tagged').popover('hide');
+	}
+});
