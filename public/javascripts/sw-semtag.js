@@ -215,7 +215,7 @@ semtag.typeProperties = function (types, callback) {
 semtag.hasAncestorWithId = function (el, id) {
 	'use strict';
 	var hasAncestor;
-	semtag.ancestors(el.parentNode, function (err, ancestors) {
+	semtag.ancestors(el, function (err, ancestors) {
 		id = (id instanceof Array ? id.join('|') : id);
 		var i,
 			idRegExp = new RegExp('^(' + id + ')$');
@@ -555,12 +555,52 @@ semtag.resetToTag = function (id, callback) {
 	}
 	callback();
 };
+semtag.closestChild = function (node, descendant) {
+	"use strict";
+	var parent;
+	if (descendant.parentElement) {
+		parent = descendant.parentElement;
+		if (node === parent) {
+			return descendant;
+		}
+		return semtag.closestChild(node, parent);
+	}
+	return false;
+};
+
+semtag.legalRange = function (range) {
+	"use strict";
+	var newRange = range.cloneRange(),
+		child,
+		start,
+		end;
+	if (range.startContainer === range.endContainer) {
+		return newRange;
+	}
+	child = semtag.closestChild(range.endContainer.parentElement, range.startContainer.parentElement);
+	if (child) {
+		newRange.setStartBefore(child);
+		return newRange;
+	}
+	child = semtag.closestChild(range.startContainer.parentElement, range.endContainer.parentElement);
+	if (child) {
+		newRange.setEndAfter(child);
+		return newRange;
+	}
+	start = semtag.closestChild(range.commonAncestorContainer, range.startContainer);
+	end = semtag.closestChild(range.commonAncestorContainer, range.endContainer);
+	newRange.setStartBefore(start);
+	newRange.setEndAfter(end);
+	return newRange;
+};
 $('#content').mouseup(function () {
 	'use strict';
 	var range,
-		text;
-	if (window.getSelection().rangeCount === 1) {
-		range = window.getSelection().getRangeAt(0);
+		text,
+		selection = window.getSelection();
+	if (selection.rangeCount === 1) {
+		range = selection.getRangeAt(0);
+		range = semtag.legalRange(range);
 		text = semtag.strip(range.toString());
 		if (semtag.hasAncestorWithId(range.startContainer, ['content']) &&
 				semtag.hasAncestorWithId(range.endContainer, ['content'])) {
