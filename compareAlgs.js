@@ -9,7 +9,7 @@ var fs = require('fs'),
 				if (err) {
 					console.log('Got err for synset: ' + synsets[i]);
 				} else {
-					var result = 'synset: ' + json.synset + '\r';
+					var result = json.synset + '\r';
 					if (json.lin.schema_dot_org) {
 						result += '\tlin: ' + json.lin.schema_dot_org  + '\r';
 					} else {
@@ -22,8 +22,10 @@ var fs = require('fs'),
 					}
 					if (json.rec.schema_dot_org !== json.lin.schema_dot_org) {
 						result += 'Different\r';
+						fs.appendFile('testing/compare-different', result);
 					} else {
 						result += 'Same\r';
+						fs.appendFile('testing/compare-same', result);
 					}
 					console.log('Wrote result for ' + json.synset);
 					fs.appendFile('testing/compare', result, function () {
