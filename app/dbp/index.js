@@ -7,29 +7,26 @@ var url = require('url'),
 	defaultGraph = 'default-graph-uri=http://dbpedia.org&',
 	querystring = require("querystring"),
 	format = 'format=application%2Fsparql-results%2Bjson&',
-//	query = 'query=select+distinct+%3Ftype+where+%7B%3Chttp%3A%2F%2Fdbpedia.org%2Fresource%2FTom_Cruise%3E+a+%3Ftype%7D&',
 	debug = 'debug=off&',
-	timeout = 'timeout=0',
-	dbp = function (resource) {
-		var query = 'query=select+distinct+?type+where+{<' + resource + '>+a+?type}&',
+	timeout = 'timeout=3',
+	dbp = function (resource, callback) {
+		var type = 'sense',
+			query = 'query=select+distinct+?' + type +  '+where+{<' + resource + '>+a+?' + type + '}&',
 			request =  endpoint + defaultGraph + query + format + timeout;
-		http.get( request, 
-		function (response, err) {
-			var body = '';
-			if (err) {
-				console.log('Error: ');
-				console.log(err);
-			} else if (response) {
+		http.get(request,
+			function (response, err) {
+				var body = '';
+				if (err) {
+					callback(err);
+					return err;
+				}
 				response.on('data', function (chunk) {
 					body += chunk;
 				});
 				response.on('end', function () {
-					console.log(body);
+					callback(null, JSON.parse(body));
 				});
-			} else {
-				console.log('huh');
-			}
-		});
+			});
 	};
 /**
 *	Finds the schema.org terms that maps to the DBPedia term given
@@ -46,14 +43,27 @@ var url = require('url'),
 */
 exports.bestFit = function (term, callback) {
 	var fit = {'synset': term, 'senses': [], origin: 'dbp/best-fit/' + term, 'ns': {'schema': 'http://schema.org/'}};
-	fit.senses.push('dbp:' + term);
 	fit.ns.dbp = 'http://dbpedia.org/resource/';
-	if (dbpedia2schema[term]) {
-		fit.senses.push('schema:' + dbpedia2schema[term]);
-	}
-	fit.senses.push('schema:Thing');
-	callback(null, fit);
+	dbp(fit.ns.dbp + term, function (err, json) {
+		var bindings = json.results.bindings,
+			i = 0,
+			type;
+		if (!err) {
+			for (i = 0; i < bindings.length; i += 1) {
+				type = bindings[i].sense.value;
+				if (type.match('http://schema.org/')) {
+					fit.senses.push('schema:' + type.substring(type.lastIndexOf('/') + 1));
+				}
+			}
+		}
+		if (fit.senses.length === 0) {
+			fit.senses.push('schema:Thing');
+		}
+		fit.senses.push('dbp:' + term);
+		callback(null, fit);
+	});
 };
-dbp('http://dbpedia.org/resource/Boxing');
+
+
 
 
