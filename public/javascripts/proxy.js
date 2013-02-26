@@ -16,6 +16,7 @@ proxy.get = function (url, callback) {
 (function () {
 	'use strict';
 	var getPage = function () {
+		document.getElementById('content').innerHTML = '<div class="span6"><h4>Loading</h4></div>';
 		var url = $('#url').val();
 		proxy.get(url, function (error, dom) {
 			if (error) {
