@@ -16,7 +16,7 @@ start:
 	@echo "Starting grunt"
 	@grunt watch --no-color >> logs/grunt.${DATE}.log &
 	@echo "Starting mongoDB"
-	@mongod --port 3001 --fork --logpath logs/mongodb.${DATE}-.log --logappend
+	@mongod --port 3001 --fork --logpath logs/mongodb.${DATE}.log --logappend
 	@echo ${STARTED}
 	
 stop:
