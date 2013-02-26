@@ -114,6 +114,7 @@ semtag.buildPropertyInputList = function () {
 		count = propertyList.length,
 		properties,
 		property,
+		ranges = '',
 		notSelf = function (elem) {
 			return elem[0] !== id;
 		};
@@ -123,9 +124,11 @@ semtag.buildPropertyInputList = function () {
 	for (i = 0; i < count; i += 1) {
 		el = propertyList[i];
 		if (el.className && el.className.match(/(^|\b)property(\b|$)/)) {
+			ranges = el.dataset.range.split(" ");
+			ranges = ranges.length === 1 ? ranges[0] : ranges.slice(0, -1).join(",") + " or " + ranges.slice(-1);
 			property = el.getAttribute('property').substring(7);
 			property = property.charAt(0).toUpperCase() + property.slice(1);
-			if (el.dataset.range === 'Text' || el.dataset.range === 'URL') {
+			if (el.dataset.range.match('Text') || el.dataset.range.match('URL') || el.dataset.range.match('Number')) {
 				value = el.getAttribute('content') || el.getAttribute('href') || '';
 				inputList += '<li>';
 				inputList += '<span class="left">' + property + ': </span>';
@@ -133,7 +136,7 @@ semtag.buildPropertyInputList = function () {
 					+ el.getAttribute('property') + '" type="text" value="'
 					+ value + '" placeholder="' + el.dataset.range + '"/>';
 				inputList += '</li>';
-			} else if (el.dataset.range === 'Date') {
+			} else if (el.dataset.range.match('Date')) {
 				value = el.getAttribute('content') || '';
 				inputList += '<li>';
 				inputList += '<span class="left">' + property + ': </span>';
@@ -163,14 +166,14 @@ semtag.buildPropertyInputList = function () {
 					inputList += '<span class="left"> or write the URL: </span>';
 					inputList += '<input class="property right" name="'
 						+ el.getAttribute('property') + '" type="text" value="'
-						+ value + '" placeholder="URL"/>';
+						+ value + '" placeholder="' + ranges + '"/>';
 					inputList += '</li>';
 				} else {
 					inputList += '<li>';
 					inputList += '<span class="left">' + property + ': </span>';
 					inputList += '<input class="property right" name="'
 						+ el.getAttribute('property') + '" type="text" value="'
-						+ value + '" placeholder="URL"/>';
+						+ value + '" placeholder="URL or Text"/>';
 					inputList += '</li>';
 				}
 			}
