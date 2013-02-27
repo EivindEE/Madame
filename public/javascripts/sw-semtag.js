@@ -498,15 +498,16 @@ semtag.resetDYM = function () {
 	}
 	if (semtag.input) {
 		semtag.input.value = "";
+		semtag.input.style.display = "none";
 	}
-	if (semtag.header && semtag.header.style.display) {
-		semtag.header.style.display = 'none';
+	if (semtag.header) {
+		semtag.header.innerHTML = semtag.headerText || '';
 	}
 };
 
 semtag.displayHeader = function (word) {
 	'use strict';
-	semtag.word.innerText =  word;
+	semtag.header.innerHTML =  'Select the sense which describes <span id="' +  word + '">' + word + '</span>, or write another term which descibes it';
 	semtag.header.style.display = '';
 	semtag.input.style.display = '';
 };
