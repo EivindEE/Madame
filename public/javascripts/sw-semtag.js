@@ -578,6 +578,12 @@ semtag.legalRange = function (range) {
 		child,
 		start,
 		end;
+	while (newRange.toString()[0] === ' ') {
+		newRange.setStart(range.startContainer, range.startOffset + 1);
+	}
+	while (newRange.toString()[newRange.toString().length - 1] === ' ') {
+		newRange.setEnd(range.endContainer, range.endOffset - 1);
+	}
 	if ((range.startContainer === range.endContainer) || (range.startContainer.parentNode === range.endContainer.parentNode)) {
 		return newRange;
 	}
