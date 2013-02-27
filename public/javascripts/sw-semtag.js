@@ -173,7 +173,7 @@ semtag.buildPropertyInputList = function () {
 					inputList += '<span class="left">' + property + ': </span>';
 					inputList += '<input class="property right" name="'
 						+ el.getAttribute('property') + '" type="text" value="'
-						+ value + '" placeholder="URL or Text"/>';
+						+ value + '" placeholder="' + ranges + '"/>';
 					inputList += '</li>';
 				}
 			}
