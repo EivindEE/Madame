@@ -15,8 +15,9 @@ $synset: 		rgba(186, 218, 85, $alpha);	// #BADA55;
 $schema_org: 	rgba(153, 0, 0, $alpha); 	// Schema.org color (#990000), pluss alpha
 $sumo:			rgba(204, 102, 102, $alpha); // #CC6666
 $base: 			rgba(100, 149, 237, $alpha);// #6495ED;
-
-
+$background:	#FFF;
+$radius:		5px;
+$padding:		8px;
 @mixin rounded($side, $radius: 10px) {
   border-#{$side}-radius: $radius;
   -moz-border-radius-#{$side}: $radius;
@@ -39,11 +40,14 @@ $base: 			rgba(100, 149, 237, $alpha);// #6495ED;
 	border-top-color: $color;
 }
 
+body {
+	background-color: $background;
+}
+
 iframe {
 	height: 50em;
 	@include border(3 px);
 }
-
 #content-container {
 	min-height: 500px;
 }
@@ -51,6 +55,28 @@ iframe {
 #disambiuate {
 	max-height: 400px;
 	overflow: auto;
+}
+
+.nav {
+	margin-bottom: 0;
+}
+
+#sidebox {
+	background-color: $background;
+}
+
+.tab-content {	
+	padding: $padding;
+	
+	border-left: 1px solid #DDD;
+	border-right: 1px solid #DDD;
+	border-bottom: 1px solid #DDD;
+	-webkit-border-bottom-right-radius: $radius;
+	-webkit-border-bottom-left-radius: $radius;
+	-moz-border-radius-bottomright: $radius;
+	-moz-border-radius-bottomleft: $radius;
+	border-bottom-right-radius: $radius;
+	border-bottom-left-radius: $radius;
 }
 
 #content {
@@ -133,7 +159,7 @@ iframe {
 	color: $dark;
 }
 .popover span {
-	padding-top: 7px;
+	padding-top: $padding;
 }
 
 .left {
