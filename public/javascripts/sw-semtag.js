@@ -604,6 +604,7 @@ $('#content').mouseup(function () {
 		selection = window.getSelection();
 	if (selection.rangeCount === 1) {
 		range = selection.getRangeAt(0);
+		document.getSelection().empty();
 		range = semtag.legalRange(range);
 		text = semtag.strip(range.toString());
 		if (semtag.hasAncestorWithId(range.startContainer, ['content']) &&
@@ -615,13 +616,11 @@ $('#content').mouseup(function () {
 						semtag.resetToTag('toTag', function () {
 							semtag.surround(range, 'toTag');
 							semtag.sw('Topic');
-							document.getSelection().addRange(range);
 						});
 					} else {
 						semtag.resetToTag('toTag', function () {
 							semtag.surround(range, 'toTag');
 							semtag.sw(text);
-							document.getSelection().addRange(range);
 						});
 					}
 				} else if (range.startContainer === range.endContainer) {
@@ -636,11 +635,11 @@ $('#content').mouseup(function () {
 						semtag.resetToTag('toTag', function () {
 							semtag.surround(range, 'toTag');
 							semtag.sw("Image");
-							document.getSelection().addRange(range);
 						});
 					}
 				}
 			}
 		}
 	}
+	document.getSelection().addRange(range);
 });
