@@ -153,7 +153,8 @@ exports.test = function (req, res) {
 		{
 			title: 'SpecRunner',
 			specs: ['javascripts/spec/semtag_spec.js'],
-			sources: ['javascripts/semtag.js', 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js']
+			sources: ['javascripts/semtag.js', 'javascripts/lib/jquery.1.4.min.js']
+//'http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js']
 		}
 	);
 };
