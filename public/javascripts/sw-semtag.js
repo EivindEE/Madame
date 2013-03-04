@@ -131,7 +131,7 @@ semtag.buildPropertyInputList = function () {
 			property = property.charAt(0).toUpperCase() + property.slice(1);
 			comment = el.dataset.comment;
 			inputList += '<li>';
-			inputList += '<span class="left" title="' + comment + '">' + property + ': </span>';
+			inputList += '<i class="icon-question-sign" title="' + comment + '"></i><span class="left" title="' + comment + '">' + property + ': </span>';
 			if (el.dataset.range.match('Text') || el.dataset.range.match('URL') || el.dataset.range.match('Number')) {
 				value = el.getAttribute('content') || el.getAttribute('href') || '';
 				inputList += '<input class="property right" name="'
@@ -418,7 +418,7 @@ semtag.wordSenseClicked = function (wordSense, options) {
 		});
 	});
 	removeIcon = semtag.buildTag('img', {
-		'attr': {'src': '/images/remove.png',
+		'attr': {'src': '/img/remove.png',
 				'alt': 'X'},
 		'classes': ['removeIcon']
 	});
