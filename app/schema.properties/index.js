@@ -9,7 +9,11 @@ exports.propertiesList = function (term, callback) {
 		propertyList.concat(mapping.types[term].specific_properties);
 	}
 	for (i = 0; i < propertyList.length; i += 1) {
-		propertiesAndTypes[propertyList[i]] = mapping.properties[propertyList[i]].ranges;
+		propertiesAndTypes[propertyList[i]] = {
+			'ranges' : mapping.properties[propertyList[i]].ranges,
+			'comment': mapping.properties[propertyList[i]].comment_plain
+		};
 	}
 	callback(null, propertiesAndTypes);
 };
+

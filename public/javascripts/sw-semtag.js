@@ -194,7 +194,7 @@ semtag.typeProperties = function (types, callback) {
 			var type;
 			for (type in data) {
 				if (data.hasOwnProperty(type)) {
-					properties.push({ 'property': 'schema:' + type, 'range': data[type]});
+					properties.push({ 'property': 'schema:' + type, 'range': data[type].ranges, 'comment': data[type].comment});
 				}
 			}
 			finished += 1;
@@ -415,7 +415,7 @@ semtag.wordSenseClicked = function (wordSense, options) {
 			for (i = 0; i < properties.length; i += 1) {
 				if (propertiesAdded.indexOf(properties[i].property) === -1) {
 					propertiesAdded.push(properties[i].property);
-					property = semtag.buildTag('span', {'classes': 'property', 'attr' : { 'property': properties[i].property}, 'data' : {'range': properties[i].range.join(" ")}});
+					property = semtag.buildTag('span', {'classes': 'property', 'attr' : { 'property': properties[i].property}, 'data' : {'range': properties[i].range.join(" "), "comment": properties[i].comment}});
 					toTag.appendChild(property);
 				}
 			}
