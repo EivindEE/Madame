@@ -130,18 +130,16 @@ semtag.buildPropertyInputList = function () {
 			property = el.getAttribute('property').substring(7);
 			property = property.charAt(0).toUpperCase() + property.slice(1);
 			comment = el.dataset.comment;
+			inputList += '<li>';
+			inputList += '<span class="left" title="' + comment + '">' + property + ': </span>';
 			if (el.dataset.range.match('Text') || el.dataset.range.match('URL') || el.dataset.range.match('Number')) {
 				value = el.getAttribute('content') || el.getAttribute('href') || '';
-				inputList += '<li>';
-				inputList += '<span class="left" title="' + comment + '">' + property + ': </span>';
 				inputList += '<input class="property right" name="'
 					+ el.getAttribute('property') + '" type="text" value="'
 					+ value + '" placeholder="' + el.dataset.range + '"/>';
 				inputList += '</li>';
 			} else if (el.dataset.range.match('Date')) {
 				value = el.getAttribute('content') || '';
-				inputList += '<li>';
-				inputList += '<span class="left" title="' + comment + '">' + property + ': </span>';
 				inputList += '<input class="property right" name="';
 				inputList += el.getAttribute('property') + '" type="text" placeholder="Format: YYYY-MM-DDTHH:MM" ';
 				inputList += 'value="' + value + '" />';
@@ -151,8 +149,6 @@ semtag.buildPropertyInputList = function () {
 				properties = semtag.getElementsByProperty(el.dataset.range);
 				properties = properties.filter(notSelf);
 				if (properties.length > 0) {
-					inputList += '<li>';
-					inputList += '<span class="left" title="' + comment + '">' + property + ': </span>';
 					inputList += '<select class="property right" name="' + el.getAttribute('property') + '">';
 					inputList += '<option>None</option>';
 					for (j = 0; j < properties.length; j += 1) {
@@ -171,8 +167,6 @@ semtag.buildPropertyInputList = function () {
 						+ value + '" placeholder="' + ranges + '"/>';
 					inputList += '</li>';
 				} else {
-					inputList += '<li>';
-					inputList += '<span class="left" title="' + comment + '">' + property + ': </span>';
 					inputList += '<input class="property right" name="'
 						+ el.getAttribute('property') + '" type="text" value="'
 						+ value + '" placeholder="' + ranges + '"/>';
