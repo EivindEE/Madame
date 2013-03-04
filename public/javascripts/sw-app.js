@@ -30,7 +30,8 @@ semtag.exportPage = function (head, html) {
 		{
 			'q' : html[0].innerHTML,
 			'head': head,
-			'URI': semtag.dom.URI
+			'URI': semtag.dom.URI,
+			'prefixes': document.body.getAttribute('prefix')
 		}, function (id) {
 
 			id = id.replace(/"/g, '');

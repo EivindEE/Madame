@@ -7,6 +7,7 @@ var props = require('../properties'),
 	documentSchema = new mongoose.Schema({
 		'body': String,
 		'head': String,
+		'prefixes': String,
 		'created': {'type': Date, 'default': Date.now}
 	}),
 	Document = db.model('Document', documentSchema);
@@ -24,6 +25,7 @@ exports.save = function (html, callback) {
 	var documentObject = {'body': ''},
 		head = html.head,
 		URI = html.URI,
+		prefixes = html.prefixes,
 		document;
 	documentObject.head = head.replace(/(<link[^>]* href\s*=\s*[\"\'])(\/[^>]*)/g, '$1' + URI + '$2');
 	document = new Document(documentObject);
@@ -37,7 +39,7 @@ exports.save = function (html, callback) {
 			html.body = html.body.replace(props.intertalCommentEnd, '');
 			html.body = html.body.replace(props.htmlCommentStart, '<!--');
 			html.body = html.body.replace(props.htmlCommentEnd, '-->');
-			Document.update({'_id': doc.id}, {$set: {'body': html.body}}, {upsert: true}, function (error) {
+			Document.update({'_id': doc.id}, {$set: {'body': html.body, 'prefixes': prefixes}}, {upsert: true}, function (error) {
 				if (error) {
 					callback(error);
 				}

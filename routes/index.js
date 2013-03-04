@@ -101,6 +101,7 @@ exports.exporter = function (req, res) {
 	html.head = req.body.head || '';
 	html.scripts = req.body.scripts || '';
 	html.URI = req.body.URI || '';
+	html.prefixes = req.body.prefixes || '';
 	exporter.save(html, function (err, response) {
 		if (err) {
 			res.writeHead(500, {'Content-Type': 'text/plain'});
@@ -126,7 +127,8 @@ exports.loader = function (req, res) {
 				'export',
 				{
 					'head': document.head,
-					'body': document.body
+					'body': document.body,
+					'prefixes': document.prefixes || 'none found'
 				}
 			);
 		}

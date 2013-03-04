@@ -1,4 +1,4 @@
 doctype 5
 html
 	head!= head
-	body(prefix = "sumo: http://www.ontologyportal.org/SUMO.owl# schema: http://schema.org/")!= body
+	body(prefixes="#{prefixes}")!= body
