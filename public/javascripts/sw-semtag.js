@@ -610,13 +610,13 @@ $('#content').mouseup(function () {
 		selection = window.getSelection();
 	if (selection.rangeCount === 1) {
 		range = selection.getRangeAt(0);
-		document.getSelection().empty();
 		range = semtag.legalRange(range);
 		text = semtag.strip(range.toString());
 		if (semtag.hasAncestorWithId(range.startContainer, ['content']) &&
 				semtag.hasAncestorWithId(range.endContainer, ['content'])) {
 			if (!(semtag.hasAncestorWithClass(range.startContainer, ['tagged', 'popover'])
 					|| semtag.hasAncestorWithClass(range.endContainer, ['tagged', 'popover']))) {
+				document.getSelection().empty();
 				if (range && text.length > 0) {
 					if (text.length > 50) {
 						semtag.resetToTag('toTag', function () {
@@ -644,8 +644,8 @@ $('#content').mouseup(function () {
 						});
 					}
 				}
+				document.getSelection().addRange(range);
 			}
 		}
 	}
-	document.getSelection().addRange(range);
 });
