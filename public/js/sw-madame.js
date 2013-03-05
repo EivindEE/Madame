@@ -1,8 +1,8 @@
 /*jslint browser: true */
 /*global  $, console */
-var semtag = semtag || {};
+var madame = madame || {};
 
-semtag.clean = function (el, callback) {
+madame.clean = function (el, callback) {
 	'use strict';
 	el = $(el);
 	var properties = el.find('.tagged .property'),
@@ -19,12 +19,12 @@ semtag.clean = function (el, callback) {
 	}
 };
 
-semtag.ancestors = function (el, callback, nodes) {
+madame.ancestors = function (el, callback, nodes) {
 	'use strict';
 	nodes = nodes || [];
 	if (el.parentNode) {
 		nodes.push(el);
-		semtag.ancestors(el.parentNode, callback, nodes);
+		madame.ancestors(el.parentNode, callback, nodes);
 	} else {
 		if (typeof callback === 'function') {
 			callback(null, nodes);
@@ -33,7 +33,7 @@ semtag.ancestors = function (el, callback, nodes) {
 	return nodes;
 };
 
-semtag.correctTypeAttribute = function (range) {
+madame.correctTypeAttribute = function (range) {
 	'use strict';
 
 	switch (range) {
@@ -45,7 +45,7 @@ semtag.correctTypeAttribute = function (range) {
 	return 'href';
 };
 
-semtag.addProperties = function (el, pop) {
+madame.addProperties = function (el, pop) {
 	'use strict';
 	var properties = el.find('.property'),
 		count = properties.length,
@@ -59,7 +59,7 @@ semtag.addProperties = function (el, pop) {
 		if (properties[i].value) {
 			elementProperties = parent.find('.property[property="' + properties[i].getAttribute('name')  + '"]');
 			for (j = 0; j < elementProperties.length; j += 1) {
-				storeType = semtag.correctTypeAttribute(elementProperties[j].dataset.range);
+				storeType = madame.correctTypeAttribute(elementProperties[j].dataset.range);
 
 				if (elementProperties[j].dataset.range === 'Text' || properties[i].value !== 'None') {
 					elementProperties[j].setAttribute(storeType, properties[i].value);
@@ -76,7 +76,7 @@ semtag.addProperties = function (el, pop) {
 *	@param properties, a string with one or more properties
 *	@return An array of element id value pairs for elements that have a given property
 */
-semtag.getElementsByProperty = function (properties) {
+madame.getElementsByProperty = function (properties) {
 	'use strict';
 	var els = document.getElementsByClassName('tagged'),
 		count = els.length,
@@ -101,7 +101,7 @@ semtag.getElementsByProperty = function (properties) {
 * If property is already set, the function should keep this value as default
 * @return {String} inputList, HTML list of possible properties the term can have, and inputs for setting the value.
 */
-semtag.buildPropertyInputList = function () {
+madame.buildPropertyInputList = function () {
 	'use strict';
 	var inputList = '<ul id="properties">',
 		self = this,
@@ -146,7 +146,7 @@ semtag.buildPropertyInputList = function () {
 				inputList += '</li>';
 			} else {
 				value = el.getAttribute('href') || '';
-				properties = semtag.getElementsByProperty(el.dataset.range);
+				properties = madame.getElementsByProperty(el.dataset.range);
 				properties = properties.filter(notSelf);
 				if (properties.length > 0) {
 					inputList += '<select class="property right" name="' + el.getAttribute('property') + '">';
@@ -179,7 +179,7 @@ semtag.buildPropertyInputList = function () {
 	return inputList;
 };
 
-semtag.typeProperties = function (types, callback) {
+madame.typeProperties = function (types, callback) {
 	'use strict';
 	var properties = [],
 		type,
@@ -211,10 +211,10 @@ semtag.typeProperties = function (types, callback) {
 	}
 };
 
-semtag.hasAncestorWithId = function (el, id) {
+madame.hasAncestorWithId = function (el, id) {
 	'use strict';
 	var hasAncestor;
-	semtag.ancestors(el, function (err, ancestors) {
+	madame.ancestors(el, function (err, ancestors) {
 		id = (id instanceof Array ? id.join('|') : id);
 		var i,
 			idRegExp = new RegExp('^(' + id + ')$');
@@ -232,10 +232,10 @@ semtag.hasAncestorWithId = function (el, id) {
 	});
 	return hasAncestor;
 };
-semtag.hasAncestorWithClass = function (el, className) {
+madame.hasAncestorWithClass = function (el, className) {
 	'use strict';
 	var hasAncestor;
-	semtag.ancestors(el.parentNode, function (err, ancestors) {
+	madame.ancestors(el.parentNode, function (err, ancestors) {
 		className = (className instanceof Array ? className.join('|') : className);
 		var i,
 			classRegExp = new RegExp('(^|\\b)(' + className + ')(\\b|$)');
@@ -252,13 +252,13 @@ semtag.hasAncestorWithClass = function (el, className) {
 	return hasAncestor;
 };
 
-semtag.wantedSense = function (sense) {
+madame.wantedSense = function (sense) {
 	'use strict';
 	sense = [];
 	return true;
 };
 
-semtag.extendTag = function (el, options) {
+madame.extendTag = function (el, options) {
 	'use strict';
 	var	i,
 		attr,
@@ -287,7 +287,7 @@ semtag.extendTag = function (el, options) {
 	return el;
 };
 
-semtag.buildTag = function (type, options) {
+madame.buildTag = function (type, options) {
 	'use strict';
 	var el;
 	if (typeof type === 'object') {
@@ -295,12 +295,12 @@ semtag.buildTag = function (type, options) {
 		type = 'div';
 	}
 	options = options || {};
-	el = semtag.extendTag(document.createElement(type), options);
+	el = madame.extendTag(document.createElement(type), options);
 
 	return el;
 };
 
-semtag.getId = function (content) {
+madame.getId = function (content) {
 	'use strict';
 	var id,
 		baseString,
@@ -308,7 +308,7 @@ semtag.getId = function (content) {
 	if (content.length > 50 || !content.match(/^[a-zA-Z][0-9a-zA-Z]*$/)) {
 		content = 'section';
 	}
-	baseString = 'semtag-' + content.replace(/ /g, '_') + '-';
+	baseString = 'madame-' + content.replace(/ /g, '_') + '-';
 	id =  baseString + counter;
 	while (document.getElementById(id)) {
 		counter += 1;
@@ -317,7 +317,7 @@ semtag.getId = function (content) {
 	return id;
 };
 
-semtag.removeSense = function (removeImage) {
+madame.removeSense = function (removeImage) {
 	'use strict';
 
 	var taggedNode = removeImage.parentNode;
@@ -327,7 +327,7 @@ semtag.removeSense = function (removeImage) {
 	taggedNode.outerHTML = taggedNode.innerHTML;
 };
 
-semtag.decideEndpoint = function (source) {
+madame.decideEndpoint = function (source) {
 	"use strict";
 	if (source === 'schema_org' || source === 'WordNet') {
 		return '/wn/best-fit/';
@@ -337,23 +337,23 @@ semtag.decideEndpoint = function (source) {
 	}
 };
 
-semtag.prefixes = semtag.prefixes || {};
+madame.prefixes = madame.prefixes || {};
 
-semtag.ensurePrefixes = function () {
+madame.ensurePrefixes = function () {
 	'use strict';
 	var prefixes = document.body.getAttribute('prefix') || '',
 		prefix;
-	for (prefix in semtag.prefixes) {
-		if (semtag.prefixes.hasOwnProperty(prefix)) {
+	for (prefix in madame.prefixes) {
+		if (madame.prefixes.hasOwnProperty(prefix)) {
 			if (prefixes.indexOf(prefix + ':') === -1) {
-				prefixes += ' ' + prefix + ': ' + semtag.prefixes[prefix];
+				prefixes += ' ' + prefix + ': ' + madame.prefixes[prefix];
 			}
 		}
 	}
 	document.body.setAttribute('prefix', prefixes);
 };
 
-semtag.addSenses = function (url, callback) {
+madame.addSenses = function (url, callback) {
 	'use strict';
 	$.getJSON(url, function (json) {
 		var sense,
@@ -361,10 +361,10 @@ semtag.addSenses = function (url, callback) {
 			sensesString;
 		for (ns in json.ns) {
 			if (json.ns.hasOwnProperty(ns)) {
-				semtag.prefixes[ns] = json.ns[ns];
+				madame.prefixes[ns] = json.ns[ns];
 			}
 		}
-		semtag.ensurePrefixes();
+		madame.ensurePrefixes();
 		sense = json.senses.join(" ");
 		sensesString = json.senses.map(function (el) {
 			var index = el.indexOf(':');
@@ -376,22 +376,22 @@ semtag.addSenses = function (url, callback) {
 	});
 };
 
-semtag.wordSenseClicked = function (wordSense, options) {
+madame.wordSenseClicked = function (wordSense, options) {
 	'use strict';
 	options = options || {};
 	var toTag	= document.getElementById('toTag'),
 		content = options.text || toTag.textContent,
-		id		= semtag.getId(content),
+		id		= madame.getId(content),
 		about	= options.about || document.URL + '#' + id,
 		sense	= options.wordSense || wordSense.getAttribute('id'),
-		endpoint = semtag.decideEndpoint(wordSense.dataset.source),
+		endpoint = madame.decideEndpoint(wordSense.dataset.source),
 		wnId = sense.substring(sense.lastIndexOf('/') + 1),
 		removeIcon,
 		jQueryId = '#' + id,
 		tooltipContent = content;
 
-	semtag.addSenses(endpoint + wnId, function (senses, sense) {
-		toTag = semtag.extendTag(toTag,
+	madame.addSenses(endpoint + wnId, function (senses, sense) {
+		toTag = madame.extendTag(toTag,
 			{
 				'id': id,
 				'attr': {
@@ -403,21 +403,21 @@ semtag.wordSenseClicked = function (wordSense, options) {
 		if (content.length > 50) {
 			tooltipContent = 'Section';
 		}
-		$(jQueryId).tooltip({title: tooltipContent + " meaning: " + senses}).popover({placement: 'bottom', html: true, title: '<h4>Properties:</h4>', content: semtag.buildPropertyInputList});
-		semtag.typeProperties(sense, function (properties) {
+		$(jQueryId).tooltip({title: tooltipContent + " meaning: " + senses}).popover({placement: 'bottom', html: true, title: '<h4>Properties:</h4>', content: madame.buildPropertyInputList});
+		madame.typeProperties(sense, function (properties) {
 			var i,
 				property,
 				propertiesAdded = [];
 			for (i = 0; i < properties.length; i += 1) {
 				if (propertiesAdded.indexOf(properties[i].property) === -1) {
 					propertiesAdded.push(properties[i].property);
-					property = semtag.buildTag('span', {'classes': 'property', 'attr' : { 'property': properties[i].property}, 'data' : {'range': properties[i].range.join(" "), "comment": properties[i].comment}});
+					property = madame.buildTag('span', {'classes': 'property', 'attr' : { 'property': properties[i].property}, 'data' : {'range': properties[i].range.join(" "), "comment": properties[i].comment}});
 					toTag.appendChild(property);
 				}
 			}
 		});
 	});
-	removeIcon = semtag.buildTag('img', {
+	removeIcon = madame.buildTag('img', {
 		'attr': {'src': '/img/remove.png',
 				'alt': 'X'},
 		'classes': ['removeIcon']
@@ -425,11 +425,11 @@ semtag.wordSenseClicked = function (wordSense, options) {
 	toTag.appendChild(removeIcon);
 	$('.removeIcon').unbind('click');
 	$('.removeIcon').click(function () {
-		semtag.removeSense(this);
+		madame.removeSense(this);
 	});
 };
 
-semtag.buildWordSenseList = function (sensList) {
+madame.buildWordSenseList = function (sensList) {
 	'use strict';
 	var sensCount,
 		senses = [],
@@ -460,7 +460,7 @@ semtag.buildWordSenseList = function (sensList) {
 		if (el.source === 'WordNet') {
 			index = el.word.indexOf(')');
 			el.word = el.word.substring(index + 1);
-			el.word = semtag.strip(el.word);
+			el.word = madame.strip(el.word);
 			el.word = el.word.charAt(0).toUpperCase() + el.word.substring(1);
 		} else if (el.source === 'schema_org') {
 			el.word = el.word.charAt(0) + el.word.substring(1).toLowerCase();
@@ -471,8 +471,8 @@ semtag.buildWordSenseList = function (sensList) {
 	});
 	sensCount = sensList.length;
 	for (i = 0; i < sensCount; i += 1) {
-		if (semtag.wantedSense(sensList[i])) {
-			el = semtag.buildTag('li', {
+		if (madame.wantedSense(sensList[i])) {
+			el = madame.buildTag('li', {
 				'id': sensList[i].senseid,
 				'data': {
 					'source': sensList[i].source
@@ -487,53 +487,53 @@ semtag.buildWordSenseList = function (sensList) {
 	return list;
 };
 
-semtag.resetDYM = function () {
+madame.resetDYM = function () {
 	'use strict';
-	if (semtag.senses) {
-		semtag.senses.innerHTML = "";
+	if (madame.senses) {
+		madame.senses.innerHTML = "";
 	}
-	if (semtag.input) {
-		semtag.input.value = "";
-		semtag.input.style.display = "none";
+	if (madame.input) {
+		madame.input.value = "";
+		madame.input.style.display = "none";
 	}
-	if (semtag.header) {
-		semtag.header.innerHTML = semtag.headerText || '';
+	if (madame.header) {
+		madame.header.innerHTML = madame.headerText || '';
 	}
 };
 
-semtag.displayHeader = function (word) {
+madame.displayHeader = function (word) {
 	'use strict';
-	semtag.header.innerHTML =  'Select the sense which describes <span id="' +  word + '">' + word + '</span>, or write another term which descibes it';
-	semtag.header.style.display = '';
-	semtag.input.style.display = '';
+	madame.header.innerHTML =  'Select the sense which describes <span id="' +  word + '">' + word + '</span>, or write another term which descibes it';
+	madame.header.style.display = '';
+	madame.input.style.display = '';
 };
 
-semtag.buildDidYouMeanTable = function (json, tableId) {
+madame.buildDidYouMeanTable = function (json, tableId) {
 	'use strict';
 	var didYouMean,
 		word;
 	didYouMean = document.getElementById(tableId);
 	word = document.getElementById('toTag').textContent;
-	semtag.displayHeader(json.word);
-	didYouMean.appendChild(semtag.buildWordSenseList(json.senses));
+	madame.displayHeader(json.word);
+	didYouMean.appendChild(madame.buildWordSenseList(json.senses));
 	$('.word-sense').click(function () {
-		semtag.wordSenseClicked(this);
-		semtag.resetDYM();
+		madame.wordSenseClicked(this);
+		madame.resetDYM();
 		$('#sidebar li:first a:first').tab('show');
 	});
 	$('#sidebar li:nth-child(2) a:first').tab('show'); // Selector for "Meanings pane"
 };
-semtag.sw = function (term) {
+madame.sw = function (term) {
 	'use strict';
 	term = term.replace(/ /g, '_'); // Replaces inner white space with underscores
 	$.getJSON('/lex',
 		{
 			word: term
 		}, function (data) {
-			semtag.buildDidYouMeanTable(data, 'dym', term);
+			madame.buildDidYouMeanTable(data, 'dym', term);
 		});
 };
-semtag.surround = function (range, className) {
+madame.surround = function (range, className) {
 	'use strict';
 	var fragment = range.extractContents(),
 		tag = document.createElement("span");
@@ -542,11 +542,11 @@ semtag.surround = function (range, className) {
 	range.insertNode(tag);
 };
 
-semtag.strip = function (string) {
+madame.strip = function (string) {
 	'use strict';
 	return string.replace(/^\s*|\s*$/g, ''); // Remove leading and trailing whitespace.
 };
-semtag.resetToTag = function (id, callback) {
+madame.resetToTag = function (id, callback) {
 	'use strict';
 	var toRemove;
 	toRemove = document.getElementById(id);
@@ -555,7 +555,7 @@ semtag.resetToTag = function (id, callback) {
 	}
 	callback();
 };
-semtag.closestChild = function (node, descendant) {
+madame.closestChild = function (node, descendant) {
 	"use strict";
 	var parent;
 	if (descendant.parentElement) {
@@ -563,12 +563,12 @@ semtag.closestChild = function (node, descendant) {
 		if (node === parent) {
 			return descendant;
 		}
-		return semtag.closestChild(node, parent);
+		return madame.closestChild(node, parent);
 	}
 	return false;
 };
 
-semtag.legalRange = function (range) {
+madame.legalRange = function (range) {
 	"use strict";
 	var newRange = range.cloneRange(),
 		child,
@@ -583,18 +583,18 @@ semtag.legalRange = function (range) {
 	if ((range.startContainer === range.endContainer) || (range.startContainer.parentNode === range.endContainer.parentNode)) {
 		return newRange;
 	}
-	child = semtag.closestChild(range.endContainer.parentElement, range.startContainer.parentElement);
+	child = madame.closestChild(range.endContainer.parentElement, range.startContainer.parentElement);
 	if (child) {
 		newRange.setStartBefore(child);
 		return newRange;
 	}
-	child = semtag.closestChild(range.startContainer.parentElement, range.endContainer.parentElement);
+	child = madame.closestChild(range.startContainer.parentElement, range.endContainer.parentElement);
 	if (child) {
 		newRange.setEndAfter(child);
 		return newRange;
 	}
-	start = semtag.closestChild(range.commonAncestorContainer, range.startContainer);
-	end = semtag.closestChild(range.commonAncestorContainer, range.endContainer);
+	start = madame.closestChild(range.commonAncestorContainer, range.startContainer);
+	end = madame.closestChild(range.commonAncestorContainer, range.endContainer);
 	newRange.setStartBefore(start);
 	newRange.setEndAfter(end);
 	return newRange;
@@ -606,23 +606,23 @@ $('#content').mouseup(function () {
 		selection = window.getSelection();
 	if (selection.rangeCount === 1) {
 		range = selection.getRangeAt(0);
-		range = semtag.legalRange(range);
-		text = semtag.strip(range.toString());
-		if (semtag.hasAncestorWithId(range.startContainer, ['content']) &&
-				semtag.hasAncestorWithId(range.endContainer, ['content'])) {
-			if (!(semtag.hasAncestorWithClass(range.startContainer, ['tagged', 'popover'])
-					|| semtag.hasAncestorWithClass(range.endContainer, ['tagged', 'popover']))) {
+		range = madame.legalRange(range);
+		text = madame.strip(range.toString());
+		if (madame.hasAncestorWithId(range.startContainer, ['content']) &&
+				madame.hasAncestorWithId(range.endContainer, ['content'])) {
+			if (!(madame.hasAncestorWithClass(range.startContainer, ['tagged', 'popover'])
+					|| madame.hasAncestorWithClass(range.endContainer, ['tagged', 'popover']))) {
 				document.getSelection().empty();
 				if (range && text.length > 0) {
 					if (text.length > 50) {
-						semtag.resetToTag('toTag', function () {
-							semtag.surround(range, 'toTag');
-							semtag.sw('Topic');
+						madame.resetToTag('toTag', function () {
+							madame.surround(range, 'toTag');
+							madame.sw('Topic');
 						});
 					} else {
-						semtag.resetToTag('toTag', function () {
-							semtag.surround(range, 'toTag');
-							semtag.sw(text);
+						madame.resetToTag('toTag', function () {
+							madame.surround(range, 'toTag');
+							madame.sw(text);
 						});
 					}
 				} else if (range.startContainer === range.endContainer) {
@@ -634,9 +634,9 @@ $('#content').mouseup(function () {
 							||
 							range.commonAncestorContainer.nodeName === 'IMG'
 					) {
-						semtag.resetToTag('toTag', function () {
-							semtag.surround(range, 'toTag');
-							semtag.sw("Image");
+						madame.resetToTag('toTag', function () {
+							madame.surround(range, 'toTag');
+							madame.sw("Image");
 						});
 					}
 				}

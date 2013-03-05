@@ -1,5 +1,5 @@
 {
-	"name": "SemTag",
+	"name": "Madame",
 	"version": "0.0.1",
 	"description": "A automatic mapper from WordNet to schema.org and SUMO",
 	"author": {"name": "Eivind Elseth", "email": "eivind.elseth@gmail.com"},

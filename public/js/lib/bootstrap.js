@@ -1051,7 +1051,7 @@
       $tip.find('.popover-content > *')[this.options.html ? 'html' : 'text'](content)
       $tip.find('.submit').click(function () {
           pop = $(this).closest('.popover')
-      	  semtag.addProperties($tip, pop)
+      	  madame.addProperties($tip, pop)
       })
       $tip.removeClass('fade top bottom left right in')
     }

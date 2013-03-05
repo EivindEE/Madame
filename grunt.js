@@ -22,7 +22,8 @@ module.exports = function (grunt) {
 				'grunt.js',
 				jsDir + 'spec/**/*.js',
 				jsDir + '*.js',
-				'test/**/*.js', 'app/*.js',
+				'testing/**/*.js',
+				'app/*.js',
 				'app/**/*.js',
 				'app.js',
 				'routes/**.js'
@@ -43,8 +44,7 @@ module.exports = function (grunt) {
 			dist: {
 				src: [
 					jsDir + 'lib/bootstrap.js',
-					jsDir + 'semtag.js',
-					jsDir + 'sw-semtag.js',
+					jsDir + 'sw-madame.js',
 					jsDir + 'proxy.js'
 				],
 				dest: jsDir + 'dist/<%= pkg.name %>.js'

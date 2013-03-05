@@ -1,5 +1,6 @@
+/*jslint node: true */
 'use strict';
-exports.nouns = [	
+exports.nouns = [
 	'a',
 	'abortion',
 	'account',

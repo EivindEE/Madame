@@ -1,7 +1,7 @@
 /*jslint browser: true */
 /*global  $, console */
 
-var semtag = semtag || {};
+var madame = madame || {};
 $('#sidebar a').click(function (e) {
 	'use strict';
 	e.preventDefault();
@@ -11,18 +11,18 @@ $('#sidebar a:first').tab('show');
 (function () {
 	'use strict';
 	var semtag = window.semtag || {};
-	semtag.header = document.getElementById('dym-header');
-	semtag.headerText = 'Highlight a word in the panel to the right to select a word';
-	semtag.header.innerHTML = semtag.headerText;
-	semtag.word = document.getElementById('word');
-	semtag.input = document.getElementById('dym-input');
-	semtag.input.style.display = "none";
-	semtag.dym = document.getElementById('dym-input');
-	semtag.senses = document.getElementById('senses');
-	semtag.dom = semtag.dom || {};
+	madame.header = document.getElementById('dym-header');
+	madame.headerText = 'Highlight a word in the panel to the right to select a word';
+	madame.header.innerHTML = madame.headerText;
+	madame.word = document.getElementById('word');
+	madame.input = document.getElementById('dym-input');
+	madame.input.style.display = "none";
+	madame.dym = document.getElementById('dym-input');
+	madame.senses = document.getElementById('senses');
+	madame.dom = madame.dom || {};
 }());
 
-semtag.exportPage = function (head, html) {
+madame.exportPage = function (head, html) {
 	'use strict';
 
 
@@ -30,7 +30,7 @@ semtag.exportPage = function (head, html) {
 		{
 			'q' : html[0].innerHTML,
 			'head': head,
-			'URI': semtag.dom.URI,
+			'URI': madame.dom.URI,
 			'prefixes': document.body.getAttribute('prefix')
 		}, function (id) {
 
@@ -44,14 +44,14 @@ $('#export-btn').click(function () {
 	if ($('#google-id').val()) {
 		$('#content').append('<a rel="author" href="' + $('#google-id').val() + '"></a>');
 	}
-	var head = semtag.dom.head || '',
+	var head = madame.dom.head || '',
 		html = document.getElementById('content').cloneNode(true);
-	if (semtag.clean) {
-		semtag.clean(html, function (cleanHTML) {
-			semtag.exportPage(head, cleanHTML);
+	if (madame.clean) {
+		madame.clean(html, function (cleanHTML) {
+			madame.exportPage(head, cleanHTML);
 		});
 	} else {
-		semtag.exportPage(head, html);
+		madame.exportPage(head, html);
 	}
 });
 
@@ -69,20 +69,20 @@ $('#dym-input').keypress(function (kp) {
 		twitterPattern = new RegExp('^@', 'i'),
 		word = document.getElementById('toTag').textContent;
 	if (kp.charCode === 13) { // Charcode 13 === Enter keypress
-		inputString = semtag.input.value;
+		inputString = madame.input.value;
 		if (inputString.search(URLPattern) !== -1) {
-			semtag.wordSenseClicked(inputString, {'wordSense': inputString, 'title': 'external reference', 'text': word});
-			semtag.resetDYM();
+			madame.wordSenseClicked(inputString, {'wordSense': inputString, 'title': 'external reference', 'text': word});
+			madame.resetDYM();
 		} else if (inputString.search(twitterPattern) !== -1) {
-			semtag.wordSenseClicked(inputString,
+			madame.wordSenseClicked(inputString,
 				{
 					'wordSense': 'http://twitter.com/' + inputString.substring(1),
 					'title': "Twitter handle",
 					'text': word
 				});
-			semtag.resetDYM();
+			madame.resetDYM();
 		} else {
-			semtag.sw(inputString);
+			madame.sw(inputString);
 		}
 	}
 });

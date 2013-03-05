@@ -1,3 +1,5 @@
+/*jslint node: true */
+'use strict';
 exports.synsets = [
 	'synset-a-noun-6',
 	'synset-a-noun-7',

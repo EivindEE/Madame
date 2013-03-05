@@ -1,6 +1,7 @@
 /*jslint node: true */
 "use strict";
-var url = require('url'),
+var	pjson = require('./package.json'),
+	url = require('url'),
 	wn	= require('../app/wn'),
 	dbp = require('../app/dbp'),
 	disambiguate = require('../app/disambiguate'),
@@ -91,8 +92,8 @@ exports.index = function (req, res) {
 	res.render(
 		'semtag',
 		{
-			title: 'SemTag',
-			scripts: ['http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js', jsDir + 'dist/SemTag.min.js']
+			title: 'Meta data made simple',
+			scripts: ['http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js', jsDir + 'dist/Madame.min.js']
 		}
 	);
 };
@@ -142,22 +143,7 @@ exports.sw = function (req, res) {
 		'sw',
 		{
 			title: 'Meta data made simple',
-			scripts: ['http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js', jsDir + 'dist/SemTag.js', jsDir + 'sw-app.js']
-		}
-	);
-};
-
-
-
-exports.test = function (req, res) {
-	req = null;
-	res.render(
-		'testrunner',
-		{
-			title: 'SpecRunner',
-			specs: ['javascripts/spec/semtag_spec.js'],
-			sources: [jsDir + 'semtag.js', jsDir + '/lib/jquery.1.4.min.js']
-//'http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js']
+			scripts: ['http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js', jsDir + 'dist/Madame.js', jsDir + 'sw-app.js']
 		}
 	);
 };
