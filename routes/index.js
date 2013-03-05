@@ -1,6 +1,6 @@
 /*jslint node: true */
 "use strict";
-var	pjson = require('./package.json'),
+var	pkg = require('./package.json'),
 	url = require('url'),
 	wn	= require('../app/wn'),
 	dbp = require('../app/dbp'),
@@ -93,7 +93,7 @@ exports.index = function (req, res) {
 		'semtag',
 		{
 			title: 'Meta data made simple',
-			scripts: ['http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js', jsDir + 'dist/Madame.min.js']
+			scripts: ['http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js', jsDir + 'dist/' + pkg.name + '.min.js']
 		}
 	);
 };
@@ -143,7 +143,7 @@ exports.sw = function (req, res) {
 		'sw',
 		{
 			title: 'Meta data made simple',
-			scripts: ['http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js', jsDir + 'dist/Madame.js', jsDir + 'sw-app.js']
+			scripts: ['http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js', jsDir + 'dist/' + pkg.name + '.js', jsDir + 'sw-app.js']
 		}
 	);
 };
