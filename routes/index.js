@@ -1,6 +1,6 @@
 /*jslint node: true */
 "use strict";
-var	pkg = require('./package.json'),
+var	pkg = require('../package.json'),
 	url = require('url'),
 	wn	= require('../app/wn'),
 	dbp = require('../app/dbp'),
