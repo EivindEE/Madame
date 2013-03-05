@@ -4,6 +4,8 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-jslint');
 	grunt.loadNpmTasks('grunt-contrib');
 	grunt.loadNpmTasks('grunt-compass');
+	var jsDir = 'public/js/',
+		styleDir = 'public/stylesheets/';
 
 	// Project configuration.
 	grunt.initConfig({
@@ -18,8 +20,8 @@ module.exports = function (grunt) {
 		jslint: {
 			files: [
 				'grunt.js',
-				'public/javascripts/spec/**/*.js',
-				'public/javascripts/*.js',
+				jsDir + 'spec/**/*.js',
+				jsDir + '*.js',
 				'test/**/*.js', 'app/*.js',
 				'app/**/*.js',
 				'app.js',
@@ -30,9 +32,9 @@ module.exports = function (grunt) {
 			compress: {
 				files: {
 					'public/stylesheets/style.min.css': [
-						'public/stylesheets/reset.css',
-						'public/stylesheets/bootstrap.css',
-						'public/stylesheets/style.css'
+						styleDir + 'reset.css',
+						styleDir + 'bootstrap.css',
+						styleDir + 'style.css'
 					]
 				}
 			}
@@ -40,24 +42,24 @@ module.exports = function (grunt) {
 		concat: {
 			dist: {
 				src: [
-					'public/javascripts/lib/bootstrap.js',
-					'public/javascripts/semtag.js',
-					'public/javascripts/sw-semtag.js',
-					'public/javascripts/proxy.js'
+					jsDir + 'lib/bootstrap.js',
+					jsDir + 'semtag.js',
+					jsDir + 'sw-semtag.js',
+					jsDir + 'proxy.js'
 				],
-				dest: 'public/javascripts/dist/<%= pkg.name %>.js'
+				dest: jsDir + 'dist/<%= pkg.name %>.js'
 			}
 		},
 		min: {
 			dist: {
 				src: ['<banner:meta.banner>', '<config:concat.dist.dest>'],
-				dest: 'public/javascripts/dist/<%= pkg.name %>.min.js'
+				dest: jsDir + 'dist/<%= pkg.name %>.min.js'
 			}
 		},
 		watch: {
 			files: [
-				'public/javascripts/*.js',
-				'public/stylesheets/scss/*',
+				jsDir + '*.js',
+				styleDir + 'scss/*',
 				'grunt.js',
 				'app/*.js',
 				'app/**/*.js',
@@ -80,8 +82,8 @@ module.exports = function (grunt) {
 		uglify: {},
 		compass: {
 			dev: {
-				src: 'public/stylesheets/scss/',
-				dest: 'public/stylesheets/',
+				src: styleDir + 'scss/',
+				dest: styleDir,
 				linecomments: true
 			}
 		}

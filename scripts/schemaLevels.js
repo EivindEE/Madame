@@ -8,7 +8,7 @@ var http = require('http'),
 		for (type in json.types){
 			if (json.types.hasOwnProperty(type)){
 				level = json.types[type].ancestors.length;
-				fs.appendFileSync('testing/schemaLevels', '\t' + type + ':' + level + ',\n');
+				fs.appendFileSync('..testing/schemaLevels', '\t' + type + ':' + level + ',\n');
 			}
 		}
 	};

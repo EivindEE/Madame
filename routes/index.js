@@ -7,6 +7,7 @@ var url = require('url'),
 	proxy = require('../app/proxy'),
 	exporter = require('../app/export'),
 	properties = require('../app/schema.properties'),
+	jsDir = 'js/',
 	returnJSON = function (error, json, res) {
 		if (error) {
 			console.log(error);
@@ -91,7 +92,7 @@ exports.index = function (req, res) {
 		'semtag',
 		{
 			title: 'SemTag',
-			scripts: ['http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js', 'javascripts/dist/SemTag.min.js']
+			scripts: ['http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js', jsDir + 'dist/SemTag.min.js']
 		}
 	);
 };
@@ -141,7 +142,7 @@ exports.sw = function (req, res) {
 		'sw',
 		{
 			title: 'Meta data made simple',
-			scripts: ['http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js', 'javascripts/dist/SemTag.js', 'javascripts/sw-app.js']
+			scripts: ['http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js', jsDir + 'dist/SemTag.js', jsDir + 'sw-app.js']
 		}
 	);
 };
@@ -155,7 +156,7 @@ exports.test = function (req, res) {
 		{
 			title: 'SpecRunner',
 			specs: ['javascripts/spec/semtag_spec.js'],
-			sources: ['javascripts/semtag.js', 'javascripts/lib/jquery.1.4.min.js']
+			sources: [jsDir + 'semtag.js', jsDir + '/lib/jquery.1.4.min.js']
 //'http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js']
 		}
 	);

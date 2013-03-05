@@ -1,8 +1,8 @@
 "use strict";
 var fs = require('fs'),
-	wn = require('./app/wn'),
-	synsets = require('./testing/synsets.js').synsets,
-	schemaLevels = require('./testing/schemaLevels.js').schemaLevels,
+	wn = require('../app/wn'),
+	synsets = require('../testing/synsets.js').synsets,
+	schemaLevels = require('../testing/schemaLevels.js').schemaLevels,
 	index = 0,
 	numSynsets = 0,
 	numLinNone = 0,
@@ -60,7 +60,7 @@ var fs = require('fs'),
 			stats += 'Avg level lin: ' + (sumLinLevel / numSynsets) + '\n';
 			stats += 'Avg level rec:' + (sumRecLevel / numSynsets) + '\n';
 			stats += 'Total none results: ' + (numLinNone + numRecNone) + '(lin:' + numLinNone + ', rec:' + numRecNone + ')\n'; 
-			fs.appendFile('testing/compare-stats', stats);
+			fs.appendFile('../testing/compare-stats', stats);
 		}
 	};
 	writeSense(index);

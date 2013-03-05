@@ -2,7 +2,7 @@
 "use strict";
 var http = require('http'),
 	fs = require('fs'),
-	nouns = require('./testing/uniqueNouns.js').nouns,
+	nouns = require('../testing/uniqueNouns.js').nouns,
 	i,
 	synsets = [],
 	saveSynsets = function (json) {
@@ -16,7 +16,7 @@ var http = require('http'),
 			}
 		}
 		if (synsets.length) {
-			fs.appendFile('testing/synsets', '\r' + synsets.join('\r'));
+			fs.appendFile('../testing/synsets', '\r' + synsets.join('\r'));
 		}
 	};
 	
