@@ -1,7 +1,7 @@
 /*jslint browser:true */
 /*globals $, console */
 var proxy = proxy || {};
-var semtag = semtag || {};
+var madame = madame || {};
 proxy.get = function (url, callback) {
 	"use strict";
 	var data;
@@ -22,9 +22,9 @@ proxy.get = function (url, callback) {
 			if (error) {
 				document.getElementById('content').innerHTML = '<div class="span6"><h4>No such page found</h4></div>';
 			} else {
-				semtag.dom = {};
-				semtag.dom.URI = dom.URI || '';
-				semtag.dom.head = dom.head || '';
+				madame.dom = {};
+				madame.dom.URI = dom.URI || '';
+				madame.dom.head = dom.head || '';
 				document.getElementById('content').innerHTML = dom.body;
 				$(document.getElementById('content')).click(function (e) {
 					e.preventDefault();
