@@ -567,7 +567,7 @@ exports.declaration = {
 		},
 		"applicationCategory": {
 			"comment": "Type of software application, e.g. \"Game, Multimedia\".",
-			"comment_plain": "Type of software application, e.g. \&quot;Game, Multimedia\&quot;.",
+			"comment_plain": "Type of software application, e.g. &quot;Game, Multimedia&quot;.",
 			"domains": [
 				"SoftwareApplication"
 			],
@@ -580,7 +580,7 @@ exports.declaration = {
 		},
 		"applicationSubCategory": {
 			"comment": "Subcategory of the application, e.g. \"Arcade Game\".",
-			"comment_plain": "Subcategory of the application, e.g. \&quot;Arcade Game\&quot;.",
+			"comment_plain": "Subcategory of the application, e.g. &quot;Arcade Game&quot;.",
 			"domains": [
 				"SoftwareApplication"
 			],
@@ -1089,7 +1089,7 @@ exports.declaration = {
 		},
 		"browserRequirements": {
 			"comment": "Specifies browser requirements in human-readable text. For example,\"requires HTML5 support\".",
-			"comment_plain": "Specifies browser requirements in human-readable text. For example,\&quot;requires HTML5 support\&quot;.",
+			"comment_plain": "Specifies browser requirements in human-readable text. For example,&quot;requires HTML5 support&quot;.",
 			"domains": [
 				"WebApplication"
 			],
@@ -3663,7 +3663,7 @@ exports.declaration = {
 		},
 		"openingHours": {
 			"comment": "The opening hours for a business. Opening hours can be specified as a weekly time range, starting with days, then times per day. Multiple days can be listed with commas ',' separating each day. Day or time ranges are specified using a hyphen '-'.<br/>- Days are specified using the following two-letter combinations: <code>Mo</code>, <code>Tu</code>, <code>We</code>, <code>Th</code>, <code>Fr</code>, <code>Sa</code>, <code>Su</code>.<br/>- Times are specified using 24:00 time. For example, 3pm is specified as <code>15:00</code>. <br/>- Here is an example: <code>&lt;time itemprop=\"openingHours\" datetime=\"Tu,Th 16:00-20:00\"&gt;Tuesdays and Thursdays 4-8pm&lt;/time&gt;</code>. <br/>- If a business is open 7 days a week, then it can be specified as <code>&lt;time itemprop=\"openingHours\" datetime=\"Mo-Su\"&gt;Monday through Sunday, all day&lt;/time&gt;</code>.",
-			"comment_plain": "The opening hours for a business. Opening hours can be specified as a weekly time range, starting with days, then times per day. Multiple days can be listed with commas ',' separating each day. Day or time ranges are specified using a hyphen '-'.- Days are specified using the following two-letter combinations: Mo, Tu, We, Th, Fr, Sa, Su.- Times are specified using 24:00 time. For example, 3pm is specified as 15:00. - Here is an example: &lt;time itemprop=\&quot;openingHours\&quot; datetime=\&quot;Tu,Th 16:00-20:00\&quot;&gt;Tuesdays and Thursdays 4-8pm&lt;/time&gt;. - If a business is open 7 days a week, then it can be specified as &lt;time itemprop=\&quot;openingHours\&quot; datetime=\&quot;Mo-Su\&quot;&gt;Monday through Sunday, all day&lt;/time&gt;.",
+			"comment_plain": "The opening hours for a business. Opening hours can be specified as a weekly time range, starting with days, then times per day. Multiple days can be listed with commas ',' separating each day. Day or time ranges are specified using a hyphen '-'.- Days are specified using the following two-letter combinations: Mo, Tu, We, Th, Fr, Sa, Su.- Times are specified using 24:00 time. For example, 3pm is specified as 15:00. - Here is an example: &lt;time itemprop=&quot;openingHours&quot; datetime=&quot;Tu,Th 16:00-20:00&quot;&gt;Tuesdays and Thursdays 4-8pm&lt;/time&gt;. - If a business is open 7 days a week, then it can be specified as &lt;time itemprop=&quot;openingHours&quot; datetime=&quot;Mo-Su&quot;&gt;Monday through Sunday, all day&lt;/time&gt;.",
 			"domains": [
 				"LocalBusiness",
 				"CivicStructure"
@@ -9418,7 +9418,7 @@ exports.declaration = {
 				"CreativeWork"
 			],
 			"comment": "A comment on an item - for example, a comment on a blog post. The comment's content is expressed via the \"text\" property, and its topic via \"about\", properties shared with all CreativeWorks.",
-			"comment_plain": "A comment on an item - for example, a comment on a blog post. The comment's content is expressed via the \&quot;text\&quot; property, and its topic via \&quot;about\&quot;, properties shared with all CreativeWorks.",
+			"comment_plain": "A comment on an item - for example, a comment on a blog post. The comment's content is expressed via the &quot;text&quot; property, and its topic via &quot;about&quot;, properties shared with all CreativeWorks.",
 			"id": "Comment",
 			"label": "Comment",
 			"properties": [
