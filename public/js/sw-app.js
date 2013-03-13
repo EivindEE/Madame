@@ -149,5 +149,5 @@ madame.exportPage = function (head, html) {
 			callback(data);
 		});
 	};
-}('content'));
+}('madame-content'));
 
