@@ -114,5 +114,40 @@ madame.exportPage = function (head, html) {
 			$('.tagged').popover('hide');
 		}
 	});
+
+	var getPage = function () {
+		document.getElementById(contentPane).innerHTML = '<div class="span6"><h4>Loading</h4></div>';
+		var url = $('#url').val();
+		madame.get(url, function (error, dom) {
+			if (error) {
+				document.getElementById(contentPane).innerHTML = '<div class="span6"><h4>No such page found</h4></div>';
+			} else {
+				madame.dom = {};
+				madame.dom.URI = dom.URI || '';
+				madame.dom.head = dom.head || '';
+				document.getElementById(contentPane).innerHTML = dom.body;
+				$(document.getElementById(contentPane)).click(function (e) {
+					e.preventDefault();
+				});
+			}
+
+		});
+	};
+	$('#get').click(getPage);
+	$('#url').keypress(function (e) {
+		if (e.keyCode === 13) {
+			getPage();
+		}
+	});
+	madame.get = function (url, callback) {
+		var data;
+		$.getJSON('/proxy?q=' +  url, function (response) {
+			data = response;
+		}).success(function () {
+			callback(null, data);
+		}).error(function (data) {
+			callback(data);
+		});
+	};
 }('content'));
 
