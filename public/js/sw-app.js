@@ -91,11 +91,11 @@ madame.exportPage = function (head, html) {
 			madame.sw(madame.input.value);
 		}
 	});
-	
+
 	// Set up export button, add google id if provided
 	$('#export-btn').click(function () {
 		if ($('#google-id').val()) {
-			$('#' + id).append('<a rel="author" href="' + $('#google-id').val() + '"></a>');
+			$('#' + contentPane).append('<a rel="author" href="' + $('#google-id').val() + '"></a>');
 		}
 		var head = madame.dom.head || '',
 			html = document.getElementById(contentPane).cloneNode(true);
@@ -107,7 +107,7 @@ madame.exportPage = function (head, html) {
 			madame.exportPage(head, html);
 		}
 	});
-	
+
 	// Set up  hide popover when esc is pressed
 	$(document).keyup(function (e) {
 		if (e.keyCode === 27) {
