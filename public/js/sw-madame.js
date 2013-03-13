@@ -574,13 +574,6 @@ madame.legalRange = function (range) {
 		child,
 		start,
 		end;
-
-	if (newRange.toString()[0] === ' ') {
-		newRange.setStart(newRange.startContainer, newRange.startOffset + 1);
-	}
-	if (newRange.toString()[newRange.toString().length - 1] === ' ') {
-		newRange.setEnd(newRange.endContainer, newRange.endOffset - 1);
-	}
 	if ((range.startContainer === range.endContainer) || (range.startContainer.parentNode === range.endContainer.parentNode)) {
 		return newRange;
 	}
