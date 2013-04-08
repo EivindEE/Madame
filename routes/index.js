@@ -92,7 +92,7 @@ exports.index = function (req, res) {
 	res.render(
 		'semtag',
 		{
-			title: 'Meta data made simple',
+			title: 'Meta data made easy',
 			scripts: ['http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js', jsDir + 'dist/' + pkg.name + '.min.js']
 		}
 	);
