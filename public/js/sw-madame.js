@@ -448,7 +448,9 @@ var madame = madame || {};
 			list = document.getElementById('senses'),
 			i,
 			el,
-			filterFunction,
+			filterFunction = function (el) {
+				return el.explanation;
+			},
 			hasWordNetMapping = function (list) {
 				var i;
 				for (i = 0; i < list.length; i += 1) {
@@ -458,15 +460,6 @@ var madame = madame || {};
 				}
 				return false;
 			};
-		if (hasWordNetMapping(sensList)) {
-			filterFunction = function (el) {
-				return el.explanation && el.senseid.match('noun-[0-9]+$');
-			};
-		} else {
-			filterFunction = function (el) {
-				return el.explanation;
-			};
-		}
 		sensList = sensList.filter(filterFunction).map(function (el) {
 			var index;
 			if (el.source === 'WordNet') {
