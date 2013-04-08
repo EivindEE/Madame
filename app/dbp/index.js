@@ -26,6 +26,9 @@ var url = require('url'),
 				response.on('end', function () {
 					callback(null, JSON.parse(body));
 				});
+			}).on('error',
+			function (err) {
+				callback(err);
 			});
 	};
 /**
@@ -45,10 +48,11 @@ exports.bestFit = function (term, callback) {
 	var fit = {'synset': term, 'senses': [], origin: 'dbp/best-fit/' + term, 'ns': {'schema': 'http://schema.org/'}};
 	fit.ns.dbp = 'http://dbpedia.org/resource/';
 	dbp(fit.ns.dbp + term, function (err, json) {
-		var bindings = json.results.bindings,
+		var bindings,
 			i = 0,
 			type;
 		if (!err) {
+			bindings = json.results.bindings;
 			for (i = 0; i < bindings.length; i += 1) {
 				type = bindings[i].sense.value;
 				if (type.match('http://schema.org/')) {
