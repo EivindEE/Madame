@@ -172,72 +172,6 @@ var url = require('url'),
 			}
 		}
 		callback(null, {"synset": mapping.synset, "schema_dot_org": schema_dot_org, "sumo": sumo, "parents": parents, "siblings": siblings, "parentSiblings": parentSiblings});
-	},
-	sibParRec = function (mapping, callback) {
-		var schema_dot_org = mapping.schema_dot_org,
-			sumo = mapping.sumo,
-			counter = 0,
-			i,
-			sibling,
-			siblings = [],
-			parent,
-			parents = [],
-			link,
-			parentSiblings = [];
-		if (!(schema_dot_org && sumo)) {
-			if (mapping.chain) {
-				if (mapping.chain[0].schema_dot_org) {
-					schema_dot_org = schema_dot_org || mapping.chain[0].schema_dot_org;
-				}
-				if (mapping.chain[0].sumo) {
-					sumo = sumo || mapping.chain[0].sumo;
-				}
-			}
-			if (mapping.siblings) {
-				siblings = [];
-				for (i = 0; i < mapping.siblings.length; i += 1) {
-					sibling = {"synset": mapping.siblings[i].synset};
-					if (mapping.siblings[i].schema_dot_org) {
-						schema_dot_org = schema_dot_org || schema2parent[mapping.siblings[i].schema_dot_org];
-						sibling.schema_dot_org = schema2parent[mapping.siblings[i].schema_dot_org];
-					}
-					if (mapping.siblings[i].sumo) {
-						sumo = sumo || sumo2parent[mapping.siblings[i].sumo];
-						sibling.sumo = sumo2parent[mapping.siblings[i].sumo];
-					}
-					siblings.push(sibling);
-				}
-			}
-		}
-		if (mapping.chain) {
-			for (counter = 0; counter < mapping.chain.length; counter += 1) {
-				link = mapping.chain[counter];
-				parent = {'synset': link.synset, 'schema_dot_org': link.schema_dot_org, 'sumo' : link.sumo, 'siblings': []};
-				schema_dot_org = schema_dot_org || link.schema_dot_org;
-				sumo = sumo || link.sumo;
-				if (link.siblings) {
-					for (i = 0; i < link.siblings.length; i += 1) {
-						sibling = {"synset": link.siblings[i].synset};
-						if (link.siblings[i].schema_dot_org) {
-							schema_dot_org = schema_dot_org || schema2parent[link.siblings[i].schema_dot_org];
-							sibling.schema_dot_org = schema2parent[link.siblings[i].schema_dot_org];
-						}
-						if (link.siblings[i].sumo) {
-							sumo = sumo || sumo2parent[link.siblings[i].sumo];
-							sibling.sumo = sumo2parent[link.siblings[i].sumo];
-						}
-						if (sibling.sumo || sibling.schema_dot_org) {
-							parent.siblings.push(sibling);
-						}
-					}
-				}
-			}
-			if (parent.sumo || parent.schema_dot_org || parent.siblings) {
-				parents.push(parent);
-			}
-			counter += 1;
-		}
-		callback(null, {"synset": mapping.synset, "schema_dot_org": schema_dot_org, "sumo": sumo, "parents": parents, "siblings": siblings, "parentSiblings": parentSiblings});
 	};
 /**
 *	Finds the closest mappings from a synset to several ontologies using a few different algorithms
@@ -259,45 +193,30 @@ exports.bestFit = function (synset, callback) {
 		if (error) {
 			callback(error);
 		} else {
-			sibParRec(mapping, function (recError, recResults) {
-				parSibParsib(mapping, function (linError, linResults) {
-					if (recError || linError) {
-						console.log(recError);
-						console.log(linError);
-						callback(new Error("Error"));
-					} else {
-						if (linResults.sumo) {
-							fit.senses.push("sumo:" + linResults.sumo);
-							fit.ns.sumo = 'http://www.ontologyportal.org/SUMO.owl#';
-						}
-						if (linResults.schema_dot_org) {
-							fit.senses.push("schema:" + linResults.schema_dot_org);
-							fit.ns.schema = 'http://schema.org/';
-						}
-						if (recResults.sumo) {
-							fit.senses.push("sumo:" + recResults.sumo);
-							fit.ns.sumo = 'http://www.ontologyportal.org/SUMO.owl#';
-						}
-						if (recResults.schema_dot_org) {
-							fit.senses.push("schema:" + recResults.schema_dot_org);
-							fit.ns.schema = 'http://schema.org/';
-						}
-						fit.lin = {
-							'schema_dot_org' : linResults.schema_dot_org,
-							'sumo' : linResults.sumo
-						};
-						fit.rec = {
-							'schema_dot_org' : recResults.schema_dot_org,
-							'sumo' : recResults.sumo
-						};
-						if (!fit.ns.schema) {
-							fit.senses.push('schema:Thing');
-							fit.ns.schema = 'http://schema.org/';
-						}
-						fit.senses.push('wn:' + synset);
-						callback(null, fit);
+			parSibParsib(mapping, function (linError, linResults) {
+				if (linError) {
+					console.log(linError);
+					callback(new Error("Error"));
+				} else {
+					if (linResults.sumo) {
+						fit.senses.push("sumo:" + linResults.sumo);
+						fit.ns.sumo = 'http://www.ontologyportal.org/SUMO.owl#';
 					}
-				});
+					if (linResults.schema_dot_org) {
+						fit.senses.push("schema:" + linResults.schema_dot_org);
+						fit.ns.schema = 'http://schema.org/';
+					}
+					fit.lin = {
+						'schema_dot_org' : linResults.schema_dot_org,
+						'sumo' : linResults.sumo
+					};
+					if (!fit.ns.schema) {
+						fit.senses.push('schema:Thing');
+						fit.ns.schema = 'http://schema.org/';
+					}
+					fit.senses.push('wn:' + synset);
+					callback(null, fit);
+				}
 			});
 		}
 	});
