@@ -1,13 +1,8 @@
-Name Suggestions (SemTag is taken)
-================
-MeDa (MEta DAta)
-MeDams (MEta Data Made Simple)
-MaDams (MetA DAta Made Simple)
-Simple Schemata
-
-TODO
-====
-Update the name of the project
+Madame (MetA DatA Made Easy)
+======
+This tool is developed as part of my master thesis in information science and aims to provide a tool that will
+allow developers to markup their web pages with semantic data in an easy way, that doens't require learing about
+ontologies or RFD.
 
 Homepage
 ========
