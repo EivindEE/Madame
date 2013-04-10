@@ -39,7 +39,6 @@ exports.get = function (url, callback) {
 				host = document.location.host;
 				port = document.location.port;
 				URI = protocol + '//' + host;
-				console.log(props);
 				if (port) {
 					URI += ':' + port;
 				}
