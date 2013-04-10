@@ -602,4 +602,5 @@ var madame = madame || {};
 	exports.surround = surround;
 	exports.sw = sw;
 	exports.clean = clean;
+	exports.addProperties = addProperties;
 }(madame));
