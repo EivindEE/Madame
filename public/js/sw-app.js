@@ -51,7 +51,7 @@ madame.exportPage = function (head, html) {
 					madame.hasAncestorWithId(range.endContainer, [contentPane])) {
 				if (!(madame.hasAncestorWithClass(range.startContainer, ['tagged', 'popover'])
 						|| madame.hasAncestorWithClass(range.endContainer, ['tagged', 'popover']))) {
-					document.getSelection().empty();
+					document.getSelection().removeAllRanges();
 					if (range && text.length > 0) {
 						if (text.length > 50) {
 							madame.resetToTag('toTag', function () {
