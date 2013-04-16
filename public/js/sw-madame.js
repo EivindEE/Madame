@@ -43,6 +43,7 @@ var madame = madame || {};
 				properties[i].parentElement.removeChild(properties[i]);
 			}
 		}
+		resetToTag('toTag');
 		$('.tagged').popover('hide');
 		if (callback) {
 			callback(el);
@@ -555,7 +556,9 @@ var madame = madame || {};
 		if (toRemove) {
 			toRemove.outerHTML = toRemove.innerHTML;
 		}
-		callback();
+		if (callback) {
+			callback();
+		}
 	};
 
 	closestChild = function (node, descendant) {
