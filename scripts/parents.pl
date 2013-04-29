@@ -24,19 +24,6 @@ my %json = ("chain" => [uniq(@hypernyms_with_siblings)], "synset" => $synset, "o
 my $json = JSON->new->utf8->pretty->encode(\%json);
 print $json;
 
-
-sub uniq { # Copied from http://stackoverflow.com/questions/7651/how-do-i-remove-duplicate-items-from-an-array-in-perl#answer-7657
-    my %seen = ();
-    my @r = ();
-    foreach my $a (@_) {
-        unless ($seen{$a}) {
-            push @r, $a;
-            $seen{$a} = 1;
-        }
-    }
-    return @r;
-}
-
 sub hypernym {
 	my @hypernym = $wn->querySense($_[0], "hype");
 	if ($#hypernym > 0) {
@@ -63,4 +50,16 @@ sub siblings {
 		push (@sibling_and_offset, {"synset" => $sibling, "offset" => $wn->offset($sibling)});
 	}
 	return @sibling_and_offset;
+}
+
+sub uniq { # Copied from http://stackoverflow.com/questions/7651/how-do-i-remove-duplicate-items-from-an-array-in-perl#answer-7657
+    my %seen = ();
+    my @r = ();
+    foreach my $a (@_) {
+        unless ($seen{$a}) {
+            push @r, $a;
+            $seen{$a} = 1;
+        }
+    }
+    return @r;
 }
