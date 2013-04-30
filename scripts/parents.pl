@@ -20,8 +20,8 @@ while ( @hypernym){ # Does a breadth first search through the WordNet graph, can
 my @hypernyms_with_siblings;
 push(@hypernyms_with_siblings, {"synset" => $_ , "offset" => $wn->offset($_) ,"siblings" => [siblings($_)]}) for @hypernyms;
 
-my %json = ("chain" => [uniq(@hypernyms_with_siblings)], "synset" => $synset, "offset"=> $wn->offset($synset), "siblings" => [siblings($synset)]);
-my $json = JSON->new->utf8->pretty->encode(\%json);
+my %result_map = ("chain" => [uniq(@hypernyms_with_siblings)], "synset" => $synset, "offset"=> $wn->offset($synset), "siblings" => [siblings($synset)]);
+my $json = JSON->new->utf8->pretty->encode(\%result_map);
 print $json;
 
 sub hypernym {
