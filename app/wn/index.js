@@ -6,7 +6,7 @@ var url = require('url'),
 	wn2sumo = require('../../mappings/wn2sumo').mapping,
 	schema2parent = require('../../mappings/schema2parent').mapping,
 	sumo2parent = require('../../mappings/sumo2parent').mapping,
-	findParents = function (synset, callback) {
+	createHypernymChain = function (synset, callback) {
 		exec('perl scripts/parents.pl ' + synset, function (error, stout, stderr) {
 			if (error) {
 				callback(new Error(error));
@@ -58,7 +58,7 @@ var url = require('url'),
 	mapSynset = function (synset, callback) {
 		var	json,
 			i;
-		findParents(synset, function (error, data) {
+		createHypernymChain(synset, function (error, data) {
 			if (error) {
 				callback(error);
 			} else {
@@ -103,75 +103,48 @@ var url = require('url'),
 			}
 		});
 	},
-	parSibParsib = function (mapping, callback) {
+	hypernymesFirst = function (mapping, callback) {
 		var schema_dot_org = mapping.schema_dot_org,
 			sumo = mapping.sumo,
-			siblings,
-			parents,
-			sibling,
-			parentSiblings,
 			i,
 			j;
 		if (!(schema_dot_org && sumo)) {
 			if (mapping.chain) {
-				parents = [];
 				for (i = 0; i < mapping.chain.length; i += 1) {
 					schema_dot_org = schema_dot_org || mapping.chain[i].schema_dot_org;
 					sumo = sumo || mapping.chain[i].sumo;
-					if (mapping.chain[i].sumo || mapping.chain[i].schema_dot_org) {
-						parents.push({"synset": mapping.chain[i].synset, "schema_dot_org": mapping.chain[i].schema_dot_org, "sumo": mapping.chain[i].sumo});
-					}
 				}
 			}
 		}
 		if (!(schema_dot_org && sumo)) {
 			if (mapping.siblings) {
-				siblings = [];
 				for (i = 0; i < mapping.siblings.length; i += 1) {
-					sibling = {"synset": mapping.siblings[i].synset};
 					if (mapping.siblings[i].schema_dot_org) {
 						schema_dot_org = schema_dot_org || schema2parent[mapping.siblings[i].schema_dot_org];
-						sibling.schema_dot_org = schema2parent[mapping.siblings[i].schema_dot_org];
 					}
 					if (mapping.siblings[i].sumo) {
 						sumo = sumo || sumo2parent[mapping.siblings[i].sumo];
-						sibling.sumo = sumo2parent[mapping.siblings[i].sumo];
 					}
-					siblings.push(sibling);
 				}
 			}
 		}
 		if (!(schema_dot_org && sumo)) {
 			if (mapping.chain) {
-				parentSiblings = [];
-				siblings = [];
 				for (i = 0; i < mapping.chain.length; i += 1) {
 					if (mapping.chain[i].siblings) {
-						siblings = [];
 						for (j = 0; j < mapping.chain[i].siblings.length; j += 1) {
-							sibling = {};
 							if (mapping.chain[i].siblings[j].schema_dot_org) {
 								schema_dot_org = schema_dot_org || schema2parent[mapping.chain[i].siblings[j].schema_dot_org];
-								sibling.schema_dot_org = schema2parent[mapping.chain[i].siblings[j].schema_dot_org];
-								sibling.synset = mapping.chain[i].synset;
 							}
 							if (mapping.chain[i].siblings[j].schema_dot_org) {
 								sumo = sumo || mapping.chain[i].sumo;
-								sibling.sumo = sumo2parent[mapping.chain[i].siblings[j].sumo];
-								sibling.synset = mapping.chain[i].synset;
 							}
-							if (sibling.synset) {
-								siblings.push(sibling);
-							}
-						}
-						if (siblings.length) {
-							parentSiblings.push(siblings);
 						}
 					}
 				}
 			}
 		}
-		callback(null, {"synset": mapping.synset, "schema_dot_org": schema_dot_org, "sumo": sumo, "parents": parents, "siblings": siblings, "parentSiblings": parentSiblings});
+		callback(null, {"synset": mapping.synset, "schema_dot_org": schema_dot_org, "sumo": sumo});
 	};
 /**
 *	Finds the closest mappings from a synset to several ontologies using a few different algorithms
@@ -193,22 +166,22 @@ exports.bestFit = function (synset, callback) {
 		if (error) {
 			callback(error);
 		} else {
-			parSibParsib(mapping, function (linError, linResults) {
-				if (linError) {
-					console.log(linError);
-					callback(new Error("Error"));
+			hypernymesFirst(mapping, function (err, results) {
+				if (err) {
+					console.log(err);
+					callback(err);
 				} else {
-					if (linResults.sumo) {
-						fit.senses.push("sumo:" + linResults.sumo);
+					if (results.sumo) {
+						fit.senses.push("sumo:" + results.sumo);
 						fit.ns.sumo = 'http://www.ontologyportal.org/SUMO.owl#';
 					}
-					if (linResults.schema_dot_org) {
-						fit.senses.push("schema:" + linResults.schema_dot_org);
+					if (results.schema_dot_org) {
+						fit.senses.push("schema:" + results.schema_dot_org);
 						fit.ns.schema = 'http://schema.org/';
 					}
 					fit.lin = {
-						'schema_dot_org' : linResults.schema_dot_org,
-						'sumo' : linResults.sumo
+						'schema_dot_org' : results.schema_dot_org,
+						'sumo' : results.sumo
 					};
 					if (!fit.ns.schema) {
 						fit.senses.push('schema:Thing');
