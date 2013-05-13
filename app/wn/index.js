@@ -23,7 +23,7 @@ var url = require('url'),
 			mapping.schema_dot_org = wn2schema[object.synset];
 		}
 		if (wn2sumo[object.offset]) {
-			mapping.sumo = wn2sumo[object.offset].sumo;
+			mapping.sumo = wn2sumo[object.offset];
 		}
 		callback(null, mapping);
 	},
