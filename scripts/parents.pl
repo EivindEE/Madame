@@ -6,10 +6,12 @@ my $wn = WordNet::QueryData->new(
 	dir => "/usr/local/WordNet-3.0/dict/",
 	noload => 1);
 # Takes an argument in the form synset-wordsens-gramaticalcategory-senscount
-my @stripped = ($ARGV[0] =~ /.*-(.*)-(.).*-(.*)/);
+my @stripped = ($ARGV[0] =~ /[^-]*-(.*)-(.)oun-(.*)/);
 my $synset = join('#', @stripped);
-
-my @hypernym = hypernym($synset);
+my @hypernym = $wn->querySense($synset, "inst");
+if (not @hypernym) {
+	@hypernym = hypernym($synset);
+}
 my @hypernyms;
 while ( @hypernym){ # Does a breadth first search through the WordNet graph, can be switched to depth first by substituting shift with pop
 	my $hypernym = shift @hypernym;
