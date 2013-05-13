@@ -60,7 +60,7 @@ exports.get = function (url, callback) {
 					for (i = 0; i < count; i += 1) {
 						tag = document.images[i].src;
 						if (tag.charAt(0) === '/') {
-							document.images[i].src = url + tag;
+							document.images[i].src = protocol + '//' + document.location.host + tag;
 						}
 					}
 					dom.URI = URI;
