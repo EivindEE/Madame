@@ -9,9 +9,8 @@ my $wn = WordNet::QueryData->new(
 my @stripped = ($ARGV[0] =~ /[^-]*-(.*)-(.)oun-(.*)/);
 my $synset = join('#', @stripped);
 my @hypernym = $wn->querySense($synset, "inst");
-if (not @hypernym) {
-	@hypernym = hypernym($synset);
-}
+
+push(@hypernym, hypernym($synset));
 my @hypernyms;
 while ( @hypernym){ # Does a breadth first search through the WordNet graph, can be switched to depth first by substituting shift with pop
 	my $hypernym = shift @hypernym;
