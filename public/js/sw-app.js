@@ -151,3 +151,4 @@ madame.exportPage = function (head, html) {
 	};
 }('madame-content'));
 
+document.getElementById('alerts').innerHTML = '<div class="alert"><button type="button" class="close" data-dismiss="alert">&times;</button><strong>Notice!</strong> The lexitags server is having network issues and might cause the app to be unavailable. We apologize for the inconvenience. </div>';
