@@ -1,7 +1,19 @@
 footer.container
 	div.row 
 		div.span12.footer 
-			div Created by <span about="http://elseth.me#Eivind" typeof="foaf:Person"><a  href="https://plus.google.com/109805035452729053764" rel="author"><span property="foaf:name">Eivind Elseth</span></a>, under the supervision of <span rel="foaf:supervisor"><a href="http://csabaveres.net" typeof="foaf:Person"><span property="foaf:name">Csaba Veres</span></a></span></span>.
+			div Created by 
+				|<span about="https://plus.google.com/109805035452729053764" typeof="foaf:Person  schema:Person">
+				|<a  href="https://plus.google.com/109805035452729053764" rel="author">
+				|<span property="foaf:name">Eivind Elseth</span>
+				|</a>
+				| as part my <span typeof="foaf:Document schema:CreativeWork" href="https://github.com/EivindEE/Thesis" property="foaf:made foaf:publications"><span property="foaf:topic"><link property="schema:downloadUrl" href="https://github.com/EivindEE/Thesis/archive/master.zip"/>thesis in information science</span></span></span>.
+				| <br/>It was developed under the supervision of 
+				|<span rel="http://purl.org/dc/elements/1.1/contributor">
+				|<a href="http://csabaveres.net" typeof="foaf:Person schema:Person">
+				|<span property="foaf:name schema:name">Csaba Veres</span>
+				|</a>
+				|</span>
+				|</span>.
 			div View or fork the source code on <a href="https://github.com/EivindEE/Madame">GitHub.</a>
 		
 each js in scripts
