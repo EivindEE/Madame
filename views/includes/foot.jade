@@ -29,6 +29,10 @@ footer.container
 				span(property="schema:bestRating", content="1")
 				link(property="schema:worstRating", content="6")
 				link(property="schema:ratingValue", content="1")
+			span(resource="madame", typeof="schema:SoftwareApplication")
+				link(property="schema:review", href="schema:SoftwareApplication")	
+				link(property="schema:downloadUrl", href="https://github.com/EivindEE/Madame/archive/master.zip")	
+
 each js in scripts
 	script( src=js)
 
