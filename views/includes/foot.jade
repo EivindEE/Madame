@@ -2,14 +2,21 @@ footer.container
 	div.row 
 		div.span12.footer 
 			div Created by 
-				|<span about="https://plus.google.com/109805035452729053764" typeof="foaf:Person  schema:Person">
-				|<a  href="https://plus.google.com/109805035452729053764" rel="author">
-				|<span property="foaf:name">Eivind Elseth</span>
+				|<span resource="#eivind" typeof="foaf:Person  schema:Person uni:GraduateStudent">
+				|<a  about="#eivind" href="https://plus.google.com/109805035452729053764" rel="author">
+				|<span about="#eivind" property="foaf:name">Eivind Elseth</span>
 				|</a>
-				| as part my <span typeof="foaf:Document schema:CreativeWork" href="https://github.com/EivindEE/Thesis" property="foaf:made foaf:publications"><span property="foaf:topic"><link property="schema:downloadUrl" href="https://github.com/EivindEE/Thesis/archive/master.zip"/>thesis in information science</span></span></span>.
+				| as part my
+				|<link about="#eivind" property="foaf:made foaf:publications" href="#thesis"/>
+				|<a resource="#thesis" href="https://github.com/EivindEE/Thesis" typeof="foaf:Document schema:CreativeWork" href="https://github.com/EivindEE/Thesis" >
+				|<link property="schema:downloadUrl" href="https://github.com/EivindEE/Thesis/archive/master.zip"/>
+				|<link property="uni:advisor" href="http://csabaveres.net"/>
+				|<link property="schema:name foaf:name" content="Metadata made easy - Adding metadata by means of natural language"/>
+				|thesis</a> in information science
+				|</span>
 				| <br/>It was developed under the supervision of 
-				|<span rel="http://purl.org/dc/elements/1.1/contributor">
-				|<a href="http://csabaveres.net" typeof="foaf:Person schema:Person">
+				|<span rel="uni:advisor">
+				|<a href="http://csabaveres.net" typeof="foaf:Person schema:Person uni:AssociateProfessor">
 				|<span property="foaf:name schema:name">Csaba Veres</span>
 				|</a>
 				|</span>
