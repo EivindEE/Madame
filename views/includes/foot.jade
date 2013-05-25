@@ -21,8 +21,14 @@ footer.container
 				|</a>
 				|</span>
 				|</span>.
-			div View or fork the source code on <a href="https://github.com/EivindEE/Madame">GitHub.</a>
-		
+			div View or fork the source code on <a typeof="" href="https://github.com/EivindEE/Madame">GitHub.</a>
+			span(resource="review", typeof="schema:Review")
+				link(property="schema:itemReviewed", href="#thesis")
+				link(property="schema:reviewRating", href="grade")
+			span(resource="grade", typeof="schema:Rating")
+				span(property="schema:bestRating", content="A")
+				link(property="schema:worstRating", content="F")
+				link(property="schema:ratingValue", content="A")
 each js in scripts
 	script( src=js)
 
