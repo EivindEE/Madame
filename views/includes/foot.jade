@@ -1,7 +1,7 @@
 footer.container
-	div.row 
-		div.span12.footer 
-			div Created by 
+	div.row
+		div.span12.footer
+			div Created by
 				|<span resource="#eivind" typeof="foaf:Person  schema:Person uni:GraduateStudent">
 				|<a  about="#eivind" href="https://plus.google.com/109805035452729053764" rel="author">
 				|<span about="#eivind" property="foaf:name">Eivind Elseth</span>
@@ -14,7 +14,7 @@ footer.container
 				|<link property="schema:name foaf:name" content="Metadata made easy - Adding metadata by means of natural language"/>
 				|thesis</a> in information science
 				|</span>
-				| <br/>It was developed under the supervision of 
+				| <br/>It was developed under the supervision of
 				|<span rel="uni:advisor">
 				|<a href="http://csabaveres.net" typeof="foaf:Person schema:Person uni:AssociateProfessor">
 				|<span property="foaf:name schema:name">Csaba Veres</span>
@@ -22,8 +22,8 @@ footer.container
 				|</span>
 				|</span>.
 			div View or fork the source code on <a typeof="" href="https://github.com/EivindEE/Madame">GitHub.</a>
-			span(resource="madame", typeof="schema:SoftwareApplication")
-				link(property="schema:downloadUrl", href="https://github.com/EivindEE/Madame/archive/master.zip")	
+			span(resource="#madame", typeof="schema:SoftwareApplication")
+				link(property="schema:downloadUrl", href="https://github.com/EivindEE/Madame/archive/master.zip")
 
 each js in scripts
 	script( src=js)
