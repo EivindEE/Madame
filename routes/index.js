@@ -142,7 +142,7 @@ exports.sw = function (req, res) {
 	res.render(
 		'sw',
 		{
-			title: 'Meta data made easy',
+			title: 'Metadata made easy',
 			scripts: ['http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js', jsDir + 'dist/' + pkg.name + '.js', jsDir + 'sw-app.js']
 		}
 	);
