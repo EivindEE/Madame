@@ -10,6 +10,7 @@ exports.mapping = {
 	"apartment_building#n#1": "ApartmentComplex",
 	"aquarium#n#1": "Aquarium",
 	"article#n#1": "Article",
+	"artefact#n#1": "Product",
 	"automobile_mechanic#n#1": "AutoRepair",
 	"bakery#n#1": "Bakery",
 	"beach#n#1": "Beach",
