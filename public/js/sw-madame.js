@@ -32,7 +32,8 @@ var madame = madame || {};
 		closestChild,
 		legalRange,
 		clean,
-		sw;
+		sw,
+		alert;
 	clean = function (el, callback) {
 		el = $(el);
 		var properties = el.find('.tagged .property'),
@@ -535,6 +536,12 @@ var madame = madame || {};
 			{
 				word: term
 			}, function (data) {
+				if (data['default']) {
+					alert({
+						'header': 'Warning',
+						'body': 'The disambiguation server is not responding, and only the default responses can be provided'
+					});
+				}
 				buildDidYouMeanTable(data, 'dym', term);
 			});
 	};
@@ -597,6 +604,13 @@ var madame = madame || {};
 		newRange.setEndAfter(end);
 		return newRange;
 	};
+
+	alert = function (theAlert) {
+		document.getElementById('alerts').innerHTML =
+			'<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">&times;</button><strong>'
+			+ theAlert.header
+			+ '!</strong> ' + theAlert.body + ' </div>';
+	};
 	exports.legalRange = legalRange;
 	exports.strip = strip;
 	exports.hasAncestorWithId = hasAncestorWithId;
@@ -606,4 +620,5 @@ var madame = madame || {};
 	exports.sw = sw;
 	exports.clean = clean;
 	exports.addProperties = addProperties;
+
 }(madame));
