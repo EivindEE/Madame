@@ -31,7 +31,7 @@ exports.term = function (term, callback) {
 findLexitagTerms =
 	function (searchString, callback) {
 		var body = '',
-			url = 'http://lexitags.dyndns.org:8080/server/lexitags2/Semtags?data={"word": "',
+			url = 'http://lexitags.dyndns.org/server/lexitags2/Semtags?data={"word": "',
 			queryEnd = '"}';
 		saneString(searchString, function (error, saneSearchString) {
 			if (error) {
