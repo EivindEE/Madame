@@ -49,8 +49,8 @@ madame.exportPage = function (head, html) {
 			text = madame.strip(range.toString());
 			if (madame.hasAncestorWithId(range.startContainer, [contentPane]) &&
 					madame.hasAncestorWithId(range.endContainer, [contentPane])) {
-				if (!(madame.hasAncestorWithClass(range.startContainer, ['tagged', 'popover'])
-						|| madame.hasAncestorWithClass(range.endContainer, ['tagged', 'popover']))) {
+				if (!(madame.hasAncestorWithClass(range.startContainer, ['tagged', 'popover']) ||
+						madame.hasAncestorWithClass(range.endContainer, ['tagged', 'popover']))) {
 					document.getSelection().removeAllRanges();
 					if (range && text.length > 0) {
 						if (text.length > 50) {
@@ -67,11 +67,9 @@ madame.exportPage = function (head, html) {
 					} else if (range.startContainer === range.endContainer) {
 						if (
 							(
-								range.commonAncestorContainer.nodeName === 'A'
-								&&
+								range.commonAncestorContainer.nodeName === 'A' &&
 								range.commonAncestorContainer.childNodes[0].nodeName === 'IMG'
-							)
-								||
+							) ||
 								range.commonAncestorContainer.nodeName === 'IMG'
 						) {
 							madame.resetToTag('toTag', function () {

@@ -161,9 +161,9 @@ var madame = madame || {};
 				inputList += '<i class="icon-question-sign" title="' + comment + '"></i><span class="left" title="' + comment + '">' + property + ': </span>';
 				if (el.dataset.range.match('Text') || el.dataset.range.match('URL') || el.dataset.range.match('Number')) {
 					value = el.getAttribute('content') || el.getAttribute('href') || '';
-					inputList += '<input class="property right" name="'
-						+ el.getAttribute('property') + '" type="text" value="'
-						+ value + '" placeholder="' + el.dataset.range + '"/>';
+					inputList += '<input class="property right" name="' +
+					el.getAttribute('property') + '" type="text" value="' +
+					value + '" placeholder="' + el.dataset.range + '"/>';
 					inputList += '</li>';
 				} else if (el.dataset.range.match('Date')) {
 					value = el.getAttribute('content') || '';
@@ -189,14 +189,14 @@ var madame = madame || {};
 						inputList += '</li>';
 						inputList += '<li>';
 						inputList += '<span class="left"> or write the URL: </span>';
-						inputList += '<input class="property right" name="'
-							+ el.getAttribute('property') + '" type="text" value="'
-							+ value + '" placeholder="' + ranges + '"/>';
+						inputList += '<input class="property right" name="' +
+						el.getAttribute('property') + '" type="text" value="' +
+						value + '" placeholder="' + ranges + '"/>';
 						inputList += '</li>';
 					} else {
-						inputList += '<input class="property right" name="'
-							+ el.getAttribute('property') + '" type="text" value="'
-							+ value + '" placeholder="' + ranges + '"/>';
+						inputList += '<input class="property right" name="' +
+						el.getAttribute('property') + '" type="text" value="' +
+						value + '" placeholder="' + ranges + '"/>';
 						inputList += '</li>';
 					}
 				}
@@ -607,9 +607,10 @@ var madame = madame || {};
 
 	alert = function (theAlert) {
 		document.getElementById('alerts').innerHTML =
-			'<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">&times;</button><strong>'
-			+ theAlert.header
-			+ '!</strong> ' + theAlert.body + ' </div>';
+			'<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">&times;</button><strong>' +
+			theAlert.header +
+			'!</strong> ' +
+			theAlert.body + ' </div>';
 	};
 	exports.legalRange = legalRange;
 	exports.strip = strip;

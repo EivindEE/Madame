@@ -19,6 +19,7 @@ The WordNet::QueryData package is dependent on having [WordNet](http://wordnet.p
 
 To get the css you need a scss compiler. You can for example use [compass](http://compass-style.org).
 
-For dev there is also a dependency for grunt.js which can be installed by running `[sudo] npm install -g grunt`.
+For dev there is also a dependency for Gruntfile.js which can be installed by running `[sudo] npm install -g grunt-cli`.
 To make sure the web page is running the latest build, run grunt before opening the page.
 To run grunt you need to have [compass](http://compass-style.org) installed.
+
