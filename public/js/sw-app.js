@@ -1,5 +1,4 @@
 /*jslint browser: true */
-/*global  $, console */
 
 var madame = madame || {};
 

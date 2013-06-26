@@ -32,6 +32,17 @@ module.exports = function (grunt) {
 			],
 			directives: {
 				'browser': true,
+				'strict': true,
+				'curly': true,
+				'eqeqeq': true,
+				'forin': true,
+				'immed': true,
+				'plusplus': true,
+				'maxdepth': 6,
+				'trailing': true,
+//				'quotmark': true, // 'single' or 'double'
+//				'undef': true,
+//				'unused': true,
 				'node': true
 			},
 			globals: {

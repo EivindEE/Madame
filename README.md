@@ -23,3 +23,4 @@ For dev there is also a dependency for Gruntfile.js which can be installed by ru
 To make sure the web page is running the latest build, run grunt before opening the page.
 To run grunt you need to have [compass](http://compass-style.org) installed.
 
+https://github.com/gruntjs/grunt-contrib-compass
