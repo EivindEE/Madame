@@ -49,12 +49,14 @@ module.exports = function (grunt) {
 			}
 		},
 		cssmin: {
-			'files': {
-				'public/stylesheets/style.min.css': [
-					styleDir + 'reset.css',
-					styleDir + 'bootstrap.css',
-					styleDir + 'style.css'
-				]
+			combine: {
+				'files': {
+					'public/stylesheets/style.min.css': [
+						styleDir + 'reset.css',
+						styleDir + 'bootstrap.css',
+						styleDir + 'style.css'
+					]
+				}
 			}
 		},
 		concat: {
@@ -88,9 +90,10 @@ module.exports = function (grunt) {
 		},
 		compass: {
 			dev: {
-				src: styleDir + 'scss/',
-				dest: styleDir,
-				linecomments: true
+				options: {
+					sassDir: styleDir + 'scss',
+					cssDir: styleDir
+				}
 			}
 		}
 	});
