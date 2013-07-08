@@ -70,7 +70,7 @@ module.exports = function (grunt) {
 			target: {
 				files:
 					{
-						'public/js/dist/<%= pkg.name %>.js' : 'public/js/dist/<%= pkg.name %>.min.js'
+						'public/js/dist/Madame.min.js' : 'public/js/dist/Madame.js'
 					}
 			}
 		},
