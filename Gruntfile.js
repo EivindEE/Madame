@@ -1,7 +1,7 @@
 /*global module:false*/
 module.exports = function (grunt) {
 	"use strict";
-	grunt.loadNpmTasks('grunt-linter');
+	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-compass');
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
