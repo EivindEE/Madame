@@ -12,13 +12,13 @@ NODE_RUNNING:=`scripts/running.sh`
 start:
 	@echo ${STARTING}
 	@echo "Starting supervisor"
-	@supervisor -e 'node|js|jade' --watch app.js,grunt.js,app,views,routes --quiet app.js 1>> logs/supervisor.${DATE}.log 2>> logs/supervisor.${DATE}.err.log &
+	@supervisor -e 'node|js|jade' --watch app.js,Gruntfile.js,app,views,routes --quiet app.js 1>> logs/supervisor.${DATE}.log 2>> logs/supervisor.${DATE}.err.log &
 	@echo "Starting grunt"
 	@grunt watch --no-color >> logs/grunt.${DATE}.log &
 	@echo "Starting mongoDB"
 	@mongod --port 3001 --fork --logpath logs/mongodb.${DATE}.log --logappend
 	@echo ${STARTED}
-	
+
 stop:
 	@echo ${STOPPING}
 	@killall node
