@@ -1,5 +1,5 @@
 node_modules
-logs
+logs/*.log
 public/js/dist
 public/mock/*.json
 *.min.*
