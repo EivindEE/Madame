@@ -1,8 +1,9 @@
+.DS_Store
 node_modules
+npm-debug.log
 logs/*.log
 public/js/dist
 public/mock/*.json
 *.min.*
 *.css
-.DS_Store
 .sass-cache/

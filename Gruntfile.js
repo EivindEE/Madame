@@ -2,8 +2,7 @@
 module.exports = function (grunt) {
 	"use strict";
 	grunt.loadNpmTasks('grunt-linter');
-	grunt.loadNpmTasks('grunt-contrib');
-	grunt.loadNpmTasks('grunt-compass');
+	grunt.loadNpmTasks('grunt-contrib-compass');
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-cssmin');
