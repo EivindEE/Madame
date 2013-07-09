@@ -6,7 +6,7 @@ ontologies or RFD.
 
 Homepage
 ========
-You can view this projects homepage on [microbrewit.thunemedia.no:3000](http://microbrewit.thunemedia.no:3000)
+You can view this projects homepage on [csaba.dyndns.ws:3000](http://csaba.dyndns.ws:3000)
 
 
 Dependencies
